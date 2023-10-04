@@ -22,3 +22,13 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+
+/frontend/node_modules
+/frontend/.idea
+/frontend/dist
+/frontend/package-lock.json
+
+/backend/node_modules
+/backend/dist
+/backend/package-lock.json
