@@ -1,7 +1,7 @@
 import { BaseEntity } from "./BaseEntity.js";
 
-export class Statuses extends BaseEntity {
+export class Order extends BaseEntity {
   constructor(db) {
-    super(db, 'statuses');
+    super(db, 'orders');
   }
 }
