@@ -7,10 +7,10 @@ export class MenuItem extends BaseEntity {
 
   findAll(options = {}) {
     const filters = this.mapKeys(options);
-    const condition = filters.length ? ` WHERE ${filters.join(" AND ")}` : "";
+    const condition = filters.length ? `WHERE ${filters.join(" AND ")}` : "";
 
     return this.db.all(`
-      SELECT ${this.tableName}.id AS id, name, photo, price, product_id
+      SELECT name, photo, price, product_id as id
       FROM ${this.tableName}
       JOIN products ON products.id = ${this.tableName}.product_id
       ${condition}
@@ -24,7 +24,7 @@ export class MenuItem extends BaseEntity {
 
     const filters = this.mapKeys(options).join(" AND ");
     return this.db.all(`
-      SELECT products.*, ${this.tableName}.id AS id, product_id 
+      SELECT products.* 
       FROM ${this.tableName}
       JOIN products ON products.id = ${this.tableName}.product_id
       WHERE ${filters}

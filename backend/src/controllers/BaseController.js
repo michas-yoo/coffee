@@ -1,6 +1,6 @@
 export class BaseController {
-  constructor(db, model, modelSubController = null) {
-    this.model = new model(db, modelSubController);
+  constructor(db, model) {
+    this.model = new model(db);
   }
 
   async index(options) {

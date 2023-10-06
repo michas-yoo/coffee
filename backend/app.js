@@ -13,7 +13,7 @@ import { GalleryController } from "./src/controllers/GalleryController.js";
 import { MenuItemController } from "./src/controllers/MenuItemController.js";
 import { ModifierController } from "./src/controllers/ModifierController.js";
 import { ModifierTypeController } from "./src/controllers/ModifierTypeController.js";
-import { FIFTEEN_MINUTES, REFRESH_COOKIE_NAME } from "./src/utils/constants.js";
+import { SEVEN_DAYS, REFRESH_COOKIE_NAME } from "./src/utils/constants.js";
 import { addDefaultData, openDB, printToConsole, setupTables } from "./src/db/db.js";
 
 const app = express();
@@ -23,15 +23,15 @@ const __dirname = path.dirname(__filename);
 
 const URLS_WITHOUT_AUTH = ["/", "/login", "/register", "/refresh_token"];
 
-function processResultWithCookie(result, res) {
-  if (result.cookie) {
+function processResultWithCookie(result, res, req = {}) {
+  if (result.cookie && !req.cookies?.[REFRESH_COOKIE_NAME]) {
     res.cookie(REFRESH_COOKIE_NAME, result.cookie, {
       httpOnly: true,
-      path: "/refresh_token",
-      maxAge: FIFTEEN_MINUTES,
+      // path: "http://localhost:3000/refresh_token",
+      maxAge: SEVEN_DAYS,
     });
-    delete result.cookie;
   }
+  delete result.cookie;
 }
 
 (async () => {
@@ -43,25 +43,26 @@ function processResultWithCookie(result, res) {
   const menuItemController = new MenuItemController(db);
   const modifierTypeController = new ModifierTypeController(db);
 
-  const shopController = new ShopController(db, menuItemController);
+  const shopController = new ShopController(db, menuItemController, galleryController);
 
   await setupTables(db, false);
   await addDefaultData(db, false);
   printToConsole(db, false);
 
   app.use(cors({
-    origin: "http://localhost:3000", credentials: true,
+    origin: ["http://localhost:3000", "http://localhost:5173"],
+    credentials: true,
   }));
 
   // Auth token interceptor
   app.use((req, res, next) => {
     const noNeedForAuth = URLS_WITHOUT_AUTH.includes(req.originalUrl);
-    if (noNeedForAuth || req.originalUrl.match(/static/gi)) return next();
+    if (noNeedForAuth || req.originalUrl.match(/static|ref/gi)) return next();
 
     const authorization = req.headers["authorization"] || "";
 
     if (!authorization) {
-      return res.status(401).json({ ok: false, message: ["Not authenticated"] });
+      return res.status(401).json({ ok: false, message: ["No token in headers"] });
     }
 
     try {
@@ -69,7 +70,7 @@ function processResultWithCookie(result, res) {
       req.payload = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
     } catch (e) {
       console.log(e);
-      return res.status(401).json({ ok: false, message: ["Not authenticated"] });
+      return res.status(401).json({ ok: false, message: ["Bad token"] });
     }
 
     return next();
@@ -82,6 +83,9 @@ function processResultWithCookie(result, res) {
   // === GET REQUESTS ===
 
   app.get("/", async (req, res) => {
+    res.send("Hello world");
+  });
+  app.get("/refresh_token", async (req, res) => {
     res.send("Hello world");
   });
 
@@ -154,7 +158,7 @@ function processResultWithCookie(result, res) {
   app.post("/refresh_token", async (req, res) => {
     const token = req.cookies[REFRESH_COOKIE_NAME];
     const result = await userController.refreshToken(token);
-    processResultWithCookie(result, res);
+    processResultWithCookie(result, res, req);
 
     res.json(result);
   });

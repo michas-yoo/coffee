@@ -1,7 +1,7 @@
-import { createApp } from 'vue';
-import './style.css';
-import App from './App.vue';
-import Antd from 'ant-design-vue';
+import { createApp } from "vue";
+import "./style.css";
+import App from "./App.vue";
+import Antd from "ant-design-vue";
 import { createRouter, createWebHistory } from "vue-router";
 
 const router = createRouter({
@@ -9,8 +9,23 @@ const router = createRouter({
   routes: [
     {
       path: "/",
-      name: "Main",
+      name: "main",
       component: () => import("./views/MainPage.vue"),
+    },
+    {
+      path: "/register",
+      name: "register",
+      component: () => import("./views/RegisterPage.vue"),
+    },
+    {
+      path: "/login",
+      name: "login",
+      component: () => import("./views/LoginPage.vue"),
+    },
+    {
+      path: "/shops/:id",
+      name: "shop",
+      component: () => import("./views/ShopPage.vue"),
     },
   ],
 });
@@ -18,4 +33,4 @@ const router = createRouter({
 createApp(App)
   .use(Antd)
   .use(router)
-  .mount('#app')
+  .mount("#app");

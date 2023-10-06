@@ -1,0 +1,29 @@
+<script setup>
+import SingleProduct from "./SingleProduct.vue";
+
+const props = defineProps({
+  data: [Object],
+});
+</script>
+
+<template>
+  <div class="products-container">
+    <transition-group appear name="move">
+      <SingleProduct
+        v-for="(product, i) in props.data"
+        :key="product.id"
+        :data="product"
+        :order-id="i"
+      />
+    </transition-group>
+  </div>
+</template>
+
+<style scoped>
+.products-container {
+  position: relative;
+  display: grid;
+  gap: 20px;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+}
+</style>

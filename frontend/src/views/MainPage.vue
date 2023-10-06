@@ -1,31 +1,40 @@
 <script setup>
-import HelloWorld from "../components/HelloWorld.vue";
+import { appStore } from "../store.js";
+import { onMounted, reactive } from "vue";
+import { notification } from "ant-design-vue";
+import { makeRequest } from "../api/apiClient.js";
+import ShopsGrid from "../components/ShopsGrid.vue";
+import { BellOutlined } from "@ant-design/icons-vue";
+
+const data = reactive({
+  shops: [],
+});
+
+onMounted(async () => {
+  try {
+    data.shops = await makeRequest("getShops");
+  } catch (message) {
+    notification.error({ message });
+  }
+});
 </script>
+
 <template>
-  <div>
-    <a href="https://vitejs.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="../assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
-  </div>
-  <HelloWorld />
+  <ALayout>
+    <APageHeader
+      :title="appStore.time"
+      :sub-title="appStore.username"
+    >
+      <template #extra>
+        <AButton shape="circle">
+          <BellOutlined />
+        </AButton>
+      </template>
+    </APageHeader>
+    <ShopsGrid :data="data.shops" />
+  </ALayout>
 </template>
 
 <style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
 
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
-}
 </style>

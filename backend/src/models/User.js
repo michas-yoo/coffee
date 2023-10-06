@@ -14,6 +14,14 @@ export class User extends BaseEntity {
         required: true,
         minLength: 3,
       },
+      name: {
+        required: true,
+        minLength: 2,
+      },
+      phone: {
+        required: true,
+        minLength: 9,
+      },
     };
   }
 
@@ -43,14 +51,15 @@ export class User extends BaseEntity {
       data: {
         id: user.id,
         accessToken: createAccessToken(user.id),
+        username: user.name,
       },
       message: null,
       cookie: createRefreshToken(user.id),
     };
   }
 
-  async register({ email, password }) {
-    const validation = this.validate({ email, password });
+  async register(payload) {
+    const validation = this.validate(payload);
 
     if (validation.length) {
       return {
@@ -60,9 +69,10 @@ export class User extends BaseEntity {
       };
     }
 
-    const hashedPassword = await hash(password, 12);
+    payload.password = await hash(payload.password, 12);
+
     try {
-      const result = await this.create({ email, password: hashedPassword }, false);
+      const result = await this.create(payload, false);
 
       if (Array.isArray(result)) {
         return {
@@ -111,6 +121,7 @@ export class User extends BaseEntity {
       return {
         ok: true,
         data: {
+          username: user.name,
           accessToken: createAccessToken(user.id),
         },
         cookie: createRefreshToken(user.id),

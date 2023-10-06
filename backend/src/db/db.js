@@ -20,7 +20,9 @@ export async function setupTables(db, run) {
   await db.exec(`CREATE TABLE users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     email TEXT UNIQUE NOT NULL,
-    password TEXT NOT NULL
+    password TEXT NOT NULL,
+    name TEXT NOT NULL,
+    phone TEXT NOT NULL
   )`);
 
   await db.exec(`CREATE TABLE products (
