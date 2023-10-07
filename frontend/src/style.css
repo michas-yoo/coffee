@@ -21,7 +21,20 @@ label {
   margin-bottom: 30px !important;
 }
 
+.flexed {
+  display: flex;
+}
+
+.aic {
+  align-items: center;
+}
+
+.sb {
+  justify-content: space-between;
+}
+
 .ant-page-header {
+  padding-top: 0 !important;
   padding-left: 0 !important;
   padding-right: 0 !important;
 }
@@ -43,6 +56,15 @@ label {
 
 .ant-card-meta-title {
   white-space: pre-line !important;
+}
+
+.tab-bar .ant-tabs-nav::before {
+  display: none;
+}
+
+.tab-bar .ant-tabs-nav-list {
+  justify-content: space-between;
+  margin: 0 auto;
 }
 
 .login-container,
@@ -82,10 +104,6 @@ label {
 .move-leave-to {
   opacity: 0;
   transform: translateX(100px);
-}
-
-.move-leave-active {
-  position: absolute;
 }
 
 .move-enter-active,

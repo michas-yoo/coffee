@@ -45,8 +45,8 @@ function processResultWithCookie(result, res, req = {}) {
 
   const shopController = new ShopController(db, menuItemController, galleryController);
 
-  await setupTables(db, false);
-  await addDefaultData(db, false);
+  await setupTables(db);
+  await addDefaultData(db);
   printToConsole(db, false);
 
   app.use(cors({
@@ -123,7 +123,7 @@ function processResultWithCookie(result, res, req = {}) {
   });
 
   app.get("/get_menu/:shopId/:id", async (req, res) => {
-    const { shopId, id } = req.params;
+    const { id, shopId } = req.params;
     const result = await menuItemController.show({ id, shop_id: shopId });
     res.json(result);
   });

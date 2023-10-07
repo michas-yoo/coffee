@@ -126,12 +126,12 @@ export class User extends BaseEntity {
         },
         cookie: createRefreshToken(user.id),
       };
-    } catch (e) {
-      console.log(e);
+    } catch ({ message }) {
+      console.log(message);
       return {
         ok: false,
         data: null,
-        message: [e.message],
+        message: [message],
       };
     }
   }

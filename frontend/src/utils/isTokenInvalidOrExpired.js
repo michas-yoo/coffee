@@ -1,9 +1,9 @@
 import jwtDecode from "jwt-decode";
 
 export const isTokenInvalidOrExpired = (url, accessToken) => {
-  const ignoredUrls = ['/login', '/register', '/refresh_token'];
+  const ignoredUrls = new RegExp(/login|register|refresh_token/gi);
 
-  if (ignoredUrls.includes(url)) {
+  if (url.match(ignoredUrls)) {
     return false;
   }
 

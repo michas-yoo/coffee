@@ -18,7 +18,7 @@ const onClick = () => {
     hoverable
     :style="{
       width: '100%',
-      transitionDelay: `${0.08 * props.orderId}s`
+      transitionDelay: `${0.08 * props.orderNum}s`
     }"
     @click="onClick"
   >

@@ -14,10 +14,10 @@ const tableNames = [
   "modifier_types",
 ];
 
-export async function setupTables(db, run) {
-  if (!run) return;
+const allModifiers = new Array(20).fill('').map((_, i) => i + 1).join(',');
 
-  await db.exec(`CREATE TABLE users (
+export async function setupTables(db) {
+  await db.exec(`CREATE TABLE IF NOT EXISTS users (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     email TEXT UNIQUE NOT NULL,
     password TEXT NOT NULL,
@@ -25,7 +25,7 @@ export async function setupTables(db, run) {
     phone TEXT NOT NULL
   )`);
 
-  await db.exec(`CREATE TABLE products (
+  await db.exec(`CREATE TABLE IF NOT EXISTS products (
     id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL UNIQUE,
     photo TEXT NOT NULL,
@@ -35,17 +35,17 @@ export async function setupTables(db, run) {
     modifier_types TEXT
   )`);
 
-  await db.exec(`CREATE TABLE modifier_types (
+  await db.exec(`CREATE TABLE IF NOT EXISTS modifier_types (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT UNIQUE NOT NULL
   )`);
 
-  await db.exec(`CREATE TABLE statuses (
+  await db.exec(`CREATE TABLE IF NOT EXISTS statuses (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT UNIQUE NOT NULL
   )`);
 
-  await db.exec(`CREATE TABLE modifiers (
+  await db.exec(`CREATE TABLE IF NOT EXISTS modifiers (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     title TEXT UNIQUE NOT NULL,
     price INTEGER NOT NULL DEFAULT 0,
@@ -56,7 +56,7 @@ export async function setupTables(db, run) {
         ON DELETE CASCADE
   )`);
 
-  await db.exec(`CREATE TABLE shops (
+  await db.exec(`CREATE TABLE IF NOT EXISTS shops (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
     geo TEXT NOT NULL,
@@ -65,7 +65,7 @@ export async function setupTables(db, run) {
     poster TEXT NOT NULL
   )`);
 
-  await db.exec(`CREATE TABLE modifier_lacks (
+  await db.exec(`CREATE TABLE IF NOT EXISTS modifier_lacks (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     shop_id INTEGER NOT NULL,
     modifier_id INTEGER NOT NULL,
@@ -79,7 +79,7 @@ export async function setupTables(db, run) {
         ON DELETE CASCADE
   )`);
 
-  await db.exec(`CREATE TABLE gallery (
+  await db.exec(`CREATE TABLE IF NOT EXISTS gallery (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     photo TEXT NOT NULL,
     shop_id INTEGER NOT NULL,
@@ -89,7 +89,7 @@ export async function setupTables(db, run) {
         ON DELETE CASCADE
   )`);
 
-  await db.exec(`CREATE TABLE menu_items (
+  await db.exec(`CREATE TABLE IF NOT EXISTS menu_items (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     shop_id INTEGER NOT NULL,
     product_id INTEGER NOT NULL,
@@ -103,7 +103,7 @@ export async function setupTables(db, run) {
         ON DELETE CASCADE
   )`);
 
-  await db.exec(`CREATE TABLE orders (
+  await db.exec(`CREATE TABLE IF NOT EXISTS orders (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     shop_id INTEGER NOT NULL,
     user_id INTEGER NOT NULL,
@@ -132,58 +132,12 @@ export async function setupTables(db, run) {
   )`);
 }
 
-export async function addDefaultData(db, run) {
-  if (!run) return;
-
-  await db.run(`INSERT INTO products VALUES (
-    null, "Классика", "http://localhost:3000/static/cup_1.png", 69, 1, 1, "1,2,3,4,5"
-  )`);
-  await db.run(`INSERT INTO products VALUES (
-    null, "Мятная свежесть", "http://localhost:3000/static/cup_2.png", 79, 1, 1, "1,2,3,4,5"
-  )`);
-  await db.run(`INSERT INTO products VALUES (
-    null, "Малиновый латте", "http://localhost:3000/static/cup_3.png", 89, 1, 1, "1,2,3,4,5"
-  )`);
-  await db.run(`INSERT INTO products VALUES (
-    null, "Дымный эспрессо", "http://localhost:3000/static/cup_4.png", 69, 1, 1, "1,2,3,4,5"
-  )`);
-  await db.run(`INSERT INTO products VALUES (
-    null, "Черничное наслаждение", "http://localhost:3000/static/cup_5.png", 79, 1, 1, "1,2,3,4,5"
-  )`);
-  await db.run(`INSERT INTO products VALUES (
-    null, "Солнечный латте", "http://localhost:3000/static/cup_6.png", 89, 1, 1, "1,2,3,4,5"
-  )`);
-  await db.run(`INSERT INTO products VALUES (
-    null, "Ягодный бум", "http://localhost:3000/static/cup_7.png", 89, 1, 1, "1,2,3,4,5"
-  )`);
-  await db.run(`INSERT INTO products VALUES (
-    null, "Океанский бриз", "http://localhost:3000/static/cup_8.png", 79, 1, 1, "1,2,3,4,5"
-  )`);
-
-  await db.run(`INSERT INTO shops VALUES (
-    null, "Кофемастер Сокол", "55.8052135 37.5164965", "09:00", "21:00", 
-    "http://localhost:3000/static/shop_1.png"
-  )`);
-  await db.run(`INSERT INTO shops VALUES (
-    null, "Кофемастер Беговая", "55.773735 37.5443432", "09:00", "21:00", 
-    "http://localhost:3000/static/shop_2.png"
-  )`);
-  await db.run(`INSERT INTO shops VALUES (
-    null, "Кофемастер 1905 года", "55.7655558 37.5594906", "09:00", "21:00", 
-    "http://localhost:3000/static/shop_3.png"
-  )`);
-  await db.run(`INSERT INTO shops VALUES (
-    null, "Кофемастер Сокол", "55.8052135 37.5164965", "09:00", "21:00", 
-    "http://localhost:3000/static/shop_4.png"
-  )`);
-  await db.run(`INSERT INTO shops VALUES (
-    null, "Кофемастер Белорусская", "55.7781197 37.57902", "09:00", "21:00", 
-    "http://localhost:3000/static/shop_5.png"
-  )`);
-  await db.run(`INSERT INTO shops VALUES (
-    null, "Кофемастер Китай-город", "55.7580277 37.6346813", "09:00", "21:00", 
-    "http://localhost:3000/static/shop_6.png"
-  )`);
+export async function addDefaultData(db) {
+  // Run migrations only for the first time
+  const dataInDB = await db.get(`SELECT COUNT(*) as count FROM statuses`);
+  if (dataInDB.count) {
+    return;
+  }
 
   await db.run(`INSERT INTO statuses VALUES (null, "pending")`);
   await db.run(`INSERT INTO statuses VALUES (null, "in_progress")`);
@@ -218,6 +172,56 @@ export async function addDefaultData(db, run) {
   await db.run(`INSERT INTO modifiers VALUES (null, "Шоколадная крошка", 20, 4)`);
   await db.run(`INSERT INTO modifiers VALUES (null, "Крошка из печенья", 20, 4)`);
   await db.run(`INSERT INTO modifiers VALUES (null, "Карамельный соус", 20, 4)`);
+
+  await db.run(`INSERT INTO products VALUES (
+    null, "Классика", "http://localhost:3000/static/cup_1.png", 69, 1, 1, "${allModifiers}"
+  )`);
+  await db.run(`INSERT INTO products VALUES (
+    null, "Мятная свежесть", "http://localhost:3000/static/cup_2.png", 79, 1, 1, "${allModifiers}"
+  )`);
+  await db.run(`INSERT INTO products VALUES (
+    null, "Малиновый латте", "http://localhost:3000/static/cup_3.png", 89, 1, 1, "${allModifiers}"
+  )`);
+  await db.run(`INSERT INTO products VALUES (
+    null, "Дымный эспрессо", "http://localhost:3000/static/cup_4.png", 69, 1, 1, "${allModifiers}"
+  )`);
+  await db.run(`INSERT INTO products VALUES (
+    null, "Черничное наслаждение", "http://localhost:3000/static/cup_5.png", 79, 1, 1, "${allModifiers}"
+  )`);
+  await db.run(`INSERT INTO products VALUES (
+    null, "Солнечный латте", "http://localhost:3000/static/cup_6.png", 89, 1, 1, "${allModifiers}"
+  )`);
+  await db.run(`INSERT INTO products VALUES (
+    null, "Ягодный бум", "http://localhost:3000/static/cup_7.png", 89, 1, 1, "${allModifiers}"
+  )`);
+  await db.run(`INSERT INTO products VALUES (
+    null, "Океанский бриз", "http://localhost:3000/static/cup_8.png", 79, 1, 1, "${allModifiers}"
+  )`);
+
+  await db.run(`INSERT INTO shops VALUES (
+    null, "Кофемастер Сокол", "55.8052135 37.5164965", "09:00", "21:00", 
+    "http://localhost:3000/static/shop_1.png"
+  )`);
+  await db.run(`INSERT INTO shops VALUES (
+    null, "Кофемастер Беговая", "55.773735 37.5443432", "09:00", "21:00", 
+    "http://localhost:3000/static/shop_2.png"
+  )`);
+  await db.run(`INSERT INTO shops VALUES (
+    null, "Кофемастер 1905 года", "55.7655558 37.5594906", "09:00", "21:00", 
+    "http://localhost:3000/static/shop_3.png"
+  )`);
+  await db.run(`INSERT INTO shops VALUES (
+    null, "Кофемастер Сокол", "55.8052135 37.5164965", "09:00", "21:00", 
+    "http://localhost:3000/static/shop_4.png"
+  )`);
+  await db.run(`INSERT INTO shops VALUES (
+    null, "Кофемастер Белорусская", "55.7781197 37.57902", "09:00", "21:00", 
+    "http://localhost:3000/static/shop_5.png"
+  )`);
+  await db.run(`INSERT INTO shops VALUES (
+    null, "Кофемастер Китай-город", "55.7580277 37.6346813", "09:00", "21:00", 
+    "http://localhost:3000/static/shop_6.png"
+  )`);
 
   await db.run(`INSERT INTO menu_items VALUES (null, 1, 1)`);
   await db.run(`INSERT INTO menu_items VALUES (null, 1, 2)`);

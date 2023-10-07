@@ -1,5 +1,5 @@
 import { appStore } from "../store.js";
-import { isTokenInvalidOrExpired } from "../utils/isTokenBad.js";
+import { isTokenInvalidOrExpired } from "../utils/isTokenInvalidOrExpired.js";
 
 const API_BASE_URL = "http://localhost:3000";
 
@@ -12,16 +12,20 @@ const fetchCall = async (url, options = {}) => {
   options.headers["Content-Type"] = "application/json";
 
   try {
-    await processToken(url);
+    const refreshResult = await processToken(url);
+
+    if (!refreshResult.ok) {
+      return Promise.reject(refreshResult);
+    }
 
     if (appStore.accessToken) {
       options.headers["Authorization"] = `Bearer ${appStore.accessToken}`;
     }
 
     return await fetch(url, options).then(r => r.json());
-  } catch (e) {
-    console.log(e);
-    return Promise.reject({ ok: false, message: e.message });
+  } catch ({ message }) {
+    console.log(message);
+    return Promise.reject({ ok: false, message });
   }
 };
 
@@ -29,22 +33,29 @@ const processToken = async (url) => {
   const shouldUpdateToken = isTokenInvalidOrExpired(url, appStore.accessToken);
 
   if (!shouldUpdateToken) {
-    return;
+    return { ok: true };
   }
 
   try {
+    // We use basic fetch not to cause recursion
     const response = await fetch(`${API_BASE_URL}/refresh_token`, {
       method: "POST",
       credentials: "include",
     })
       .then((res) => res.json());
+
+    if (!response.ok) {
+      return Promise.reject(response);
+    }
+
     appStore.username = response.data.username;
     appStore.accessToken = response.data.accessToken;
-  } catch (e) {
-    console.log(e);
-    return Promise.reject({ ok: false, message: e.message });
+    return Promise.resolve(response);
+  } catch ({ message }) {
+    console.log(message);
+    return Promise.reject({ ok: false, message });
   }
-}
+};
 
 const get = async (url) => {
   try {
@@ -91,6 +102,8 @@ const getShop = async (id) => get(`/get_shops/${id}`);
 
 const getGallery = async (id) => get(`/get_gallery/${id}`);
 
+const getProductInfo = async ({ id, shopId }) => get(`/get_menu/${shopId}/${id}`);
+
 const methods = {
   login,
   getShop,
@@ -98,6 +111,7 @@ const methods = {
   register,
   getGallery,
   refreshToken,
+  getProductInfo,
 };
 
 export default methods;

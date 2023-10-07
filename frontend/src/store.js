@@ -3,7 +3,9 @@ import { getGreeting } from "./utils/getGreeting.js";
 
 export const appStore = reactive({
   time: getGreeting(),
-  loading: true,
+  loading: false,
   username: "",
   accessToken: "",
+  currentPage: "main",
+  selectedProductId: 0,
 });

@@ -13,7 +13,7 @@ const props = defineProps({
         v-for="(product, i) in props.data"
         :key="product.id"
         :data="product"
-        :order-id="i"
+        :order-num="i"
       />
     </transition-group>
   </div>

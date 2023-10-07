@@ -11,12 +11,12 @@ export class BaseController {
         data,
         message: null,
       };
-    } catch (e) {
-      console.log(e);
+    } catch ({ message }) {
+      console.log(message);
       return {
         ok: false,
         data: null,
-        message: e.message,
+        message,
       };
     }
   }
@@ -29,12 +29,12 @@ export class BaseController {
         data,
         message: null,
       };
-    } catch (e) {
-      console.log(e);
+    } catch ({ message }) {
+      console.log(message);
       return {
         ok: false,
         data: null,
-        message: e.message,
+        message,
       };
     }
   }
@@ -56,12 +56,12 @@ export class BaseController {
         data: result,
         message: null,
       };
-    } catch (e) {
-      console.log(e);
+    } catch ({ message }) {
+      console.log(message);
       return {
         ok: false,
         data: null,
-        message: e.message,
+        message,
       };
     }
   }

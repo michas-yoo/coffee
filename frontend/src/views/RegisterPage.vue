@@ -1,11 +1,12 @@
 <script setup>
-import { reactive } from "vue";
 import { Modal } from "ant-design-vue";
+import { reactive } from "vue";
 import { useRouter } from "vue-router";
 import { makeRequest } from "../api/apiClient.js";
+import { displayError } from "../utils/displayError.js";
+import { NETWORK_ERROR_TEXT } from "../constants.js";
 import RegisterStepOne from "./RegisterStepOne.vue";
 import RegisterStepTwo from "./RegisterStepTwo.vue";
-import { displayError } from "../utils/displayError.js";
 
 const MAIN_STEP = "main";
 const PROFILE_STEP = "profile";
@@ -55,15 +56,18 @@ const sendRegisterRequest = async (data) => {
       ...registration.profileInfo,
     });
     onSuccess(response);
-  } catch (e) {
-    displayError(e);
+  } catch ({ message }) {
+    displayError(message);
+    if (message === NETWORK_ERROR_TEXT) {
+      return router.push({ name: "bad-request" });
+    }
   }
 };
 </script>
 
 <template>
-  <ALayout class="registration-container">
-    <transition-group class="transition-container" appear tag="div" name="fade">
+  <transition class="transition-container" name="move" appear>
+    <ALayout class="registration-container">
       <RegisterStepOne
         @finish="onStepOneFinished"
         :data="registration.mainInfo"
@@ -75,8 +79,8 @@ const sendRegisterRequest = async (data) => {
         @finish="sendRegisterRequest"
         :data="registration.profileInfo"
       />
-    </transition-group>
-  </ALayout>
+    </ALayout>
+  </transition>
 </template>
 
 <style scoped>

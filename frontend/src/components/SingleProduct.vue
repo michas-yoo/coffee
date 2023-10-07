@@ -1,16 +1,21 @@
 <script setup>
+import { appStore } from "../store.js";
+
 const props = defineProps({
   data: Object,
-  orderId: Number,
+  orderNum: Number,
 });
+
+const onProductSelect = () => appStore.selectedProductId = props.data.id;
 </script>
 
 <template>
   <ACard
     hoverable
     :style="{
-      transitionDelay: `${0.08 * props.orderId}s`
+      transitionDelay: `${0.08 * props.orderNum}s`
     }"
+    @click="onProductSelect"
   >
     <template #cover>
       <div

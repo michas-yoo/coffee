@@ -1,5 +1,4 @@
 <script setup>
-import { appStore } from "../store.js";
 import { onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { makeRequest } from "../api/apiClient.js";
@@ -13,8 +12,6 @@ onMounted(async () => {
   } catch (e) {
     console.log(e);
   }
-
-  appStore.loading = false;
 });
 </script>
 

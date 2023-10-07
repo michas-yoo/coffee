@@ -6,5 +6,5 @@ export const displayError = (data) => {
     return;
   }
 
-  notification.error({ message: data });
+  notification.error({ message: data.message });
 };

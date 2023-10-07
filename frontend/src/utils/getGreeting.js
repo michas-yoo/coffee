@@ -13,6 +13,7 @@ export function getGreeting() {
     return "Доброй ночи 🌝";
   }
 
+  // C 17 до 21 – вечер
   if (isBetween(currentHour, 17, 21)) {
     return "Добрый вечер 🌚";
   }

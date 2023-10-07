@@ -1,15 +1,20 @@
 <script setup>
-import ProductsGrid from "../components/ProductsGrid.vue";
+import { appStore } from "../store.js";
 import { makeRequest } from "../api/apiClient.js";
 import { notification } from "ant-design-vue";
-import { onMounted, reactive } from "vue";
+import { NETWORK_ERROR_TEXT } from "../constants.js";
 import { useRoute, useRouter } from "vue-router";
+import { observeIntersection } from "../utils/observeIntersection.js";
+import { computed, onMounted, reactive, ref } from "vue";
 import { ArrowLeftOutlined, ClockCircleOutlined } from "@ant-design/icons-vue";
+import ProductOrder from "./ProductOrder.vue";
+import ProductsGrid from "../components/ProductsGrid.vue";
 
 const route = useRoute();
 const router = useRouter();
+const backContainer = ref(null);
 
-const currentShop = reactive({
+const store = reactive({
   data: {
     id: 0,
     geo: "",
@@ -20,24 +25,42 @@ const currentShop = reactive({
     open_time: "",
     close_time: "",
   },
+  menu: [],
 });
+
+const selectedProductId = computed(() => appStore.selectedProductId);
 
 onMounted(async () => {
   const routeId = route.params.id;
+  appStore.loading = true;
 
   try {
-    currentShop.data = await makeRequest("getShop", routeId);
+    store.data = await makeRequest("getShop", routeId);
+    store.menu = store.data.menu;
+    store.data.menu = [];
+    appStore.loading = false;
   } catch ({ message }) {
+    appStore.loading = false;
     notification.error({ message });
-    if (message === "Failed to fetch") {
+
+    if (message === NETWORK_ERROR_TEXT) {
       await router.push({ name: "bad-request" });
+    } else if (message?.[0] === "User not found") {
+      await router.push({ name: "login" });
     }
+
+    return;
   }
+
+  observeIntersection(backContainer.value, () => {
+    store.data.menu = store.menu;
+  }, true);
 });
 </script>
 
 <template>
-  <ASpin size="large" v-if="!currentShop.data.id" />
+  <div class="back-container" ref="backContainer"></div>
+  <ASpin size="large" v-if="!store.data.id" />
   <ALayout v-else class="shop-page-container">
     <APageHeader title=" " @back="() => router.push({ name: 'main' })">
       <template #backIcon>
@@ -48,31 +71,38 @@ onMounted(async () => {
     </APageHeader>
 
     <ACarousel class="photo-carousel" autoplay>
-      <img :src="currentShop.data.poster" :alt="currentShop.data.name">
-      <div v-for="photo in currentShop.data.gallery" :key="photo.id">
+      <img :src="store.data.poster" :alt="store.data.name">
+      <div v-for="photo in store.data.gallery" :key="photo.id">
         <img :src="photo.photo" :alt="`Photo ${photo.id}`">
       </div>
     </ACarousel>
 
     <div class="empty-space" />
 
-    <ATypographyTitle>{{ currentShop.data.name }}</ATypographyTitle>
+    <ATypographyTitle>{{ store.data.name }}</ATypographyTitle>
 
     <ACard title="Часы работы и расположение" :bordered="false">
       <ACardGrid style="width: 50%">
         <p>
           <ClockCircleOutlined />
-          С {{ currentShop.data.open_time }} до {{ currentShop.data.close_time }}
+          С {{ store.data.open_time }} до {{ store.data.close_time }}
         </p>
       </ACardGrid>
       <ACardGrid style="width: 50%">
-        <p>{{ currentShop.data.geo }}</p>
+        <p>{{ store.data.geo }}</p>
       </ACardGrid>
     </ACard>
 
     <ATypographyTitle :level="2">Меню</ATypographyTitle>
 
-    <ProductsGrid :data="currentShop.data.menu" />
+    <ProductsGrid :data="store.data.menu" />
+    <ASkeleton v-if="!store.data.menu.length" active :size="50" />
+
+    <ProductOrder
+      v-if="selectedProductId"
+      :id="selectedProductId"
+      :shop-id="store.data.id"
+    />
   </ALayout>
 </template>
 
@@ -92,7 +122,7 @@ onMounted(async () => {
 }
 
 .empty-space {
-  height: 230px;
+  height: 250px;
 }
 
 img {
@@ -105,5 +135,13 @@ img {
   max-height: 350px;
   object-fit: cover;
   object-position: center;
+}
+
+.back-container {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  width: 32px;
+  height: 32px;
 }
 </style>
