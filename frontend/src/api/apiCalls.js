@@ -1,4 +1,5 @@
 import { appStore } from "../store.js";
+import { isTokenInvalidOrExpired } from "../utils/isTokenBad.js";
 
 const API_BASE_URL = "http://localhost:3000";
 
@@ -10,14 +11,40 @@ const fetchCall = async (url, options = {}) => {
   options.credentials = "include";
   options.headers["Content-Type"] = "application/json";
 
-  if (appStore.accessToken) {
-    options.headers["Authorization"] = `Bearer ${appStore.accessToken}`;
+  try {
+    await processToken(url);
+
+    if (appStore.accessToken) {
+      options.headers["Authorization"] = `Bearer ${appStore.accessToken}`;
+    }
+
+    return await fetch(url, options).then(r => r.json());
+  } catch (e) {
+    console.log(e);
+    return Promise.reject({ ok: false, message: e.message });
+  }
+};
+
+const processToken = async (url) => {
+  const shouldUpdateToken = isTokenInvalidOrExpired(url, appStore.accessToken);
+
+  if (!shouldUpdateToken) {
+    return;
   }
 
-  return await fetch(url, options)
-    .then(res => res.json())
-    .catch((error) => ({ ok: false, message: error.messages }));
-};
+  try {
+    const response = await fetch(`${API_BASE_URL}/refresh_token`, {
+      method: "POST",
+      credentials: "include",
+    })
+      .then((res) => res.json());
+    appStore.username = response.data.username;
+    appStore.accessToken = response.data.accessToken;
+  } catch (e) {
+    console.log(e);
+    return Promise.reject({ ok: false, message: e.message });
+  }
+}
 
 const get = async (url) => {
   try {
@@ -30,7 +57,7 @@ const get = async (url) => {
     return Promise.resolve(result.data);
   } catch (e) {
     console.log(e);
-    return Promise.reject(e.message);
+    return Promise.reject(e);
   }
 };
 
@@ -48,7 +75,7 @@ const post = async (url, payload = {}) => {
     return Promise.resolve(result.data);
   } catch (e) {
     console.log(e);
-    return Promise.reject(e.message);
+    return Promise.reject(e);
   }
 };
 

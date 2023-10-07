@@ -1,10 +1,13 @@
 <script setup>
 import { appStore } from "../store.js";
-import { onMounted, reactive } from "vue";
-import { notification } from "ant-design-vue";
+import { useRouter } from "vue-router";
 import { makeRequest } from "../api/apiClient.js";
-import ShopsGrid from "../components/ShopsGrid.vue";
+import { notification } from "ant-design-vue";
 import { BellOutlined } from "@ant-design/icons-vue";
+import { onMounted, reactive } from "vue";
+import ShopsGrid from "../components/ShopsGrid.vue";
+
+const router = useRouter();
 
 const data = reactive({
   shops: [],
@@ -13,8 +16,12 @@ const data = reactive({
 onMounted(async () => {
   try {
     data.shops = await makeRequest("getShops");
-  } catch (message) {
+    appStore.loading = false;
+  } catch ({ message }) {
     notification.error({ message });
+    if (message === "Failed to fetch") {
+      await router.push({ name: "bad-request" });
+    }
   }
 });
 </script>
@@ -22,6 +29,7 @@ onMounted(async () => {
 <template>
   <ALayout>
     <APageHeader
+      class="header-column"
       :title="appStore.time"
       :sub-title="appStore.username"
     >

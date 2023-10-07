@@ -1,12 +1,18 @@
 <script setup>
-import { reactive } from "vue";
 import { appStore } from "../store.js";
 import { useRouter } from "vue-router";
 import { makeRequest } from "../api/apiClient.js";
 import { displayError } from "../utils/displayError.js";
+import { onMounted, reactive } from "vue";
 import { UserOutlined, LockOutlined } from "@ant-design/icons-vue";
 
 const router = useRouter();
+
+onMounted(() => {
+  if (appStore.accessToken) {
+    return router.push({ name: "main" });
+  }
+});
 
 const formState = reactive({
   email: "",

@@ -1,6 +1,7 @@
 <script setup>
 import ProductsGrid from "../components/ProductsGrid.vue";
 import { makeRequest } from "../api/apiClient.js";
+import { notification } from "ant-design-vue";
 import { onMounted, reactive } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { ArrowLeftOutlined, ClockCircleOutlined } from "@ant-design/icons-vue";
@@ -23,7 +24,15 @@ const currentShop = reactive({
 
 onMounted(async () => {
   const routeId = route.params.id;
-  currentShop.data = await makeRequest("getShop", routeId);
+
+  try {
+    currentShop.data = await makeRequest("getShop", routeId);
+  } catch ({ message }) {
+    notification.error({ message });
+    if (message === "Failed to fetch") {
+      await router.push({ name: "bad-request" });
+    }
+  }
 });
 </script>
 

@@ -32,6 +32,11 @@ label {
   background: transparent !important;
 }
 
+.header-column .ant-page-header-heading-left {
+  flex-direction: column;
+  align-items: flex-start;
+}
+
 .ant-card {
   display: grid;
 }

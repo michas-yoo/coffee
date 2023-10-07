@@ -27,6 +27,11 @@ const router = createRouter({
       name: "shop",
       component: () => import("./views/ShopPage.vue"),
     },
+    {
+      path: "/bad-request",
+      name: "bad-request",
+      component: () => import("./views/BadResponsePage.vue"),
+    },
   ],
 });
 
