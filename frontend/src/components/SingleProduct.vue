@@ -1,19 +1,19 @@
 <script setup>
 import { appStore } from "../store.js";
 
-const props = defineProps({
+const { data, orderNum } = defineProps({
   data: Object,
   orderNum: Number,
 });
 
-const onProductSelect = () => appStore.selectedProductId = props.data.id;
+const onProductSelect = () => appStore.selectedProductId = data.id;
 </script>
 
 <template>
   <ACard
     hoverable
     :style="{
-      transitionDelay: `${0.08 * props.orderNum}s`
+      transitionDelay: `${0.08 * orderNum}s`
     }"
     @click="onProductSelect"
   >
@@ -21,13 +21,13 @@ const onProductSelect = () => appStore.selectedProductId = props.data.id;
       <div
         class="poster"
         :style="{
-        backgroundImage: `url(${props.data.photo})`,
+        backgroundImage: `url(${data.photo})`,
       }"
       />
     </template>
-    <ACardMeta :title="props.data.name">
+    <ACardMeta :title="data.name">
       <template #description>
-        <ATypographyText type="success">{{ props.data.price }}₽</ATypographyText>
+        <ATypographyText type="success">{{ data.price }}₽</ATypographyText>
       </template>
     </ACardMeta>
   </ACard>

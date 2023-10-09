@@ -32,8 +32,8 @@ export class MenuItem extends BaseEntity {
 
     if (!data) return data;
 
-    const modifier_titles = await this.db.all(`
-      SELECT name FROM modifier_types
+    const modifier_types = await this.db.all(`
+      SELECT * FROM modifier_types
       WHERE id in (${data.modifier_types})
     `);
 
@@ -45,7 +45,7 @@ export class MenuItem extends BaseEntity {
     return {
       ...data,
       modifiers,
-      modifier_titles: modifier_titles.map((el) => el.name),
+      modifier_types,
     };
   }
 }

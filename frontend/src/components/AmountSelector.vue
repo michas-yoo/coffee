@@ -2,23 +2,23 @@
 import { ref } from "vue";
 
 const emit = defineEmits(["update"]);
-const props = defineProps({
+const { min, max, initial } = defineProps({
   min: Number,
   max: Number,
   initial: Number,
 });
 
-const value = ref(props.initial);
+const value = ref(initial);
 
 const onIncrease = () => {
-  value.value = Math.min(value.value + 1, props.max);
+  value.value = Math.min(value.value + 1, max);
   emit("update", value.value);
-}
+};
 
 const onDecrease = () => {
-  value.value = Math.max(value.value - 1, props.min);
+  value.value = Math.max(value.value - 1, min);
   emit("update", value);
-}
+};
 </script>
 
 <template>

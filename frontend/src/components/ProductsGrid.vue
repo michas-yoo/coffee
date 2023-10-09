@@ -1,7 +1,7 @@
 <script setup>
 import SingleProduct from "./SingleProduct.vue";
 
-const props = defineProps({
+const { data } = defineProps({
   data: [Object],
 });
 </script>
@@ -10,7 +10,7 @@ const props = defineProps({
   <div class="products-container">
     <transition-group appear name="move">
       <SingleProduct
-        v-for="(product, i) in props.data"
+        v-for="(product, i) in data"
         :key="product.id"
         :data="product"
         :order-num="i"

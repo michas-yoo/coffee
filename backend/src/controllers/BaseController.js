@@ -3,9 +3,12 @@ export class BaseController {
     this.model = new model(db);
   }
 
-  async index(options) {
+  async index(options = {}, whereIn = false) {
+    const findMethod = whereIn ? 'findWhereIn' : 'findAll';
+
+    console.log(findMethod)
     try {
-      const data = await this.model.findAll(options) || [];
+      const data = await this.model[findMethod](options) || [];
       return {
         ok: true,
         data,

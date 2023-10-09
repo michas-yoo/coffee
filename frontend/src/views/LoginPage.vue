@@ -25,7 +25,7 @@ const submitForm = async (data) => {
   try {
     const response = await makeRequest("login", data);
     onSuccess(response);
-  } catch ({ message }) {
+  } catch (message) {
     displayError(message);
 
     if (message === NETWORK_ERROR_TEXT) {

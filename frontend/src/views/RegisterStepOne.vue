@@ -2,11 +2,11 @@
 import { reactive } from "vue";
 import { LockOutlined, UserOutlined } from "@ant-design/icons-vue";
 
-const props = defineProps({
+const { data } = defineProps({
   data: Object,
 });
 
-const formState = reactive(props.data);
+const formState = reactive(data);
 
 const emit = defineEmits(["finish"]);
 

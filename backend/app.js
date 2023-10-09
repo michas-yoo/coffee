@@ -8,6 +8,7 @@ import bodyParser from "body-parser";
 import cookieParser from "cookie-parser";
 import { UserController } from "./src/controllers/UserController.js";
 import { ShopController } from "./src/controllers/ShopController.js";
+import { CartController } from "./src/controllers/CartController.js";
 import { OrderController } from "./src/controllers/OrderController.js";
 import { GalleryController } from "./src/controllers/GalleryController.js";
 import { MenuItemController } from "./src/controllers/MenuItemController.js";
@@ -44,6 +45,7 @@ function processResultWithCookie(result, res, req = {}) {
   const modifierTypeController = new ModifierTypeController(db);
 
   const shopController = new ShopController(db, menuItemController, galleryController);
+  const cartController = new CartController(db, modifierController);
 
   await setupTables(db);
   await addDefaultData(db);
@@ -85,12 +87,14 @@ function processResultWithCookie(result, res, req = {}) {
   app.get("/", async (req, res) => {
     res.send("Hello world");
   });
+
   app.get("/refresh_token", async (req, res) => {
     res.send("Hello world");
   });
 
   app.get("/get_shops", async (req, res) => {
     const result = await shopController.index();
+    console.log(result);
     res.json(result);
   });
 
@@ -141,6 +145,12 @@ function processResultWithCookie(result, res, req = {}) {
     res.json(result);
   });
 
+  app.get("/cart", async (req, res) => {
+    const { id } = req.payload;
+    const result = await cartController.index({ user_id: id });
+    res.json(result);
+  });
+
   // === POST REQUESTS ===
 
   app.post("/register", async (req, res) => {
@@ -159,6 +169,16 @@ function processResultWithCookie(result, res, req = {}) {
     const token = req.cookies[REFRESH_COOKIE_NAME];
     const result = await userController.refreshToken(token);
     processResultWithCookie(result, res, req);
+
+    res.json(result);
+  });
+
+  app.post("/cart", async (req, res) => {
+    const { id } = req.payload;
+    const result = await cartController.create({
+      user_id: id,
+      ...req.body,
+    });
 
     res.json(result);
   });

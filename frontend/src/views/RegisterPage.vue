@@ -56,7 +56,7 @@ const sendRegisterRequest = async (data) => {
       ...registration.profileInfo,
     });
     onSuccess(response);
-  } catch ({ message }) {
+  } catch (message) {
     displayError(message);
     if (message === NETWORK_ERROR_TEXT) {
       return router.push({ name: "bad-request" });

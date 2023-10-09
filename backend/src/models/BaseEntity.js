@@ -18,6 +18,15 @@ export class BaseEntity {
     return this.db.all(`SELECT * FROM ${this.tableName}${condition}`);
   }
 
+  findWhereIn(option = {}) {
+    if (!Object.keys(option).length) {
+      return;
+    }
+
+    const key = Object.keys(option)[0];
+    return this.db.all(`SELECT * FROM ${this.tableName} WHERE ${key} in (${option[key]})`);
+  }
+
   findOne(options) {
     if (!Object.keys(options).length) {
       return null;

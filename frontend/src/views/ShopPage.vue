@@ -52,9 +52,13 @@ onMounted(async () => {
     return;
   }
 
-  observeIntersection(backContainer.value, () => {
-    store.data.menu = store.menu;
-  }, true);
+  const showMenuCallback = () => store.data.menu = store.menu;
+
+  if (window.innerHeight < 800) {
+    observeIntersection(backContainer.value, showMenuCallback, true);
+  } else {
+    showMenuCallback();
+  }
 });
 </script>
 

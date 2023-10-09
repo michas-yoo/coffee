@@ -3,13 +3,13 @@ import { useRouter } from "vue-router";
 
 const router = useRouter();
 
-const props = defineProps({
+const { data, orderNum } = defineProps({
   data: Object,
-  orderId: Number,
+  orderNum: Number,
 });
 
 const onClick = () => {
-  router.push({ name: "shop", params: { id: props.data.id } });
+  router.push({ name: "shop", params: { id: data.id } });
 };
 </script>
 
@@ -18,16 +18,16 @@ const onClick = () => {
     hoverable
     :style="{
       width: '100%',
-      transitionDelay: `${0.08 * props.orderNum}s`
+      transitionDelay: `${0.08 * orderNum}s`
     }"
     @click="onClick"
   >
     <template #cover>
-      <img :src="props.data.poster" :alt="props.data.name">
+      <img :src="data.poster" :alt="data.name">
     </template>
-    <ACardMeta :title="props.data.name">
+    <ACardMeta :title="data.name">
       <template #description>
-        {{ props.data.geo }}
+        {{ data.geo }}
       </template>
     </ACardMeta>
   </ACard>

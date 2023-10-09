@@ -2,11 +2,13 @@
 import { appStore } from "../store.js";
 import { makeRequest } from "../api/apiClient.js";
 import { notification } from "ant-design-vue";
+import { mapModifiers } from "../utils/mapModifiers.js";
+import { DEFAULT_PRODUCT_ID } from "../constants.js";
 import { computed, onMounted, reactive } from "vue";
 import AmountSelector from "../components/AmountSelector.vue";
-import { MODIFIERS, DEFAULT_PRODUCT_ID } from "../constants.js";
+import ProductModifier from "../components/ProductModifier.vue";
 
-const props = defineProps({
+const { id, shopId } = defineProps({
   id: Number,
   shopId: Number,
 });
@@ -15,48 +17,70 @@ const store = reactive({
   data: {
     id: 0,
     name: "",
-    photo: "",
     price: 0,
+    photo: "",
     modifiers: {},
     can_be_iced: 0,
-    has_modifiers: 0,
     modifier_types: [],
-    modifier_titles: [],
   },
   sum: 0,
   amount: 1,
-  notes: "",
+  note: "",
+  activeModifiers: {},
 });
 
-const finalSum = computed(() => store.sum * store.amount);
+const finalSum = computed(() => {
+  const modifiersSum = Object.values(store.activeModifiers)
+    .reduce((sum, current) => {
+      return sum + current.price;
+    }, 0);
+
+  return store.sum * store.amount + modifiersSum;
+});
 
 const onUpdateAmount = (newValue) => store.amount = newValue;
+
+const onUpdateModifier = ({ ids, name, price }) => {
+  store.activeModifiers[name] = { ids, price };
+};
 
 const onClose = () => {
   appStore.selectedProductId = DEFAULT_PRODUCT_ID;
 };
 
+const onAddToCart = () => {
+  const selectedModifierIds = Object.values(store.activeModifiers)
+    .map((modifier) => modifier.ids)
+    .filter((modifier) => modifier)
+    .join(",");
+
+  const newCartItem = {
+    productId: store.data.id,
+    modifierIds: selectedModifierIds,
+    price: finalSum.value,
+    note: store.note,
+  };
+
+  // TODO: тут делаем запрос на бек
+  console.log(newCartItem);
+};
+
 onMounted(async () => {
   try {
     store.data = await makeRequest("getProductInfo", {
-      id: props.id,
-      shopId: props.shopId,
+      id,
+      shopId,
     });
-    const modifiers = store.data.modifiers;
-    // TODO: подумай как реализовать модификаторы
-    store.data.modifiers = {
-      size: modifiers.filter((mod) => mod.type === MODIFIERS.SIZE),
-      milk: modifiers.filter((mod) => mod.type === MODIFIERS.MILK).map((mod) => ({ ...mod, checked: false })),
-      syrup: modifiers.filter((mod) => mod.type === MODIFIERS.SYRUP).map((mod) => ({ ...mod, checked: false })),
-      topping: modifiers.filter((mod) => mod.type === MODIFIERS.TOPPING).map((mod) => ({ ...mod, checked: false })),
-    };
+
+    store.data.modifiers = mapModifiers(store.data);
     store.sum = store.data.price;
+
+    delete store.data.modifier_types;
   } catch (e) {
     console.log(e);
     notification.error({ message: e });
   }
 });
-// TODO: выдели компонент для фильтра, вынеси данные в него
 </script>
 
 <template>
@@ -86,62 +110,20 @@ onMounted(async () => {
       <AButton>Со льдом</AButton>
     </div>
 
-    <div class="size-selection">
-      <ADivider />
-      <ATypographyTitle :level="3">Размер</ATypographyTitle>
-      <AButton size="large" v-for="size in store.data.modifiers.size" :key="size.id">
-        <span style="font-weight: bold">{{ size.title }}, +{{ size.price }}₽</span>
-      </AButton>
-    </div>
+    <ProductModifier
+      v-for="modifier in store.data.modifiers"
+      :key="modifier.id"
+      :data="modifier"
+      @modifier-update="onUpdateModifier"
+    />
 
-    <div class="milk-selection" v-if="store.data.modifiers.milk">
-      <ADivider />
-      <ATypographyTitle :level="3">Молоко</ATypographyTitle>
-      <div
-        :key="milk.id"
-        v-for="milk in store.data.modifiers.milk"
-      >
-        <ARadio v-model:cheched="milk.checked">
-          {{ milk.title }}, +{{ milk.price }}₽
-        </ARadio>
-      </div>
-    </div>
-
-
-    <div class="syrup-selection" v-if="store.data.modifiers.syrup">
-      <ADivider />
-      <ATypographyTitle :level="3">Сироп</ATypographyTitle>
-      <div
-        :key="syrup.id"
-        v-for="syrup in store.data.modifiers.syrup"
-      >
-        <ARadio v-model:cheched="syrup.checked">
-          {{ syrup.title }}, +{{ syrup.price }}₽
-        </ARadio>
-      </div>
-    </div>
-
-
-    <div class="topping-selection" v-if="store.data.modifiers.topping">
-      <ADivider />
-      <ATypographyTitle :level="3">Топпинг</ATypographyTitle>
-      <div
-        :key="topping.id"
-        v-for="topping in store.data.modifiers.topping"
-      >
-        <ARadio v-model:cheched="topping.checked">
-          {{ topping.title }}, +{{ topping.price }}₽
-        </ARadio>
-      </div>
-    </div>
-
-    <div class="notes-container">
+    <div class="note-container">
       <ADivider />
       <ATextarea
         size="large"
         allow-clear
         placeholder="Например: поменьше сахара"
-        v-model:value="store.notes"
+        v-model:value="store.note"
       />
     </div>
 
@@ -151,7 +133,13 @@ onMounted(async () => {
         <ATypographyText type="secondary">Итого</ATypographyText>
         <ATypographyTitle :level="3" style="margin: 0">{{ finalSum }}₽</ATypographyTitle>
       </div>
-      <AButton size="large" type="primary">Добавить в корзину</AButton>
+      <AButton
+        size="large"
+        type="primary"
+        @click="onAddToCart"
+      >
+        Добавить в корзину
+      </AButton>
     </div>
   </a-drawer>
 </template>

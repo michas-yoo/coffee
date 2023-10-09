@@ -1,7 +1,7 @@
 <script setup>
 import SingleShop from "./SingleShop.vue";
 
-const props = defineProps({
+const { data } = defineProps({
   data: [Object],
 });
 </script>
@@ -10,7 +10,7 @@ const props = defineProps({
   <div class="shops-container">
     <transition-group appear name="move">
       <SingleShop
-        v-for="(shop, i) in props.data"
+        v-for="(shop, i) in data"
         :key="shop.id"
         :data="shop"
         :order-num="i"
