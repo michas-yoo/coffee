@@ -92,53 +92,53 @@ function processResultWithCookie(result, res, req = {}) {
     res.send("Hello world");
   });
 
-  app.get("/get_shops", async (req, res) => {
+  app.get("/shops", async (req, res) => {
     const result = await shopController.index();
     console.log(result);
     res.json(result);
   });
 
-  app.get("/get_shops/:id", async (req, res) => {
+  app.get("/shops/:id", async (req, res) => {
     const { id } = req.params;
     const result = await shopController.show({ id });
     res.json(result);
   });
 
-  app.get("/get_modifiers", async (req, res) => {
+  app.get("/modifiers", async (req, res) => {
     const result = await modifierController.index();
     res.json(result);
   });
 
-  app.get("/get_modifier_types", async (req, res) => {
+  app.get("/modifier_types", async (req, res) => {
     const result = await modifierTypeController.index();
     res.json(result);
   });
 
-  app.get("/get_gallery/:id", async (req, res) => {
+  app.get("/gallery/:id", async (req, res) => {
     const { id } = req.params;
     const result = await galleryController.index({ shop_id: id });
     res.json(result);
   });
 
-  app.get("/get_menu/:id", async (req, res) => {
+  app.get("/menu/:id", async (req, res) => {
     const { id } = req.params;
     const result = await menuItemController.index({ shop_id: id });
     res.json(result);
   });
 
-  app.get("/get_menu/:shopId/:id", async (req, res) => {
+  app.get("/menu/:shopId/:id", async (req, res) => {
     const { id, shopId } = req.params;
     const result = await menuItemController.show({ id, shop_id: shopId });
     res.json(result);
   });
 
-  app.get("/get_orders", async (req, res) => {
+  app.get("/orders", async (req, res) => {
     const { id } = req.payload;
     const result = await orderController.index({ user_id: id });
     res.json(result);
   });
 
-  app.get("/get_orders/:id", async (req, res) => {
+  app.get("/orders/:id", async (req, res) => {
     const { id } = req.params;
     const userId = req.payload.id;
     const result = await orderController.show({ id, user_id: userId });
@@ -178,6 +178,17 @@ function processResultWithCookie(result, res, req = {}) {
     const result = await cartController.create({
       user_id: id,
       ...req.body,
+    });
+
+    res.json(result);
+  });
+
+  // === DELETE REQUESTS ===
+  app.delete("/cart", async (req, res) => {
+    const { id } = req.payload;
+    const result = await cartController.remove({
+      user_id: id,
+      ...req.params,
     });
 
     res.json(result);

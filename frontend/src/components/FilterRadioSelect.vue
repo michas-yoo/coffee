@@ -25,7 +25,7 @@ const onUpdate = () => {
       :key="i"
       :value="i"
     >
-      {{ radio.title }}, +{{ radio.price }}₽
+      {{ radio.title }}<span v-if="radio.price">, +{{ radio.price }}₽</span>
     </ARadio>
   </ARadioGroup>
 </template>

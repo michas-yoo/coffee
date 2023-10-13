@@ -4,8 +4,8 @@ import { useRouter } from "vue-router";
 import { makeRequest } from "../api/apiClient.js";
 import { notification } from "ant-design-vue";
 import { BellOutlined } from "@ant-design/icons-vue";
+import { NETWORK_ERROR_TEXT } from "../constants.js";
 import { onMounted, reactive } from "vue";
-import { NETWORK_ERROR_TEXT, USER_ERROR_TEXT } from "../constants.js";
 import ShopsGrid from "../components/ShopsGrid.vue";
 
 const router = useRouter();
@@ -25,9 +25,10 @@ onMounted(async () => {
     notification.error({ message });
     if (message === NETWORK_ERROR_TEXT) {
       await router.push({ name: "bad-request" });
-    } else if (message?.[0] === USER_ERROR_TEXT) {
-      await router.push({ name: "login" });
+      return;
     }
+
+    await router.push({ name: "login" });
   }
 });
 </script>

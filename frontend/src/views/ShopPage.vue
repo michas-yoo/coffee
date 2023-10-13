@@ -9,6 +9,7 @@ import { computed, onMounted, reactive, ref } from "vue";
 import { ArrowLeftOutlined, ClockCircleOutlined } from "@ant-design/icons-vue";
 import ProductOrder from "./ProductOrder.vue";
 import ProductsGrid from "../components/ProductsGrid.vue";
+import CheckoutPrompt from "../components/CheckoutPrompt.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -29,6 +30,11 @@ const store = reactive({
 });
 
 const selectedProductId = computed(() => appStore.selectedProductId);
+const canShowCheckout = computed(() => {
+  return !appStore.selectedProductId
+    && appStore.cart.length
+    && appStore.cart[0].shop_id === store.data.id;
+});
 
 onMounted(async () => {
   const routeId = route.params.id;
@@ -65,7 +71,13 @@ onMounted(async () => {
 <template>
   <div class="back-container" ref="backContainer"></div>
   <ASpin size="large" v-if="!store.data.id" />
-  <ALayout v-else class="shop-page-container">
+  <ALayout
+    v-else
+    class="shop-page-container"
+    :class="{
+      ['has-checkout']: canShowCheckout
+    }"
+  >
     <APageHeader title=" " @back="() => router.push({ name: 'main' })">
       <template #backIcon>
         <AButton shape="circle">
@@ -107,13 +119,19 @@ onMounted(async () => {
       :id="selectedProductId"
       :shop-id="store.data.id"
     />
+
+    <CheckoutPrompt v-if="canShowCheckout" />
   </ALayout>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 .shop-page-container {
   position: relative;
   z-index: 1;
+
+  &.has-checkout {
+    padding-bottom: 120px;
+  }
 }
 
 .photo-carousel {
@@ -123,6 +141,13 @@ onMounted(async () => {
   height: 350px;
   width: calc(100% + 40px);
   z-index: -1;
+
+  img {
+    max-width: 100%;
+    max-height: 350px;
+    object-fit: cover;
+    object-position: center;
+  }
 }
 
 .empty-space {
@@ -132,13 +157,6 @@ onMounted(async () => {
 img {
   width: 100%;
   max-width: 300px;
-}
-
-.photo-carousel img {
-  max-width: 100%;
-  max-height: 350px;
-  object-fit: cover;
-  object-position: center;
 }
 
 .back-container {

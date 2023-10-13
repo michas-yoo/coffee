@@ -4,9 +4,8 @@ export class BaseController {
   }
 
   async index(options = {}, whereIn = false) {
-    const findMethod = whereIn ? 'findWhereIn' : 'findAll';
+    const findMethod = whereIn ? "findWhereIn" : "findAll";
 
-    console.log(findMethod)
     try {
       const data = await this.model[findMethod](options) || [];
       return {
@@ -51,12 +50,30 @@ export class BaseController {
           ok: false,
           data: null,
           message: result,
-        }
+        };
       }
 
       return {
         ok: true,
         data: result,
+        message: null,
+      };
+    } catch ({ message }) {
+      console.log(message);
+      return {
+        ok: false,
+        data: null,
+        message,
+      };
+    }
+  }
+
+  async remove(data) {
+    try {
+      await this.model.remove(data);
+      return {
+        ok: true,
+        data: null,
         message: null,
       };
     } catch ({ message }) {

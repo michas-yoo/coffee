@@ -42,8 +42,11 @@ const panels = [
   left: 0;
   right: 0;
   bottom: 0;
+  height: 80px;
+  display: grid;
+  place-items: center;
   padding: 0 20px;
-  background-color: white;
+  background-color: #ffffff;
   z-index: 2;
 }
 </style>

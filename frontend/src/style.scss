@@ -1,0 +1,140 @@
+:root {
+  font-family: "Helvetica Neue", "Segoe UI", Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  overflow-x: hidden;
+}
+
+body {
+  margin: 0;
+}
+
+label {
+  font-weight: bold;
+}
+
+.tal {
+  text-align: left !important;
+}
+
+.mb30 {
+  margin-bottom: 30px !important;
+}
+
+.flexed {
+  display: flex;
+}
+
+.aic {
+  align-items: center;
+}
+
+.sb {
+  justify-content: space-between;
+}
+
+.ant-page-header {
+  padding-top: 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+.ant-layout-header {
+  height: auto !important;
+  padding-inline: 0 !important;
+  background: transparent !important;
+}
+
+.header-column .ant-page-header-heading-left {
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.ant-card {
+  display: grid;
+
+  &-meta-title {
+    white-space: pre-line !important;
+  }
+}
+
+.tab-bar {
+  .ant-tabs-nav {
+    margin-bottom: 20px;
+
+    &::before {
+      display: none;
+    }
+
+    .ant-tabs-nav-list {
+      justify-content: space-between;
+      margin: 0 auto;
+    }
+  }
+}
+
+.login-container,
+.registration-container {
+  min-height: calc(100vh - 60px);
+  display: grid;
+  place-items: center;
+
+  h1 {
+    margin-bottom: 0;
+  }
+}
+
+.checkout-prompt {
+  h3 {
+    margin: 10px 0 0 !important;
+  }
+
+  h3,
+  h5,
+  span {
+    color: #ffffff;
+  }
+
+  .ant-card-body::before,
+  .ant-card-body::after {
+    display: none;
+  }
+}
+
+/* === COMMON TRANSITIONS === */
+.fade {
+  &-enter-from,
+  &-leave-to {
+    opacity: 0;
+    transform: scale(0.3);
+  }
+
+  &-leave-active {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+  }
+
+  &-enter-active,
+  &-leave-active,
+  &-move {
+    transition: all 0.5s;
+  }
+}
+
+.move {
+  &-enter-from,
+  &-leave-to {
+    opacity: 0;
+    transform: translateX(100px);
+  }
+
+  &-enter-active,
+  &-leave-active,
+  &-move {
+    transition: all 0.3s ease-in-out;
+  }
+}
+
+/*# sourceMappingURL=style.css.map */

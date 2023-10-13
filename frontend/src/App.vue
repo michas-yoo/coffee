@@ -1,7 +1,8 @@
 <script setup>
-import { computed } from "vue";
 import { appStore } from "./store.js";
 import { useRoute } from "vue-router";
+import { makeRequest } from "./api/apiClient.js";
+import { computed, onMounted } from "vue";
 import TheTabBar from "./components/TheTabBar.vue";
 
 const route = useRoute();
@@ -9,6 +10,10 @@ const isSafePage = computed(() => route.matched
   .some((record) => record.name.match(/login|register|bad/gi)),
 );
 const isLoading = computed(() => appStore.loading && isSafePage);
+
+onMounted(async () => {
+  appStore.cart = await makeRequest("getCart");
+});
 </script>
 
 <template>
@@ -19,7 +24,7 @@ const isLoading = computed(() => appStore.loading && isSafePage);
   <TheTabBar v-if="appStore.accessToken" />
 </template>
 
-<style scoped>
+<style scoped lang="scss">
 .main-spinner {
   position: absolute;
   width: 100%;
@@ -38,10 +43,10 @@ const isLoading = computed(() => appStore.loading && isSafePage);
   gap: 20px;
   margin: 0 auto;
   padding: 20px 20px 92px;
-}
 
-.main-container.no-paddings {
-  padding: 0;
-  min-height: 100vh;
+  &.no-paddings {
+    padding: 0;
+    min-height: 100vh;
+  }
 }
 </style>

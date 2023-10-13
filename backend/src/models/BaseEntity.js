@@ -7,7 +7,7 @@ export class BaseEntity {
 
   mapKeys(options) {
     return Object.entries(options).map(([key, value]) => {
-      const keyName = key === 'id' ? `${this.tableName}.id` : key;
+      const keyName = key === "id" ? `${this.tableName}.id` : key;
       return `${keyName}="${value}"`;
     });
   }
@@ -48,27 +48,22 @@ export class BaseEntity {
 
       if (!!rules.required && !data[field]) {
         errors.push(`${field} is required!`);
-        break;
       }
 
       if (data[field].length > maxLength) {
         errors.push(`${field} is too long!`);
-        break;
       }
 
       if (data[field].length < minLength) {
         errors.push(`${field} is too short!`);
-        break;
       }
 
       if ((minValue || maxValue !== MAX_INT) && typeof data[field] !== "number") {
         errors.push(`${field} is not a number!`);
-        break;
       }
 
       if (data[field] < minValue) {
         errors.push(`${field} is too small!`);
-        break;
       }
 
       if (data[field] > maxValue) {
@@ -88,10 +83,20 @@ export class BaseEntity {
       }
     }
 
-    const keys = Object.keys(data).join(", ");
-    const values = Object.values(data).map((val) => val ? `"${val}"` : val).join(", ");
+    const keys = Object.keys(data)
+      .map((key) => {
+        return key.replace(/([a-z])([A-Z])/g, "$1_$2")
+          .toLowerCase();
+      }).join(", ");
+    const values = Object.values(data).map((val) => `"${val}"`).join(", ");
 
     const result = await this.db.run(`INSERT INTO ${this.tableName} (${keys}) VALUES (${values})`);
     return { id: result.lastID };
+  }
+
+  async remove(data) {
+    const filters = this.mapKeys(data);
+    const condition = filters.join(" AND ");
+    return this.db.run(`DELETE FROM ${this.tableName} WHERE ${condition}`);
   }
 }

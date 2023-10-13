@@ -1,9 +1,9 @@
 <script setup>
 import { appStore } from "../store.js";
 import { makeRequest } from "../api/apiClient.js";
-import { notification } from "ant-design-vue";
 import { mapModifiers } from "../utils/mapModifiers.js";
 import { DEFAULT_PRODUCT_ID } from "../constants.js";
+import { Modal, notification } from "ant-design-vue";
 import { computed, onMounted, reactive } from "vue";
 import AmountSelector from "../components/AmountSelector.vue";
 import ProductModifier from "../components/ProductModifier.vue";
@@ -35,7 +35,7 @@ const finalSum = computed(() => {
       return sum + current.price;
     }, 0);
 
-  return store.sum * store.amount + modifiersSum;
+  return (store.sum + modifiersSum) * store.amount;
 });
 
 const onUpdateAmount = (newValue) => store.amount = newValue;
@@ -48,21 +48,51 @@ const onClose = () => {
   appStore.selectedProductId = DEFAULT_PRODUCT_ID;
 };
 
-const onAddToCart = () => {
+const onBeforeAdd = () => {
+  if (appStore.cart.length && appStore.cart[0].shopId !== shopId) {
+    Modal.confirm({
+      title: "Вы выбрали товар в новом кафе",
+      content: "Текущий из другого кафе будет удален из корзины",
+      cancelText: "Отменить",
+      onOk: async () => {
+        appStore.cart = [];
+        await makeRequest("clearCart");
+        await onAddToCart();
+      },
+      onCancel: () => {
+        appStore.selectedProductId = null;
+      },
+    });
+    return;
+  }
+
+  onAddToCart();
+}
+
+const onAddToCart = async () => {
   const selectedModifierIds = Object.values(store.activeModifiers)
     .map((modifier) => modifier.ids)
     .filter((modifier) => modifier)
     .join(",");
 
   const newCartItem = {
-    productId: store.data.id,
-    modifierIds: selectedModifierIds,
-    price: finalSum.value,
     note: store.note,
+    price: finalSum.value,
+    shop_id: shopId,
+    amount: store.amount,
+    productId: id,
+    modifierIds: selectedModifierIds,
   };
 
-  // TODO: тут делаем запрос на бек
-  console.log(newCartItem);
+  try {
+    const result = await makeRequest("addToCart", newCartItem);
+    console.log(result);
+    appStore.cart.push(newCartItem);
+    onClose();
+  } catch (e) {
+    console.log(e);
+    notification.error(e);
+  }
 };
 
 onMounted(async () => {
@@ -72,9 +102,8 @@ onMounted(async () => {
       shopId,
     });
 
-    store.data.modifiers = mapModifiers(store.data);
     store.sum = store.data.price;
-
+    store.data.modifiers = mapModifiers(store.data);
     delete store.data.modifier_types;
   } catch (e) {
     console.log(e);
@@ -103,13 +132,6 @@ onMounted(async () => {
       <AmountSelector @update="onUpdateAmount" :initial="1" :min="1" :max="10" />
     </div>
 
-    <div class="temperature-selection">
-      <ADivider />
-      <ATypographyTitle :level="3">Температура</ATypographyTitle>
-      <AButton>Теплый</AButton>
-      <AButton>Со льдом</AButton>
-    </div>
-
     <ProductModifier
       v-for="modifier in store.data.modifiers"
       :key="modifier.id"
@@ -136,7 +158,7 @@ onMounted(async () => {
       <AButton
         size="large"
         type="primary"
-        @click="onAddToCart"
+        @click="onBeforeAdd"
       >
         Добавить в корзину
       </AButton>

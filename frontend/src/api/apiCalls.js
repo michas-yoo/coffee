@@ -3,6 +3,7 @@ import { isTokenInvalidOrExpired } from "../utils/isTokenInvalidOrExpired.js";
 
 const API_BASE_URL = "http://localhost:3000";
 
+// Private methods
 const fetchCall = async (url, options = {}) => {
   if (!options.headers) {
     options.headers = {};
@@ -57,9 +58,17 @@ const processToken = async (url) => {
   }
 };
 
-const get = async (url) => {
+const request = async (type, url, payload = {}) => {
   try {
-    const result = await fetchCall(`${API_BASE_URL}${url}`);
+    const options = {
+      method: type,
+    };
+
+    if (type === 'post') {
+      options.body = JSON.stringify(payload);
+    }
+
+    const result = await fetchCall(`${API_BASE_URL}${url}`, options);
 
     if (!result.ok) {
       return Promise.reject(result.message);
@@ -70,45 +79,44 @@ const get = async (url) => {
     console.log(e);
     return Promise.reject(e);
   }
-};
+}
 
-const post = async (url, payload = {}) => {
-  try {
-    const result = await fetchCall(`${API_BASE_URL}${url}`, {
-      method: "post",
-      body: JSON.stringify(payload),
-    });
+// Request makers
+const get = async (url) => request('get', url);
 
-    if (!result.ok) {
-      return Promise.reject(result.message);
-    }
+const post = async (url, payload) => request('post', url, payload);
 
-    return Promise.resolve(result.data);
-  } catch (e) {
-    console.log(e);
-    return Promise.reject(e);
-  }
-};
+const remove = async (url) => request('delete', url);
 
+// Requests
 const login = async (payload) => post("/login", payload);
 
 const register = async (payload) => post("/register", payload);
 
 const refreshToken = async () => post("/refresh_token");
 
-const getShops = async () => get("/get_shops");
+const getShops = async () => get("/shops");
 
-const getShop = async (id) => get(`/get_shops/${id}`);
+const getShop = async (id) => get(`/shops/${id}`);
 
-const getGallery = async (id) => get(`/get_gallery/${id}`);
+const getGallery = async (id) => get(`/gallery/${id}`);
 
-const getProductInfo = async ({ id, shopId }) => get(`/get_menu/${shopId}/${id}`);
+const getProductInfo = async ({ id, shopId }) => get(`/menu/${shopId}/${id}`);
+
+const getCart = async () => get(`/cart`);
+
+const addToCart = async (payload) => post(`/cart`, payload);
+
+const clearCart = async () => remove(`/cart`);
 
 const methods = {
   login,
+  getCart,
   getShop,
   getShops,
   register,
+  clearCart,
+  addToCart,
   getGallery,
   refreshToken,
   getProductInfo,

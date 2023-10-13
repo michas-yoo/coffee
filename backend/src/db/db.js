@@ -107,12 +107,10 @@ export async function setupTables(db) {
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     shop_id INTEGER NOT NULL,
     user_id INTEGER NOT NULL,
-    product_id INTEGER NOT NULL,
-    comment TEXT,
     modifier_ids TEXT,
     price INTEGER NOT NULL,
     created_at TEXT DEFAULT CURRENT_TIMESTAMP,
-    status_id INTEGER NOT NULL,
+    status_id INTEGER NOT NULL DEFAULT 1,
     FOREIGN KEY (shop_id)
         REFERENCES shops (id)
         ON UPDATE CASCADE
@@ -121,24 +119,38 @@ export async function setupTables(db) {
         REFERENCES users (id)
         ON UPDATE CASCADE
         ON DELETE CASCADE,
-    FOREIGN KEY (product_id)
-        REFERENCES products (id)
-        ON UPDATE CASCADE
-        ON DELETE CASCADE,
     FOREIGN KEY (status_id)
         REFERENCES statuses (id)
         ON UPDATE CASCADE
         ON DELETE CASCADE
   )`);
 
+  await db.exec(`CREATE TABLE IF NOT EXISTS ordered_items (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    order_id INTEGER NOT NULL,
+    product_id INTEGER NOT NULL,
+    amount INTEGER NOT NULL,
+    comment TEXT,
+    FOREIGN KEY (order_id)
+        REFERENCES orders (id)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+  )`);
+
   await db.exec(`CREATE TABLE IF NOT EXISTS cart (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
+    shop_id INTEGER NOT NULL,
     user_id INTEGER NOT NULL,
     product_id INTEGER NOT NULL,
+    amount INTEGER NOT NULL,
     modifier_ids TEXT,
     price INTEGER NOT NULL,
     note TEXT,
     FOREIGN KEY (user_id)
+        REFERENCES users (id)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    FOREIGN KEY (shop_id)
         REFERENCES users (id)
         ON UPDATE CASCADE
         ON DELETE CASCADE,
@@ -162,34 +174,39 @@ export async function addDefaultData(db) {
     await db.run(`INSERT INTO statuses VALUES (null, "ready")`);
     await db.run(`INSERT INTO statuses VALUES (null, "done")`);
 
+    await db.run(`INSERT INTO modifier_types VALUES (null, "Температура", 0)`);
     await db.run(`INSERT INTO modifier_types VALUES (null, "Размер", 0)`);
     await db.run(`INSERT INTO modifier_types VALUES (null, "Молоко", 0)`);
     await db.run(`INSERT INTO modifier_types VALUES (null, "Сироп", 1)`);
     await db.run(`INSERT INTO modifier_types VALUES (null, "Топпинг", 1)`);
 
-    await db.run(`INSERT INTO modifiers VALUES (null, "S", 0, 1)`);
-    await db.run(`INSERT INTO modifiers VALUES (null, "M", 20, 1)`);
-    await db.run(`INSERT INTO modifiers VALUES (null, "L", 30, 1)`);
+    await db.run(`INSERT INTO modifiers VALUES (null, "Тёплый", 0, 1)`);
+    await db.run(`INSERT INTO modifiers VALUES (null, "Со льдом", 0, 1)`);
 
-    await db.run(`INSERT INTO modifiers VALUES (null, "Соевое", 30, 2)`);
-    await db.run(`INSERT INTO modifiers VALUES (null, "Кокосовое", 30, 2)`);
-    await db.run(`INSERT INTO modifiers VALUES (null, "Миндальное", 30, 2)`);
-    await db.run(`INSERT INTO modifiers VALUES (null, "Обезжиренное", 20, 2)`);
+    await db.run(`INSERT INTO modifiers VALUES (null, "S", 0, 2)`);
+    await db.run(`INSERT INTO modifiers VALUES (null, "M", 20, 2)`);
+    await db.run(`INSERT INTO modifiers VALUES (null, "L", 30, 2)`);
 
-    await db.run(`INSERT INTO modifiers VALUES (null, "Пекан", 20, 3)`);
-    await db.run(`INSERT INTO modifiers VALUES (null, "Ваниль", 20, 3)`);
-    await db.run(`INSERT INTO modifiers VALUES (null, "Карамель", 20, 3)`);
-    await db.run(`INSERT INTO modifiers VALUES (null, "Дикая мята", 20, 3)`);
-    await db.run(`INSERT INTO modifiers VALUES (null, "Айриш крим", 20, 3)`);
-    await db.run(`INSERT INTO modifiers VALUES (null, "Лесной орех", 20, 3)`);
-    await db.run(`INSERT INTO modifiers VALUES (null, "Соленая карамель", 20, 3)`);
+    await db.run(`INSERT INTO modifiers VALUES (null, "Коровье, 2.5%", 0, 3)`);
+    await db.run(`INSERT INTO modifiers VALUES (null, "Соевое", 30, 3)`);
+    await db.run(`INSERT INTO modifiers VALUES (null, "Кокосовое", 30, 3)`);
+    await db.run(`INSERT INTO modifiers VALUES (null, "Миндальное", 30, 3)`);
+    await db.run(`INSERT INTO modifiers VALUES (null, "Обезжиренное", 20, 3)`);
 
-    await db.run(`INSERT INTO modifiers VALUES (null, "Корица", 20, 4)`);
-    await db.run(`INSERT INTO modifiers VALUES (null, "Какао", 20, 4)`);
-    await db.run(`INSERT INTO modifiers VALUES (null, "Морская соль", 20, 4)`);
-    await db.run(`INSERT INTO modifiers VALUES (null, "Шоколадная крошка", 20, 4)`);
-    await db.run(`INSERT INTO modifiers VALUES (null, "Крошка из печенья", 20, 4)`);
-    await db.run(`INSERT INTO modifiers VALUES (null, "Карамельный соус", 20, 4)`);
+    await db.run(`INSERT INTO modifiers VALUES (null, "Пекан", 20, 4)`);
+    await db.run(`INSERT INTO modifiers VALUES (null, "Ваниль", 20, 4)`);
+    await db.run(`INSERT INTO modifiers VALUES (null, "Карамель", 20, 4)`);
+    await db.run(`INSERT INTO modifiers VALUES (null, "Дикая мята", 20, 4)`);
+    await db.run(`INSERT INTO modifiers VALUES (null, "Айриш крим", 20, 4)`);
+    await db.run(`INSERT INTO modifiers VALUES (null, "Лесной орех", 20, 4)`);
+    await db.run(`INSERT INTO modifiers VALUES (null, "Соленая карамель", 20, 4)`);
+
+    await db.run(`INSERT INTO modifiers VALUES (null, "Корица", 20, 5)`);
+    await db.run(`INSERT INTO modifiers VALUES (null, "Какао", 20, 5)`);
+    await db.run(`INSERT INTO modifiers VALUES (null, "Морская соль", 20, 5)`);
+    await db.run(`INSERT INTO modifiers VALUES (null, "Шоколадная крошка", 20, 5)`);
+    await db.run(`INSERT INTO modifiers VALUES (null, "Крошка из печенья", 20, 5)`);
+    await db.run(`INSERT INTO modifiers VALUES (null, "Карамельный соус", 20, 5)`);
 
     await db.run(`INSERT INTO products VALUES (
     null, "Классика", "http://localhost:3000/static/cup_1.png",

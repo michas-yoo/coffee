@@ -8,4 +8,5 @@ export const appStore = reactive({
   accessToken: "",
   currentPage: "main",
   selectedProductId: 0,
+  cart: [],
 });
