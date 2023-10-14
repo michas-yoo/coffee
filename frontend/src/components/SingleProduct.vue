@@ -13,7 +13,7 @@ const onProductSelect = () => appStore.selectedProductId = data.id;
   <ACard
     hoverable
     :style="{
-      transitionDelay: `${0.08 * orderNum}s`
+      transitionDelay: `${0.08 * orderNum}s`,
     }"
     @click="onProductSelect"
   >

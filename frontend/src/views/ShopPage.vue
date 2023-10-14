@@ -75,7 +75,7 @@ onMounted(async () => {
     v-else
     class="shop-page-container"
     :class="{
-      ['has-checkout']: canShowCheckout
+      'has-checkout': canShowCheckout,
     }"
   >
     <APageHeader title=" " @back="() => router.push({ name: 'main' })">

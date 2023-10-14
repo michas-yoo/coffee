@@ -10,7 +10,6 @@ const tableNames = [
   "statuses",
   "modifiers",
   "menu_items",
-  "modifier_lacks",
   "modifier_types",
 ];
 
@@ -30,7 +29,6 @@ export async function setupTables(db) {
     name TEXT NOT NULL UNIQUE,
     photo TEXT NOT NULL,
     price INTEGER NOT NULL DEFAULT 0,
-    can_be_iced BOOLEAN NOT NULL DEFAULT 0,
     modifier_types TEXT
   )`);
 
@@ -47,7 +45,7 @@ export async function setupTables(db) {
 
   await db.exec(`CREATE TABLE IF NOT EXISTS modifiers (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    title TEXT UNIQUE NOT NULL,
+    name TEXT UNIQUE NOT NULL,
     price INTEGER NOT NULL DEFAULT 0,
     type INTEGER NOT NULL,
     FOREIGN KEY (type)
@@ -63,20 +61,6 @@ export async function setupTables(db) {
     open_time TEXT NOT NULL,
     close_time TEXT NOT NULL,
     poster TEXT NOT NULL
-  )`);
-
-  await db.exec(`CREATE TABLE IF NOT EXISTS modifier_lacks (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    shop_id INTEGER NOT NULL,
-    modifier_id INTEGER NOT NULL,
-    FOREIGN KEY (shop_id)
-        REFERENCES shops (id)
-        ON UPDATE CASCADE
-        ON DELETE CASCADE,
-    FOREIGN KEY (modifier_id)
-        REFERENCES modifiers (id)
-        ON UPDATE CASCADE
-        ON DELETE CASCADE
   )`);
 
   await db.exec(`CREATE TABLE IF NOT EXISTS gallery (
@@ -210,35 +194,35 @@ export async function addDefaultData(db) {
 
     await db.run(`INSERT INTO products VALUES (
     null, "Классика", "http://localhost:3000/static/cup_1.png",
-    69, 1, "${allModifiers}"
+    69, "${allModifiers}"
   )`);
     await db.run(`INSERT INTO products VALUES (
     null, "Мятная свежесть", "http://localhost:3000/static/cup_2.png",
-    79, 1, "${allModifiers}"
+    79, "${allModifiers}"
   )`);
     await db.run(`INSERT INTO products VALUES (
     null, "Малиновый латте", "http://localhost:3000/static/cup_3.png",
-    89, 1, "${allModifiers}"
+    89, "${allModifiers}"
   )`);
     await db.run(`INSERT INTO products VALUES (
     null, "Дымный эспрессо", "http://localhost:3000/static/cup_4.png",
-    69, 1, "${allModifiers}"
+    69, "${allModifiers}"
   )`);
     await db.run(`INSERT INTO products VALUES (
     null, "Черничное наслаждение", "http://localhost:3000/static/cup_5.png",
-    79, 1, "${allModifiers}"
+    79, "${allModifiers}"
   )`);
     await db.run(`INSERT INTO products VALUES (
     null, "Солнечный латте", "http://localhost:3000/static/cup_6.png",
-    89, 1, "${allModifiers}"
+    89, "${allModifiers}"
   )`);
     await db.run(`INSERT INTO products VALUES (
     null, "Ягодный бум", "http://localhost:3000/static/cup_7.png",
-    89, 1, "${allModifiers}"
+    89, "${allModifiers}"
   )`);
     await db.run(`INSERT INTO products VALUES (
     null, "Океанский бриз", "http://localhost:3000/static/cup_8.png",
-    79, 1, "${allModifiers}"
+    79, "${allModifiers}"
   )`);
 
     await db.run(`INSERT INTO shops VALUES (

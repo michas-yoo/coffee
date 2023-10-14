@@ -32,6 +32,11 @@ const router = createRouter({
       name: "bad-request",
       component: () => import("./views/BadResponsePage.vue"),
     },
+    {
+      path: "/checkout",
+      name: "checkout",
+      component: () => import("./views/CheckoutPage.vue"),
+    },
   ],
 });
 

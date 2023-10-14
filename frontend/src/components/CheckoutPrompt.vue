@@ -2,15 +2,20 @@
 import { appStore } from "../store.js";
 import { computed } from "vue";
 import { RightOutlined } from "@ant-design/icons-vue";
+import { useRouter } from "vue-router";
+
+const router = useRouter();
 
 const cart = computed(() => ({
   elements: appStore.cart.length,
   price: appStore.cart.reduce((sum, cur) => sum + cur.price, 0),
 }));
+
+const goToCart = () => router.push({ name: "checkout" });
 </script>
 
 <template>
-  <AButton type="primary" class="checkout-prompt flexed aic sb">
+  <AButton type="primary" class="checkout-prompt flexed aic sb" @click="goToCart">
     <div class="checkout-prompt__info">
       <ATypographyText>В корзине {{ cart.elements }} шт</ATypographyText>
       <ATypographyTitle :level="3">{{ cart.price }}₽</ATypographyTitle>

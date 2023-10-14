@@ -33,6 +33,12 @@ label {
   justify-content: space-between;
 }
 
+.two-cols {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: 1fr 1fr;
+}
+
 .ant-page-header {
   padding-top: 0 !important;
   padding-left: 0 !important;

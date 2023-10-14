@@ -45,7 +45,7 @@ function processResultWithCookie(result, res, req = {}) {
   const modifierTypeController = new ModifierTypeController(db);
 
   const shopController = new ShopController(db, menuItemController, galleryController);
-  const cartController = new CartController(db, modifierController);
+  const cartController = new CartController(db, menuItemController, modifierController);
 
   await setupTables(db);
   await addDefaultData(db);
@@ -94,7 +94,6 @@ function processResultWithCookie(result, res, req = {}) {
 
   app.get("/shops", async (req, res) => {
     const result = await shopController.index();
-    console.log(result);
     res.json(result);
   });
 

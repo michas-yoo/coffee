@@ -3,11 +3,11 @@ export class BaseController {
     this.model = new model(db);
   }
 
-  async index(options = {}, whereIn = false) {
-    const findMethod = whereIn ? "findWhereIn" : "findAll";
+  async index(options = {}, params = { whereIn: false, fields: [] }) {
+    const findMethod = params.whereIn ? "findWhereIn" : "findAll";
 
     try {
-      const data = await this.model[findMethod](options) || [];
+      const data = await this.model[findMethod](options, params) || [];
       return {
         ok: true,
         data,
@@ -23,9 +23,9 @@ export class BaseController {
     }
   }
 
-  async show(options) {
+  async show(options, params) {
     try {
-      const data = await this.model.findOne(options) || null;
+      const data = await this.model.findOne(options, params) || null;
       return {
         ok: true,
         data,

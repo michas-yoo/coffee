@@ -12,7 +12,9 @@ const isSafePage = computed(() => route.matched
 const isLoading = computed(() => appStore.loading && isSafePage);
 
 onMounted(async () => {
-  appStore.cart = await makeRequest("getCart");
+  if (route.matched.some((record) => record.name.match(/checkout/))) {
+    appStore.cart.push(await makeRequest("getCart"));
+  }
 });
 </script>
 

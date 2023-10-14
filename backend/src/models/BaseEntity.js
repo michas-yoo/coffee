@@ -12,28 +12,31 @@ export class BaseEntity {
     });
   }
 
-  findAll(options = {}) {
+  findAll(options = {}, params = {}) {
     const filters = this.mapKeys(options);
+    const fields = params?.fields?.join(', ') || '*';
     const condition = filters.length ? ` WHERE ${filters.join(" AND ")}` : "";
-    return this.db.all(`SELECT * FROM ${this.tableName}${condition}`);
+    return this.db.all(`SELECT ${fields} FROM ${this.tableName}${condition}`);
   }
 
-  findWhereIn(option = {}) {
+  findWhereIn(option = {}, params = {}) {
     if (!Object.keys(option).length) {
       return;
     }
 
+    const fields = params?.fields?.join(', ') || '*';
     const key = Object.keys(option)[0];
-    return this.db.all(`SELECT * FROM ${this.tableName} WHERE ${key} in (${option[key]})`);
+    return this.db.all(`SELECT ${fields} FROM ${this.tableName} WHERE ${key} in (${option[key]})`);
   }
 
-  findOne(options) {
+  findOne(options, params = {}) {
     if (!Object.keys(options).length) {
       return null;
     }
 
     const filters = this.mapKeys(options);
-    return this.db.get(`SELECT * FROM ${this.tableName} WHERE ${filters.join(" AND ")}`);
+    const fields = params?.fields?.join(', ') || '*';
+    return this.db.get(`SELECT ${fields} FROM ${this.tableName} WHERE ${filters.join(" AND ")}`);
   }
 
   validate(data) {

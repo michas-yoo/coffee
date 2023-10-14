@@ -5,19 +5,20 @@ export class MenuItem extends BaseEntity {
     super(db, 'menu_items');
   }
 
-  findAll(options = {}) {
+  findAll(options = {}, params = {}) {
     const filters = this.mapKeys(options);
+    const fields = params?.fields?.join(', ') || `${this.tableName}.id as id, name, photo, price, product_id`;
     const condition = filters.length ? `WHERE ${filters.join(" AND ")}` : "";
 
     return this.db.all(`
-      SELECT ${this.tableName}.id as id, name, photo, price, product_id
+      SELECT ${fields}
       FROM ${this.tableName}
       JOIN products ON products.id = ${this.tableName}.product_id
       ${condition}
     `);
   }
 
-  async findOne(options) {
+  async findOne(options, params = {}) {
     if (!Object.keys(options).length) {
       return null;
     }
@@ -31,6 +32,10 @@ export class MenuItem extends BaseEntity {
     `);
 
     if (!data) return data;
+
+    if (params?.noModifiers) {
+      return data;
+    }
 
     const modifier_types = await this.db.all(`
       SELECT * FROM modifier_types

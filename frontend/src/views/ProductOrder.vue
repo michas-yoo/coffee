@@ -20,7 +20,6 @@ const store = reactive({
     price: 0,
     photo: "",
     modifiers: {},
-    can_be_iced: 0,
     modifier_types: [],
   },
   sum: 0,
@@ -85,8 +84,7 @@ const onAddToCart = async () => {
   };
 
   try {
-    const result = await makeRequest("addToCart", newCartItem);
-    console.log(result);
+    await makeRequest("addToCart", newCartItem);
     appStore.cart.push(newCartItem);
     onClose();
   } catch (e) {

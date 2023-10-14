@@ -14,7 +14,7 @@ const onUpdate = (currentValues) => {
   const modifierIds = [];
 
   filters.forEach((filter) => {
-    if (currentValues.includes(filter.title)) {
+    if (currentValues.includes(filter.name)) {
       finalSum += filter.price;
       modifierIds.push(filter.id);
     }
@@ -28,13 +28,13 @@ const onUpdate = (currentValues) => {
 </script>
 
 <template>
-  <ACheckboxGroup v-model:value="checked" @change="onUpdate">
+  <ACheckboxGroup class="two-cols" v-model:value="checked" @change="onUpdate">
     <ACheckbox
       v-for="(filter, i) in filters"
       :key="i"
-      :value="filter.title"
+      :value="filter.name"
     >
-      {{ filter.title }}, +{{ filter.price }}₽
+      {{ filter.name }}, +{{ filter.price }}₽
     </ACheckbox>
   </ACheckboxGroup>
 </template>
