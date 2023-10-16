@@ -1,12 +1,14 @@
 <script setup>
 import { appStore } from "../store.js";
+import { getSumByKey } from "../utils/getSumByKey.js";
 import { makeRequest } from "../api/apiClient.js";
 import { mapModifiers } from "../utils/mapModifiers.js";
 import { DEFAULT_PRODUCT_ID } from "../constants.js";
-import { Modal, notification } from "ant-design-vue";
+import { Modal } from "ant-design-vue";
 import { computed, onMounted, reactive } from "vue";
 import AmountSelector from "../components/AmountSelector.vue";
 import ProductModifier from "../components/ProductModifier.vue";
+import { displayError } from "../utils/displayError.js";
 
 const { id, shopId } = defineProps({
   id: Number,
@@ -24,15 +26,12 @@ const store = reactive({
   },
   sum: 0,
   amount: 1,
-  note: "",
+  comment: "",
   activeModifiers: {},
 });
 
 const finalSum = computed(() => {
-  const modifiersSum = Object.values(store.activeModifiers)
-    .reduce((sum, current) => {
-      return sum + current.price;
-    }, 0);
+  const modifiersSum = getSumByKey(Object.values(store.activeModifiers), 'price');
 
   return (store.sum + modifiersSum) * store.amount;
 });
@@ -48,7 +47,7 @@ const onClose = () => {
 };
 
 const onBeforeAdd = () => {
-  if (appStore.cart.length && appStore.cart[0].shopId !== shopId) {
+  if (appStore.cart.length && appStore.cart[0].shop_id !== shopId) {
     Modal.confirm({
       title: "Вы выбрали товар в новом кафе",
       content: "Текущий из другого кафе будет удален из корзины",
@@ -75,7 +74,7 @@ const onAddToCart = async () => {
     .join(",");
 
   const newCartItem = {
-    note: store.note,
+    comment: store.comment,
     price: finalSum.value,
     shop_id: shopId,
     amount: store.amount,
@@ -85,11 +84,10 @@ const onAddToCart = async () => {
 
   try {
     await makeRequest("addToCart", newCartItem);
-    appStore.cart.push(newCartItem);
     onClose();
   } catch (e) {
     console.log(e);
-    notification.error(e);
+    displayError(e);
   }
 };
 
@@ -105,7 +103,7 @@ onMounted(async () => {
     delete store.data.modifier_types;
   } catch (e) {
     console.log(e);
-    notification.error({ message: e });
+    displayError(e);
   }
 });
 </script>
@@ -137,13 +135,13 @@ onMounted(async () => {
       @modifier-update="onUpdateModifier"
     />
 
-    <div class="note-container">
+    <div class="comment-container">
       <ADivider />
       <ATextarea
         size="large"
         allow-clear
         placeholder="Например: поменьше сахара"
-        v-model:value="store.note"
+        v-model:value="store.comment"
       />
     </div>
 

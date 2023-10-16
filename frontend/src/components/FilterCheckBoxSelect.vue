@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from "vue";
+import { onMounted, ref } from "vue";
 
 const { filters } = defineProps({
   filters: [Object],
@@ -25,6 +25,10 @@ const onUpdate = (currentValues) => {
     price: finalSum,
   });
 };
+
+onMounted(() => {
+  onUpdate(checked.value);
+});
 </script>
 
 <template>

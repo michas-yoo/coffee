@@ -97,7 +97,6 @@
 | id           | INTEGER | PRIMARY KEY               |
 | shop_id      | INTEGER | NOT NULL                  |
 | user_id      | INTEGER | NOT NULL                  |
-| modifier_ids | TEXT    |                           |
 | price        | INTEGER | NOT NULL                  |
 | created_at   | TEXT    | DEFAULT CURRENT_TIMESTAMP |
 | status_id    | INTEGER | NOT NULL DEFAULT 1        |
@@ -110,13 +109,14 @@
 ## Ordered items
 Здесь хранятся продукты из заказа
 
-| Column     | Type    | Params      |
-|------------|---------|-------------|
-| id         | INTEGER | PRIMARY KEY |
-| order_id   | INTEGER | NOT NULL    |
-| product_id | INTEGER | NOT NULL    |
-| amount     | INTEGER | NOT NULL    |
-| comment    | TEXT    |             |
+| Column       | Type    | Params      |
+|--------------|---------|-------------|
+| id           | INTEGER | PRIMARY KEY |
+| order_id     | INTEGER | NOT NULL    |
+| product_id   | INTEGER | NOT NULL    |
+| amount       | INTEGER | NOT NULL    |
+| modifier_ids | TEXT    |             |
+| comment      | TEXT    |             |
 
 Связи
 - Поле `order_id` и `orders.id`
@@ -133,7 +133,7 @@
 | amount       | INTEGER | NOT NULL    |
 | modifier_ids | TEXT    |             |
 | price        | INTEGER | NOT NULL    |
-| note         | TEXT    |             |
+| comment         | TEXT    |             |
 
 Связи
 - Поле `shop_id` и `shops.id`

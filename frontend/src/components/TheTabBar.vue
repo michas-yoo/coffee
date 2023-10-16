@@ -1,33 +1,59 @@
 <script setup>
 import { ref } from "vue";
-import { HomeOutlined, FileTextOutlined, UserOutlined } from "@ant-design/icons-vue";
+import { useRouter } from "vue-router";
+import {
+  HomeOutlined,
+  UserOutlined,
+  FileTextOutlined,
+  ShoppingCartOutlined,
+} from "@ant-design/icons-vue";
+
+const router = useRouter();
 
 const activeKey = ref("panel_1");
 const panels = [
   {
-    id: 'panel_1',
+    id: "panel_1",
     name: "Главная",
     icon: HomeOutlined,
-    onClick: () => null,
+    onClick: () => router.push({ name: "main" }),
   },
   {
-    id: 'panel_2',
+    id: "panel_2",
     name: "Заказы",
     icon: FileTextOutlined,
-    onClick: () => null,
+    onClick: () => router.push({ name: "orders" }),
   },
   {
-    id: 'panel_3',
+    id: "panel_3",
+    name: "Корзина",
+    icon: ShoppingCartOutlined,
+    onClick: () => {
+      console.log(123);
+      router.push({ name: "checkout" });
+    },
+  },
+  {
+    id: "panel_4",
     name: "Аккаунт",
     icon: UserOutlined,
     onClick: () => null,
   },
 ];
+
+const onPanelChange = (panelId) => {
+  panels.find((panel) => panel.id === panelId)?.onClick();
+};
 </script>
 
 <template>
-  <ATabs class="tab-bar" size="large" v-model:activeKey="activeKey">
-    <ATabPane v-for="panel in panels" :key="panel.id" @click="panel.onClick">
+  <ATabs
+    size="large"
+    class="tab-bar"
+    @change="onPanelChange"
+    v-model:activeKey="activeKey"
+  >
+    <ATabPane v-for="panel in panels" :key="panel.id">
       <template #tab>
         <component :is="panel.icon" />
         {{ panel.name }}

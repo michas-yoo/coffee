@@ -1,13 +1,13 @@
 <script setup>
 import { appStore } from "../store.js";
 import { makeRequest } from "../api/apiClient.js";
-import { notification } from "ant-design-vue";
+import { displayError } from "../utils/displayError.js";
 import { NETWORK_ERROR_TEXT } from "../constants.js";
 import { useRoute, useRouter } from "vue-router";
 import { observeIntersection } from "../utils/observeIntersection.js";
 import { computed, onMounted, reactive, ref } from "vue";
 import { ArrowLeftOutlined, ClockCircleOutlined } from "@ant-design/icons-vue";
-import ProductOrder from "./ProductOrder.vue";
+import ProductOrder from "../views/ProductOrder.vue";
 import ProductsGrid from "../components/ProductsGrid.vue";
 import CheckoutPrompt from "../components/CheckoutPrompt.vue";
 
@@ -47,7 +47,7 @@ onMounted(async () => {
     appStore.loading = false;
   } catch ({ message }) {
     appStore.loading = false;
-    notification.error({ message });
+    displayError(message);
 
     if (message === NETWORK_ERROR_TEXT) {
       await router.push({ name: "bad-request" });

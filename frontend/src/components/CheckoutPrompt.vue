@@ -3,12 +3,13 @@ import { appStore } from "../store.js";
 import { computed } from "vue";
 import { RightOutlined } from "@ant-design/icons-vue";
 import { useRouter } from "vue-router";
+import { getSumByKey } from "../utils/getSumByKey.js";
 
 const router = useRouter();
 
 const cart = computed(() => ({
   elements: appStore.cart.length,
-  price: appStore.cart.reduce((sum, cur) => sum + cur.price, 0),
+  price: getSumByKey(appStore.cart, 'price'),
 }));
 
 const goToCart = () => router.push({ name: "checkout" });

@@ -10,32 +10,37 @@ const router = createRouter({
     {
       path: "/",
       name: "main",
-      component: () => import("./views/MainPage.vue"),
+      component: () => import("./pages/MainPage.vue"),
     },
     {
       path: "/register",
       name: "register",
-      component: () => import("./views/RegisterPage.vue"),
+      component: () => import("./pages/RegisterPage.vue"),
     },
     {
       path: "/login",
       name: "login",
-      component: () => import("./views/LoginPage.vue"),
+      component: () => import("./pages/LoginPage.vue"),
     },
     {
       path: "/shops/:id",
       name: "shop",
-      component: () => import("./views/ShopPage.vue"),
+      component: () => import("./pages/ShopPage.vue"),
     },
     {
       path: "/bad-request",
       name: "bad-request",
-      component: () => import("./views/BadResponsePage.vue"),
+      component: () => import("./pages/BadResponsePage.vue"),
     },
     {
       path: "/checkout",
       name: "checkout",
-      component: () => import("./views/CheckoutPage.vue"),
+      component: () => import("./pages/CheckoutPage.vue"),
+    },
+    {
+      path: "/orders",
+      name: "orders",
+      component: () => import("./pages/OrdersPage.vue"),
     },
   ],
 });

@@ -2,10 +2,11 @@ import { Cart } from "../models/Cart.js";
 import { BaseController } from "./BaseController.js";
 
 export class CartController extends BaseController {
-  constructor(db, menuItemController, modifierController) {
+  constructor(db, { menuItemController, modifierController, shopController }) {
     super(db, Cart);
     this.menuItemController = menuItemController;
     this.modifierController = modifierController;
+    this.shopController = shopController;
   }
 
   async show(options) {
@@ -32,17 +33,19 @@ export class CartController extends BaseController {
         fields: ["id", "name", "price"],
       });
 
-      if (modifiers.ok) {
-        item.modifiers = modifiers.data;
-      }
+      item.modifiers = modifiers.data || [];
 
       const product = await this.menuItemController.show({
         id: item.product_id,
       }, { noModifiers: true });
 
-      if (product.ok) {
-        item.product = product.data;
-      }
+      item.product = product.data || [];
+
+      const shop = await this.shopController.show({
+        id: item.shop_id
+      });
+
+      item.shop = shop.data || {};
     }
 
     return cartData;

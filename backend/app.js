@@ -45,7 +45,11 @@ function processResultWithCookie(result, res, req = {}) {
   const modifierTypeController = new ModifierTypeController(db);
 
   const shopController = new ShopController(db, menuItemController, galleryController);
-  const cartController = new CartController(db, menuItemController, modifierController);
+  const cartController = new CartController(db, {
+    shopController,
+    menuItemController,
+    modifierController,
+  });
 
   await setupTables(db);
   await addDefaultData(db);
@@ -150,6 +154,12 @@ function processResultWithCookie(result, res, req = {}) {
     res.json(result);
   });
 
+  app.get("/orders", async (req, res) => {
+    const { id } = req.payload;
+    const result = await orderController.index({ user_id: id });
+    res.json(result);
+  });
+
   // === POST REQUESTS ===
 
   app.post("/register", async (req, res) => {
@@ -182,12 +192,37 @@ function processResultWithCookie(result, res, req = {}) {
     res.json(result);
   });
 
+  app.post("/orders", async (req, res) => {
+    const { id } = req.payload;
+    const result = await orderController.create({
+      user_id: id,
+      ...req.body,
+    });
+
+    if (result.ok) {
+      await cartController.remove({ user_id: id });
+    }
+
+    res.json(result);
+  });
+
   // === DELETE REQUESTS ===
   app.delete("/cart", async (req, res) => {
     const { id } = req.payload;
     const result = await cartController.remove({
       user_id: id,
       ...req.params,
+    });
+
+    res.json(result);
+  });
+
+  app.delete(`/cart/:item_id`, async (req, res) => {
+    const { item_id } = req.params;
+    const { id } = req.payload;
+    const result = await cartController.remove({
+      id: item_id,
+      user_id: id,
     });
 
     res.json(result);

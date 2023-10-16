@@ -1,8 +1,7 @@
 <script setup>
+import { computed } from "vue";
 import { appStore } from "./store.js";
 import { useRoute } from "vue-router";
-import { makeRequest } from "./api/apiClient.js";
-import { computed, onMounted } from "vue";
 import TheTabBar from "./components/TheTabBar.vue";
 
 const route = useRoute();
@@ -10,12 +9,6 @@ const isSafePage = computed(() => route.matched
   .some((record) => record.name.match(/login|register|bad/gi)),
 );
 const isLoading = computed(() => appStore.loading && isSafePage);
-
-onMounted(async () => {
-  if (route.matched.some((record) => record.name.match(/checkout/))) {
-    appStore.cart.push(await makeRequest("getCart"));
-  }
-});
 </script>
 
 <template>

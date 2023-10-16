@@ -5,8 +5,8 @@ import { useRouter } from "vue-router";
 import { makeRequest } from "../api/apiClient.js";
 import { displayError } from "../utils/displayError.js";
 import { NETWORK_ERROR_TEXT } from "../constants.js";
-import RegisterStepOne from "./RegisterStepOne.vue";
-import RegisterStepTwo from "./RegisterStepTwo.vue";
+import RegisterStepOne from "../views/RegisterStepOne.vue";
+import RegisterStepTwo from "../views/RegisterStepTwo.vue";
 
 const MAIN_STEP = "main";
 const PROFILE_STEP = "profile";

@@ -1,6 +1,8 @@
 import { appStore } from "../store.js";
 import { isTokenInvalidOrExpired } from "../utils/isTokenInvalidOrExpired.js";
 
+// TODO: описать каждый метод
+
 const API_BASE_URL = "http://localhost:3000";
 
 // Private methods
@@ -64,7 +66,7 @@ const request = async (type, url, payload = {}) => {
       method: type,
     };
 
-    if (type === 'post') {
+    if (type === "post") {
       options.body = JSON.stringify(payload);
     }
 
@@ -79,14 +81,14 @@ const request = async (type, url, payload = {}) => {
     console.log(e);
     return Promise.reject(e);
   }
-}
+};
 
 // Request makers
-const get = async (url) => request('get', url);
+const get = async (url) => request("get", url);
 
-const post = async (url, payload) => request('post', url, payload);
+const post = async (url, payload) => request("post", url, payload);
 
-const remove = async (url) => request('delete', url);
+const remove = async (url) => request("delete", url);
 
 // Requests
 const login = async (payload) => post("/login", payload);
@@ -109,6 +111,12 @@ const addToCart = async (payload) => post(`/cart`, payload);
 
 const clearCart = async () => remove(`/cart`);
 
+const removeFromCart = async ({ id }) => remove(`/cart/${id}`);
+
+const createOrder = async (payload) => post("/orders", payload);
+
+const getOrders = async () => get("/orders");
+
 const methods = {
   login,
   getCart,
@@ -117,9 +125,12 @@ const methods = {
   register,
   clearCart,
   addToCart,
+  getOrders,
   getGallery,
+  createOrder,
   refreshToken,
   getProductInfo,
+  removeFromCart,
 };
 
 export default methods;
