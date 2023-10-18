@@ -1,20 +1,28 @@
 <script setup>
 import { DeleteOutlined } from "@ant-design/icons-vue";
+import { getSumByKey } from "../utils/getSumByKey.js";
+import { computed } from "vue";
 
 const { data } = defineProps({
   data: Object,
+  removable: {
+    type: Boolean,
+    default: true,
+  },
 });
 
-const emit = defineEmits(['remove']);
+const emit = defineEmits(["remove"]);
+
+const totalPrice = computed(() => (data.product.price + getSumByKey(data.modifiers, "price")) * data.amount);
 
 const onDelete = () => {
-  emit('remove', data.id);
+  emit("remove", data.id);
 };
 </script>
 
 <template>
   <ACard :title="`${data.amount}x ${data.product.name}`" class="item-card">
-    <template #extra>
+    <template #extra v-if="removable">
       <AButton @click="onDelete">
         <DeleteOutlined />
       </AButton>
@@ -38,17 +46,22 @@ const onDelete = () => {
             <span>{{ modifier.name }}</span>
             <span>+ {{ modifier.price }}₽</span>
           </ATypographyText>
+          <ATypographyText v-if="data.amount > 1" class="flexed sb">
+            <span style="color: grey">Итого за 1</span>
+            <span>{{ data.product.price + getSumByKey(data.modifiers, "price") }}₽</span>
+          </ATypographyText>
+
           <ATypographyText class="flexed sb">
             <span style="font-weight: bold">Итого</span>
-            <span style="font-weight: bold">{{ data.price }}₽</span>
+            <span style="font-weight: bold">{{ totalPrice }}₽</span>
           </ATypographyText>
         </ASpace>
       </div>
     </div>
     <div v-if="data.comment" class="comments">
-      <ADivider/>
+      <ADivider />
       <ATypographyText type="secondary">Комментарий</ATypographyText>
-      <br/>
+      <br />
       <ATypographyText>{{ data.comment }}</ATypographyText>
     </div>
   </ACard>
@@ -78,7 +91,14 @@ const onDelete = () => {
   flex: 1;
 }
 
-h3 {
-  margin: 0;
+@media screen and (max-width: 350px) {
+  .item-container {
+    gap: 24px;
+    flex-direction: column;
+  }
+
+  .poster {
+    margin: 0 auto;
+  }
 }
 </style>

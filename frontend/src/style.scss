@@ -3,6 +3,7 @@
   line-height: 1.5;
   font-weight: 400;
   overflow-x: hidden;
+  --gray: rgba(5, 5, 5, 0.06);
 }
 
 body {
@@ -90,6 +91,10 @@ label {
   }
 }
 
+.product-order .ant-drawer-body {
+  padding-bottom: 150px;
+}
+
 .checkout-prompt {
   h3 {
     margin: 10px 0 0 !important;
@@ -105,6 +110,11 @@ label {
   .ant-card-body::after {
     display: none;
   }
+}
+
+h2,
+h3 {
+  margin: 0;
 }
 
 /* === COMMON TRANSITIONS === */

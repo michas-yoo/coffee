@@ -91,45 +91,48 @@ const post = async (url, payload) => request("post", url, payload);
 const remove = async (url) => request("delete", url);
 
 // Requests
+const getCart = async () => get(`/cart`);
+
+const getShop = async (id) => get(`/shops/${id}`);
+
+const getShops = async () => get("/shops");
+
+const getOrders = async () => get("/orders");
+
+const getGallery = async (id) => get(`/gallery/${id}`);
+
+const getOrderById = async (id) => get(`/orders/${id}`);
+
+const getProductInfo = async ({ id, shopId }) => get(`/menu/${shopId}/${id}`);
+
 const login = async (payload) => post("/login", payload);
 
 const register = async (payload) => post("/register", payload);
 
-const refreshToken = async () => post("/refresh_token");
-
-const getShops = async () => get("/shops");
-
-const getShop = async (id) => get(`/shops/${id}`);
-
-const getGallery = async (id) => get(`/gallery/${id}`);
-
-const getProductInfo = async ({ id, shopId }) => get(`/menu/${shopId}/${id}`);
-
-const getCart = async () => get(`/cart`);
-
 const addToCart = async (payload) => post(`/cart`, payload);
+
+const createOrder = async (payload) => post("/orders", payload);
+
+const refreshToken = async () => post("/refresh_token");
 
 const clearCart = async () => remove(`/cart`);
 
 const removeFromCart = async ({ id }) => remove(`/cart/${id}`);
 
-const createOrder = async (payload) => post("/orders", payload);
-
-const getOrders = async () => get("/orders");
-
 const methods = {
-  login,
+  addToCart,
+  clearCart,
+  createOrder,
   getCart,
+  getGallery,
+  getOrders,
+  getOrderById,
+  getProductInfo,
   getShop,
   getShops,
-  register,
-  clearCart,
-  addToCart,
-  getOrders,
-  getGallery,
-  createOrder,
+  login,
   refreshToken,
-  getProductInfo,
+  register,
   removeFromCart,
 };
 

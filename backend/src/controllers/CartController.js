@@ -15,9 +15,7 @@ export class CartController extends BaseController {
       id: cartData.modifier_ids || "",
     }, true);
 
-    if (modifiers.ok) {
-      cartData.data.modifiers = modifiers.data;
-    }
+    cartData.data.modifiers = modifiers.data || [];
 
     return cartData;
   }

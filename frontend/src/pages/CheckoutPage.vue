@@ -9,7 +9,7 @@ import { ShopOutlined } from "@ant-design/icons-vue";
 import { displayError } from "../utils/displayError.js";
 import { ArrowLeftOutlined } from "@ant-design/icons-vue";
 import { computed, onMounted } from "vue";
-import CheckoutItem from "../components/CheckoutItem.vue";
+import ProductCard from "../components/ProductCard.vue";
 
 const router = useRouter();
 
@@ -87,7 +87,7 @@ onMounted(async () => {
         </div>
       </ACard>
 
-      <CheckoutItem
+      <ProductCard
         v-for="item in cartItems"
         :key="item.id"
         :data="item"

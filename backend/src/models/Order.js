@@ -12,17 +12,59 @@ export class Order extends BaseEntity {
     };
   }
 
-  async findAll(options = {}, params = {}) {
-    const orders = await this.db.all(`
-      SELECT ${this.tableName}.*, statuses.name as status FROM ${this.tableName}
-      JOIN statuses ON statuses.id = status_id
+  async findOne(options, params = {}) {
+    if (!Object.keys(options).length) {
+      return null;
+    }
+
+    const order = await this.db.get(`
+      SELECT ${this.tableName}.*, name, geo FROM ${this.tableName}
+      JOIN shops on shops.id = ${this.tableName}.shop_id
+      WHERE ${this.tableName}.id = ${options.id}
     `);
 
+    const products = await this.db.all(`
+      SELECT ordered_items.id AS id, amount, comment, name, photo, price, modifier_ids
+      FROM ordered_items
+      JOIN products ON products.id = product_id 
+      WHERE order_id = ${order.id}
+    `);
+
+    order.items = products.map((product) => ({
+      amount: product.amount,
+      comment: product.comment,
+      modifiers: product.modifiers,
+      modifier_ids: product.modifier_ids,
+      product: {
+        name: product.name,
+        photo: product.photo,
+        price: product.price,
+      },
+    }));
+
+    for (let item of order.items) {
+      item.modifiers = await this.db.all(`
+        SELECT * FROM modifiers
+        WHERE id IN (${item.modifier_ids})
+      `);
+    }
+
+    return order;
+  }
+
+  async findAll(options = {}, params = {}) {
+    const orders = await this.db.all(`SELECT * FROM ${this.tableName}`);
+
     for (const order of orders) {
-      // TODO: add item info
       order.items = await this.db.all(`
-        SELECT * FROM ordered_items
+        SELECT ordered_items.*, photo, name FROM ordered_items
+        JOIN products on ordered_items.product_id = products.id
         WHERE order_id = '${order.id}'
+      `);
+
+      order.shop = await this.db.get(`
+        SELECT name, geo FROM shops
+        WHERE id = '${order.shop_id}'
       `);
     }
 

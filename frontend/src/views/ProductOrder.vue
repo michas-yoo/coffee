@@ -31,7 +31,7 @@ const store = reactive({
 });
 
 const finalSum = computed(() => {
-  const modifiersSum = getSumByKey(Object.values(store.activeModifiers), 'price');
+  const modifiersSum = getSumByKey(Object.values(store.activeModifiers), "price");
 
   return (store.sum + modifiersSum) * store.amount;
 });
@@ -65,7 +65,7 @@ const onBeforeAdd = () => {
   }
 
   onAddToCart();
-}
+};
 
 const onAddToCart = async () => {
   const selectedModifierIds = Object.values(store.activeModifiers)
@@ -111,6 +111,7 @@ onMounted(async () => {
 <template>
   <a-drawer
     size="large"
+    class="product-order"
     placement="bottom"
     :open="true"
     :closable="true"
@@ -145,19 +146,20 @@ onMounted(async () => {
       />
     </div>
 
-    <ADivider />
-    <div class="final flexed aic sb">
-      <div>
-        <ATypographyText type="secondary">Итого</ATypographyText>
-        <ATypographyTitle :level="3" style="margin: 0">{{ finalSum }}₽</ATypographyTitle>
+    <div class="checkout-zone">
+      <div class="final flexed aic sb">
+        <div>
+          <ATypographyText type="secondary">Итого</ATypographyText>
+          <ATypographyTitle :level="3" style="margin: 0">{{ finalSum }}₽</ATypographyTitle>
+        </div>
+        <AButton
+          size="large"
+          type="primary"
+          @click="onBeforeAdd"
+        >
+          Добавить в корзину
+        </AButton>
       </div>
-      <AButton
-        size="large"
-        type="primary"
-        @click="onBeforeAdd"
-      >
-        Добавить в корзину
-      </AButton>
     </div>
   </a-drawer>
 </template>
@@ -175,5 +177,15 @@ onMounted(async () => {
   display: block;
   width: 200px;
   margin: 0 auto;
+}
+
+.checkout-zone {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding: 24px;
+  border-top: 1px solid var(--gray);
+  background-color: white;
 }
 </style>

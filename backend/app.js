@@ -160,6 +160,13 @@ function processResultWithCookie(result, res, req = {}) {
     res.json(result);
   });
 
+  app.get("/orders/:orderId", async (req, res) => {
+    const { orderId } = req.params;
+    const { id } = req.payload;
+    const result = await orderController.index({ user_id: id, id: orderId });
+    res.json(result);
+  });
+
   // === POST REQUESTS ===
 
   app.post("/register", async (req, res) => {
