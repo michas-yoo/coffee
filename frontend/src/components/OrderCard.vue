@@ -19,7 +19,7 @@ const onClick = (id) => emit("select", id);
       </div>
       <div class="info">
         <ATypographyTitle :level="2">
-          Заказ от {{ new Date(order.created_at).toLocaleDateString() }}
+          Заказ №{{ order.id }} от {{ new Date(order.created_at).toLocaleDateString() }}
         </ATypographyTitle>
         <ATypographyText>
           {{ order.items.length }} шт.

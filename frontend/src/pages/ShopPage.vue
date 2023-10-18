@@ -98,13 +98,13 @@ onMounted(async () => {
     <ATypographyTitle>{{ store.data.name }}</ATypographyTitle>
 
     <ACard title="Часы работы и расположение" :bordered="false">
-      <ACardGrid style="width: 50%">
+      <ACardGrid style="width: 50%" :hoverable="false">
         <p>
           <ClockCircleOutlined />
           С {{ store.data.open_time }} до {{ store.data.close_time }}
         </p>
       </ACardGrid>
-      <ACardGrid style="width: 50%">
+      <ACardGrid style="width: 50%" :hoverable="false">
         <p>{{ store.data.geo }}</p>
       </ACardGrid>
     </ACard>

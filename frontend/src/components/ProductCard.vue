@@ -91,7 +91,7 @@ const onDelete = () => {
   flex: 1;
 }
 
-@media screen and (max-width: 350px) {
+@media screen and (max-width: 360px) {
   .item-container {
     gap: 24px;
     flex-direction: column;

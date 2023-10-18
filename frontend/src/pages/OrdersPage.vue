@@ -21,6 +21,8 @@ const onShowOrderInfo = (id) => {
   selectedOrder.data = orders.value.find((order) => order.id === id);
 };
 
+const onCloseOrderInfo = () => selectedOrder.data = {};
+
 onMounted(async () => {
   orders.value = await makeRequest("getOrders");
 });
@@ -52,7 +54,11 @@ onMounted(async () => {
         />
       </ATabPane>
     </ATabs>
-    <OrderInfo v-if="selectedOrder.data.id" :order="selectedOrder.data" />
+    <OrderInfo
+      v-if="selectedOrder.data.id"
+      :order="selectedOrder.data"
+      @close="onCloseOrderInfo"
+    />
   </ALayout>
 </template>
 

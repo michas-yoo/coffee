@@ -96,7 +96,7 @@ onMounted(async () => {
 
       <ACard title="Детали заказа">
         <div class="flexed aic sb">
-          <ATypographyText type="secondary">Сумма покупок</ATypographyText>
+          <ATypographyText type="secondary">Сумма заказа</ATypographyText>
           <ATypographyText>{{ grandTotal }}₽</ATypographyText>
         </div>
         <div class="flexed aic sb">

@@ -1,8 +1,8 @@
 <script setup>
 import { makeRequest } from "../api/apiClient.js";
 import { SERVICE_FEE } from "../constants.js";
-import { ShopOutlined } from "@ant-design/icons-vue";
 import { onMounted, reactive } from "vue";
+import { ClockCircleOutlined, CalendarOutlined, ShopOutlined } from "@ant-design/icons-vue";
 import ProductCard from "../components/ProductCard.vue";
 import OrderStatus from "../components/OrderStatus.vue";
 
@@ -10,13 +10,17 @@ const { order } = defineProps({
   order: Object,
 });
 
+const emit = defineEmits(["close"]);
+
 const store = reactive({
   data: {},
 });
 
+const onClose = () => emit("close");
+
 onMounted(async () => {
   store.data = await makeRequest("getOrderById", order.id);
-  console.log(store.data);
+  console.log(order.created_at);
 });
 </script>
 
@@ -27,17 +31,30 @@ onMounted(async () => {
     :open="true"
     :title="`Детали заказа №${order.id}`"
     :closable="true"
+    @close="onClose"
   >
     <template #extra>
-      <OrderStatus :status="store.data.status_id" />
+      <OrderStatus :status="order.status_id" />
     </template>
 
     <ASpin v-if="!store.data.id" />
     <div v-else class="main-layout">
+      <ACard title="Дата и время заказа" class="order-info">
+        <ACardGrid style="width: 50%" :hoverable="false">
+          <p>
+            <CalendarOutlined class="icon" />
+            {{ new Date(order.created_at).toLocaleDateString() }}
+          </p>
+        </ACardGrid>
+        <ACardGrid style="width: 50%" :hoverable="false">
+          <p>
+            <ClockCircleOutlined class="icon" />
+            {{ new Date(order.created_at).toLocaleTimeString() }}
+          </p>
+        </ACardGrid>
+      </ACard>
       <ACard>
-        <ATypographyText type="secondary">
-          Заказ передан в кафе:
-        </ATypographyText>
+        <ATypographyText>Заказ передан в кафе:</ATypographyText>
         <div class="info">
           <AButton shape="circle" size="large" class="icon">
             <ShopOutlined />
@@ -58,7 +75,7 @@ onMounted(async () => {
 
       <ACard title="Детали оплаты">
         <ATypographyText class="flexed sb" type="secondary">
-          <span>Итоговая стоимость</span>
+          <span>Сумма заказа</span>
           <span style="color: black">{{ store.data.price - SERVICE_FEE }}₽</span>
         </ATypographyText>
         <ATypographyText class="flexed sb" type="secondary">
@@ -79,6 +96,10 @@ onMounted(async () => {
 .main-layout {
   display: grid;
   gap: 15px;
+}
+
+.icon {
+  margin-right: 5px;
 }
 
 .info {

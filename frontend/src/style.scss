@@ -117,6 +117,16 @@ h3 {
   margin: 0;
 }
 
+.order-info {
+  .ant-card-grid {
+    padding: 24px;
+  }
+
+  p {
+    margin: 0;
+  }
+}
+
 /* === COMMON TRANSITIONS === */
 .fade {
   &-enter-from,
