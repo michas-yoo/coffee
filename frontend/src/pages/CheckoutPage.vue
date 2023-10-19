@@ -4,9 +4,9 @@ import { appStore } from "../store.js";
 import { useRouter } from "vue-router";
 import { makeRequest } from "../api/apiClient.js";
 import { getSumByKey } from "../utils/getSumByKey.js";
+import { handleError } from "../utils/handleError.js";
 import { SERVICE_FEE } from "../constants.js";
 import { ShopOutlined } from "@ant-design/icons-vue";
-import { handleError } from "../utils/handleError.js";
 import { ArrowLeftOutlined } from "@ant-design/icons-vue";
 import { computed, onMounted } from "vue";
 import ProductCard from "../components/ProductCard.vue";
@@ -19,7 +19,7 @@ const grandTotal = computed(() => getSumByKey(cartItems.value, "price"));
 
 const onRemove = async (id) => {
   await makeRequest("removeFromCart", { id });
-  appStore.cart = await makeRequest("getCart");
+  appStore.cart = appStore.cart.filter((item) => item.id !== id);
 };
 
 const onOrder = async () => {
@@ -62,6 +62,7 @@ onMounted(async () => {
   } catch (e) {
     handleError(e, router);
   }
+  console.log(appStore.cart);
 });
 </script>
 
@@ -89,12 +90,15 @@ onMounted(async () => {
         </div>
       </ACard>
 
-      <ProductCard
-        v-for="item in cartItems"
-        :key="item.id"
-        :data="item"
-        @remove="onRemove"
-      />
+      <transition-group appear name="slide">
+        <ProductCard
+          v-for="(item, index) in cartItems"
+          :key="item.id"
+          :data="item"
+          :index="index"
+          @remove="onRemove"
+        />
+      </transition-group>
 
       <ACard title="Детали заказа">
         <div class="flexed aic sb">

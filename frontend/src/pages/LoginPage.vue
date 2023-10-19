@@ -37,7 +37,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <transition class="login-container" name="move" appear tag="div">
+  <transition class="login-container" name="slide" appear tag="div">
     <div>
       <ALayout>
         <ALayoutHeader class="tal mb30">

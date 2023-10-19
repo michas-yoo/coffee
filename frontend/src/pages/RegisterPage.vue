@@ -62,7 +62,7 @@ const sendRegisterRequest = async (data) => {
 </script>
 
 <template>
-  <transition class="transition-container" name="move" appear>
+  <transition class="transition-container" name="slide" appear>
     <ALayout class="registration-container">
       <RegisterStepOne
         @finish="onStepOneFinished"

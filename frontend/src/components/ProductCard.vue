@@ -3,11 +3,15 @@ import { DeleteOutlined } from "@ant-design/icons-vue";
 import { getSumByKey } from "../utils/getSumByKey.js";
 import { computed } from "vue";
 
-const { data } = defineProps({
+const { data, index } = defineProps({
   data: Object,
   removable: {
     type: Boolean,
     default: true,
+  },
+  index: {
+    type: Number,
+    default: 0,
   },
 });
 
@@ -21,7 +25,11 @@ const onDelete = () => {
 </script>
 
 <template>
-  <ACard :title="`${data.amount}x ${data.product.name}`" class="item-card">
+  <ACard
+    class="item-card"
+    :title="`${data.amount}x ${data.product.name}`"
+    :style="{transitionDelay: `${index * 0.2}s`}"
+  >
     <template #extra v-if="removable">
       <AButton @click="onDelete">
         <DeleteOutlined />

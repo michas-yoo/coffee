@@ -4,11 +4,10 @@ import { makeRequest } from "../api/apiClient.js";
 import { handleError } from "../utils/handleError.js";
 import { useRoute, useRouter } from "vue-router";
 import { observeIntersection } from "../utils/observeIntersection.js";
-import { computed, onMounted, reactive, ref, nextTick } from "vue";
+import { onMounted, reactive, ref, nextTick } from "vue";
 import { ArrowLeftOutlined, ClockCircleOutlined } from "@ant-design/icons-vue";
 import ProductOrder from "../views/ProductOrder.vue";
 import ProductsGrid from "../components/ProductsGrid.vue";
-import CheckoutPrompt from "../components/CheckoutPrompt.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -26,12 +25,6 @@ const store = reactive({
     close_time: "",
   },
   menu: [],
-});
-
-const canShowCheckout = computed(() => {
-  return appStore.productId.value
-    && appStore.cart.length
-    && appStore.cart[0].shop_id === store.data.id;
 });
 
 onMounted(async () => {
@@ -64,13 +57,7 @@ onMounted(async () => {
 <template>
   <div>
     <ASpin size="large" v-if="!store.data.id" />
-    <ALayout
-      v-else
-      class="shop-page-container"
-      :class="{
-        'has-checkout': canShowCheckout,
-      }"
-    >
+    <ALayout v-else class="shop-page-container">
       <APageHeader title=" " @back="() => router.push({ name: 'main' })">
         <template #backIcon>
           <span class="back-container" ref="backContainer" />
@@ -109,8 +96,6 @@ onMounted(async () => {
       <ASkeleton v-if="!store.data.menu.length" active :size="50" />
 
       <ProductOrder :shop-id="store.data.id" />
-
-      <CheckoutPrompt v-if="canShowCheckout" />
     </ALayout>
   </div>
 </template>

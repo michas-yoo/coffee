@@ -50,20 +50,24 @@ onMounted(async () => {
       v-model:activeKey="activeKey"
     >
       <ATabPane key="1" tab="Активные">
-        <OrderCard
-          v-for="order in orders.filter((o) => o.status_id < STATUS_DONE)"
-          :key="order.id"
-          :order="order"
-          @select="onShowOrderInfo"
-        />
+        <transition-group name="slide" appear>
+          <OrderCard
+            v-for="order in orders.filter((o) => o.status_id < STATUS_DONE)"
+            :key="order.id"
+            :order="order"
+            @select="onShowOrderInfo"
+          />
+        </transition-group>
       </ATabPane>
       <ATabPane key="2" tab="Завершенные" :disabled="!doneOrders.length">
-        <OrderCard
-          v-for="order in doneOrders"
-          :key="order.id"
-          :order="order"
-          @select="onShowOrderInfo"
-        />
+        <transition-group name="slide" appear>
+          <OrderCard
+            v-for="order in doneOrders"
+            :key="order.id"
+            :order="order"
+            @select="onShowOrderInfo"
+          />
+        </transition-group>
       </ATabPane>
     </ATabs>
     <OrderInfo

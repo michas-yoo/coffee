@@ -8,7 +8,7 @@ const { data } = defineProps({
 
 <template>
   <div class="products-container">
-    <transition-group appear name="move">
+    <transition-group appear name="slide">
       <SingleProduct
         v-for="(product, i) in data"
         :key="product.id"

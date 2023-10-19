@@ -74,7 +74,7 @@ const onAddToCart = async () => {
     price: finalSum.value,
     shop_id: shopId,
     amount: store.amount,
-    productId: id,
+    productId: id.value,
     modifierIds: selectedModifierIds,
   };
 
