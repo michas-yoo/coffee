@@ -1,9 +1,14 @@
 <script setup>
+import { useRouter } from "vue-router";
 import { STATUS_DONE } from "../constants.js";
 import { makeRequest } from "../api/apiClient.js";
+import { ArrowLeftOutlined } from "@ant-design/icons-vue";
 import { computed, onMounted, reactive, ref } from "vue";
-import OrderCard from "../components/OrderCard.vue";
 import OrderInfo from "../views/OrderInfo.vue";
+import OrderCard from "../components/OrderCard.vue";
+import { appStore } from "../store.js";
+
+const router = useRouter();
 
 const orders = ref([]);
 const activeKey = ref("1");
@@ -24,13 +29,20 @@ const onShowOrderInfo = (id) => {
 const onCloseOrderInfo = () => selectedOrder.data = {};
 
 onMounted(async () => {
+  appStore.currentPage = "orders";
   orders.value = await makeRequest("getOrders");
 });
 </script>
 
 <template>
   <ALayout>
-    <APageHeader title="Заказы" />
+    <APageHeader title="Заказы" @back="() => router.push({ name: 'main' })">
+      <template #backIcon>
+        <AButton shape="circle">
+          <ArrowLeftOutlined />
+        </AButton>
+      </template>
+    </APageHeader>
     <ATabs
       size="large"
       class="tab-bar"
@@ -55,8 +67,7 @@ onMounted(async () => {
       </ATabPane>
     </ATabs>
     <OrderInfo
-      v-if="selectedOrder.data.id"
-      :order="selectedOrder.data"
+      :order="selectedOrder"
       @close="onCloseOrderInfo"
     />
   </ALayout>

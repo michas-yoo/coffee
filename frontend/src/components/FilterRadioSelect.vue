@@ -43,6 +43,7 @@ onMounted(() => {
 
 <style scoped>
 .three-cols {
+  align-items: center;
   grid-template-columns: repeat(3, 1fr);
 }
 </style>

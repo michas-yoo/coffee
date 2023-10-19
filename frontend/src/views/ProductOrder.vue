@@ -1,17 +1,15 @@
 <script setup>
-import { appStore } from "../store.js";
-import { getSumByKey } from "../utils/getSumByKey.js";
-import { makeRequest } from "../api/apiClient.js";
-import { mapModifiers } from "../utils/mapModifiers.js";
-import { DEFAULT_PRODUCT_ID } from "../constants.js";
 import { Modal } from "ant-design-vue";
-import { computed, onMounted, reactive } from "vue";
+import { appStore } from "../store.js";
+import { makeRequest } from "../api/apiClient.js";
+import { getSumByKey } from "../utils/getSumByKey.js";
+import { handleError } from "../utils/handleError.js";
+import { mapModifiers } from "../utils/mapModifiers.js";
+import { computed, reactive, watch } from "vue";
 import AmountSelector from "../components/AmountSelector.vue";
 import ProductModifier from "../components/ProductModifier.vue";
-import { displayError } from "../utils/displayError.js";
 
-const { id, shopId } = defineProps({
-  id: Number,
+const { shopId } = defineProps({
   shopId: Number,
 });
 
@@ -30,6 +28,8 @@ const store = reactive({
   activeModifiers: {},
 });
 
+const id = computed(() => appStore.productId);
+
 const finalSum = computed(() => {
   const modifiersSum = getSumByKey(Object.values(store.activeModifiers), "price");
 
@@ -42,9 +42,7 @@ const onUpdateModifier = ({ ids, name, price }) => {
   store.activeModifiers[name] = { ids, price };
 };
 
-const onClose = () => {
-  appStore.selectedProductId = DEFAULT_PRODUCT_ID;
-};
+const onClose = () => appStore.productId = 0;
 
 const onBeforeAdd = () => {
   if (appStore.cart.length && appStore.cart[0].shop_id !== shopId) {
@@ -57,9 +55,7 @@ const onBeforeAdd = () => {
         await makeRequest("clearCart");
         await onAddToCart();
       },
-      onCancel: () => {
-        appStore.selectedProductId = null;
-      },
+      onCancel: onClose,
     });
     return;
   }
@@ -87,14 +83,18 @@ const onAddToCart = async () => {
     onClose();
   } catch (e) {
     console.log(e);
-    displayError(e);
+    handleError(e);
   }
 };
 
-onMounted(async () => {
+watch(id, async (value) => {
+  if (!value) {
+    return;
+  }
+
   try {
     store.data = await makeRequest("getProductInfo", {
-      id,
+      id: value,
       shopId,
     });
 
@@ -103,7 +103,7 @@ onMounted(async () => {
     delete store.data.modifier_types;
   } catch (e) {
     console.log(e);
-    displayError(e);
+    handleError(e);
   }
 });
 </script>
@@ -113,58 +113,70 @@ onMounted(async () => {
     size="large"
     class="product-order"
     placement="bottom"
-    :open="true"
+    :open="!!id"
     :closable="true"
     @close="onClose"
   >
-    <div class="image-container">
-      <img class="main-image" :src="store.data.photo" :alt="store.data.name" />
+    <div v-if="!store.sum" class="skeleton">
+      <ASkeletonImage class="skeleton-image" />
+      <ASkeleton active />
+      <ASkeleton active />
     </div>
+    <div v-else>
+      <div class="image-container">
+        <img class="main-image" :src="store.data.photo" :alt="store.data.name" />
+      </div>
 
-    <ATypographyTitle>{{ store.data.name }}</ATypographyTitle>
-    <div class="flexed aic sb">
-      <ATypographyTitle style="margin: 0;" :level="4">
-        {{ store.data.price }}₽
-      </ATypographyTitle>
-      <AmountSelector @update="onUpdateAmount" :initial="1" :min="1" :max="10" />
-    </div>
+      <ATypographyTitle>{{ store.data.name }}</ATypographyTitle>
+      <div class="flexed aic sb">
+        <ATypographyTitle style="margin: 0;" :level="4">
+          {{ store.data.price }}₽
+        </ATypographyTitle>
+        <AmountSelector @update="onUpdateAmount" :initial="1" :min="1" :max="10" />
+      </div>
 
-    <ProductModifier
-      v-for="modifier in store.data.modifiers"
-      :key="modifier.id"
-      :data="modifier"
-      @modifier-update="onUpdateModifier"
-    />
-
-    <div class="comment-container">
-      <ADivider />
-      <ATextarea
-        size="large"
-        allow-clear
-        placeholder="Например: поменьше сахара"
-        v-model:value="store.comment"
+      <ProductModifier
+        v-for="modifier in store.data.modifiers"
+        :key="modifier.id"
+        :data="modifier"
+        @modifier-update="onUpdateModifier"
       />
-    </div>
 
-    <div class="checkout-zone">
-      <div class="final flexed aic sb">
-        <div>
-          <ATypographyText type="secondary">Итого</ATypographyText>
-          <ATypographyTitle :level="3" style="margin: 0">{{ finalSum }}₽</ATypographyTitle>
-        </div>
-        <AButton
+      <div class="comment-container">
+        <ADivider />
+        <ATextarea
           size="large"
-          type="primary"
-          @click="onBeforeAdd"
-        >
-          Добавить в корзину
-        </AButton>
+          allow-clear
+          placeholder="Например: поменьше сахара"
+          v-model:value="store.comment"
+        />
+      </div>
+
+      <div class="checkout-zone">
+        <div class="final flexed aic sb">
+          <div>
+            <ATypographyText type="secondary">Итого</ATypographyText>
+            <ATypographyTitle :level="3" style="margin: 0">{{ finalSum }}₽</ATypographyTitle>
+          </div>
+          <AButton
+            size="large"
+            type="primary"
+            @click="onBeforeAdd"
+          >
+            Добавить в корзину
+          </AButton>
+        </div>
       </div>
     </div>
   </a-drawer>
 </template>
 
 <style scoped>
+.skeleton {
+  display: grid;
+  gap: 30px;
+}
+
 .image-container {
   width: 250px;
   padding: 30px;
@@ -187,5 +199,15 @@ onMounted(async () => {
   padding: 24px;
   border-top: 1px solid var(--gray);
   background-color: white;
+}
+
+@media screen and (max-width: 360px) {
+  .image-container {
+    width: 200px;
+  }
+
+  .main-image {
+    width: 150px;
+  }
 }
 </style>

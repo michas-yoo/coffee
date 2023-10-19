@@ -2,7 +2,7 @@
 import { onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { makeRequest } from "../api/apiClient.js";
-import { displayError } from "../utils/displayError.js";
+import { handleError } from "../utils/handleError.js";
 import { NETWORK_ERROR_TEXT } from "../constants.js";
 
 const router = useRouter();
@@ -15,7 +15,7 @@ onMounted(async () => {
     console.log(e);
 
     if (e !== NETWORK_ERROR_TEXT) {
-      displayError(e);
+      handleError(e);
       await router.push({ name: "main" });
     }
   }

@@ -1,11 +1,10 @@
 <script setup>
 import { appStore } from "../store.js";
 import { makeRequest } from "../api/apiClient.js";
-import { displayError } from "../utils/displayError.js";
-import { NETWORK_ERROR_TEXT } from "../constants.js";
+import { handleError } from "../utils/handleError.js";
 import { useRoute, useRouter } from "vue-router";
 import { observeIntersection } from "../utils/observeIntersection.js";
-import { computed, onMounted, reactive, ref } from "vue";
+import { computed, onMounted, reactive, ref, nextTick } from "vue";
 import { ArrowLeftOutlined, ClockCircleOutlined } from "@ant-design/icons-vue";
 import ProductOrder from "../views/ProductOrder.vue";
 import ProductsGrid from "../components/ProductsGrid.vue";
@@ -13,8 +12,8 @@ import CheckoutPrompt from "../components/CheckoutPrompt.vue";
 
 const route = useRoute();
 const router = useRouter();
-const backContainer = ref(null);
 
+const backContainer = ref(null);
 const store = reactive({
   data: {
     id: 0,
@@ -29,9 +28,8 @@ const store = reactive({
   menu: [],
 });
 
-const selectedProductId = computed(() => appStore.selectedProductId);
 const canShowCheckout = computed(() => {
-  return !appStore.selectedProductId
+  return appStore.productId.value
     && appStore.cart.length
     && appStore.cart[0].shop_id === store.data.id;
 });
@@ -47,81 +45,74 @@ onMounted(async () => {
     appStore.loading = false;
   } catch ({ message }) {
     appStore.loading = false;
-    displayError(message);
-
-    if (message === NETWORK_ERROR_TEXT) {
-      await router.push({ name: "bad-request" });
-    } else if (message?.[0] === "User not found") {
-      await router.push({ name: "login" });
-    }
-
+    handleError(message, router);
     return;
   }
 
   const showMenuCallback = () => store.data.menu = store.menu;
 
-  if (window.innerHeight < 800) {
-    observeIntersection(backContainer.value, showMenuCallback, true);
-  } else {
-    showMenuCallback();
-  }
+  await nextTick(() => {
+    if (window.innerHeight < 800) {
+      observeIntersection(backContainer.value, showMenuCallback, true);
+    } else {
+      showMenuCallback();
+    }
+  });
 });
 </script>
 
 <template>
-  <div class="back-container" ref="backContainer"></div>
-  <ASpin size="large" v-if="!store.data.id" />
-  <ALayout
-    v-else
-    class="shop-page-container"
-    :class="{
-      'has-checkout': canShowCheckout,
-    }"
-  >
-    <APageHeader title=" " @back="() => router.push({ name: 'main' })">
-      <template #backIcon>
-        <AButton shape="circle">
-          <ArrowLeftOutlined />
-        </AButton>
-      </template>
-    </APageHeader>
+  <div>
+    <ASpin size="large" v-if="!store.data.id" />
+    <ALayout
+      v-else
+      class="shop-page-container"
+      :class="{
+        'has-checkout': canShowCheckout,
+      }"
+    >
+      <APageHeader title=" " @back="() => router.push({ name: 'main' })">
+        <template #backIcon>
+          <span class="back-container" ref="backContainer" />
+          <AButton shape="circle">
+            <ArrowLeftOutlined />
+          </AButton>
+        </template>
+      </APageHeader>
 
-    <ACarousel class="photo-carousel" autoplay>
-      <img :src="store.data.poster" :alt="store.data.name">
-      <div v-for="photo in store.data.gallery" :key="photo.id">
-        <img :src="photo.photo" :alt="`Photo ${photo.id}`">
-      </div>
-    </ACarousel>
+      <ACarousel class="photo-carousel" autoplay>
+        <img :src="store.data.poster" :alt="store.data.name">
+        <div v-for="photo in store.data.gallery" :key="photo.id">
+          <img :src="photo.photo" :alt="`Photo ${photo.id}`">
+        </div>
+      </ACarousel>
 
-    <div class="empty-space" />
+      <div class="empty-space" />
 
-    <ATypographyTitle>{{ store.data.name }}</ATypographyTitle>
+      <ATypographyTitle>{{ store.data.name }}</ATypographyTitle>
 
-    <ACard title="Часы работы и расположение" :bordered="false">
-      <ACardGrid style="width: 50%" :hoverable="false">
-        <p>
-          <ClockCircleOutlined />
-          С {{ store.data.open_time }} до {{ store.data.close_time }}
-        </p>
-      </ACardGrid>
-      <ACardGrid style="width: 50%" :hoverable="false">
-        <p>{{ store.data.geo }}</p>
-      </ACardGrid>
-    </ACard>
+      <ACard title="Часы работы и расположение" :bordered="false">
+        <ACardGrid style="width: 50%" :hoverable="false">
+          <p>
+            <ClockCircleOutlined />
+            С {{ store.data.open_time }} до {{ store.data.close_time }}
+          </p>
+        </ACardGrid>
+        <ACardGrid style="width: 50%" :hoverable="false">
+          <p>{{ store.data.geo }}</p>
+        </ACardGrid>
+      </ACard>
 
-    <ATypographyTitle :level="2">Меню</ATypographyTitle>
+      <ATypographyTitle :level="2" style="margin: 25px 0 15px">Меню</ATypographyTitle>
 
-    <ProductsGrid :data="store.data.menu" />
-    <ASkeleton v-if="!store.data.menu.length" active :size="50" />
+      <ProductsGrid :data="store.data.menu" />
+      <ASkeleton v-if="!store.data.menu.length" active :size="50" />
 
-    <ProductOrder
-      v-if="selectedProductId"
-      :id="selectedProductId"
-      :shop-id="store.data.id"
-    />
+      <ProductOrder :shop-id="store.data.id" />
 
-    <CheckoutPrompt v-if="canShowCheckout" />
-  </ALayout>
+      <CheckoutPrompt v-if="canShowCheckout" />
+    </ALayout>
+  </div>
 </template>
 
 <style scoped lang="scss">
@@ -161,8 +152,8 @@ img {
 
 .back-container {
   position: absolute;
-  top: 20px;
-  left: 20px;
+  top: 4px;
+  left: 0;
   width: 32px;
   height: 32px;
 }

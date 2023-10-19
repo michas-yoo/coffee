@@ -3,8 +3,7 @@ import { Modal } from "ant-design-vue";
 import { reactive } from "vue";
 import { useRouter } from "vue-router";
 import { makeRequest } from "../api/apiClient.js";
-import { displayError } from "../utils/displayError.js";
-import { NETWORK_ERROR_TEXT } from "../constants.js";
+import { handleError } from "../utils/handleError.js";
 import RegisterStepOne from "../views/RegisterStepOne.vue";
 import RegisterStepTwo from "../views/RegisterStepTwo.vue";
 
@@ -57,10 +56,7 @@ const sendRegisterRequest = async (data) => {
     });
     onSuccess(response);
   } catch (message) {
-    displayError(message);
-    if (message === NETWORK_ERROR_TEXT) {
-      return router.push({ name: "bad-request" });
-    }
+    handleError(message);
   }
 };
 </script>

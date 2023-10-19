@@ -92,7 +92,17 @@ label {
 }
 
 .product-order .ant-drawer-body {
-  padding-bottom: 150px;
+  padding-bottom: 130px;
+}
+
+.skeleton-image {
+  width: 100% !important;
+
+  .ant-skeleton-image {
+    width: 200px !important;
+    height: 200px !important;
+    margin: 0 auto;
+  }
 }
 
 .checkout-prompt {
@@ -124,6 +134,19 @@ h3 {
 
   p {
     margin: 0;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .tab-bar .ant-tabs-tab .anticon {
+    margin-right: 0;
+    padding: 0 10px;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  .two-cols {
+    grid-template-columns: 1fr;
   }
 }
 

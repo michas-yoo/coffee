@@ -1,7 +1,7 @@
 <script setup>
 import { makeRequest } from "../api/apiClient.js";
 import { SERVICE_FEE } from "../constants.js";
-import { onMounted, reactive } from "vue";
+import { reactive, watch } from "vue";
 import { ClockCircleOutlined, CalendarOutlined, ShopOutlined } from "@ant-design/icons-vue";
 import ProductCard from "../components/ProductCard.vue";
 import OrderStatus from "../components/OrderStatus.vue";
@@ -18,23 +18,26 @@ const store = reactive({
 
 const onClose = () => emit("close");
 
-onMounted(async () => {
-  store.data = await makeRequest("getOrderById", order.id);
-  console.log(order.created_at);
-});
+watch(order, async () => {
+  if (!order.data.id) {
+    return;
+  }
+
+  store.data = await makeRequest("getOrderById", order.data.id);
+}, { deep: true });
 </script>
 
 <template>
   <a-drawer
     size="large"
     placement="bottom"
-    :open="true"
-    :title="`Детали заказа №${order.id}`"
+    :open="!!order.data?.id"
+    :title="`Детали заказа №${order.data.id || ''}`"
     :closable="true"
     @close="onClose"
   >
     <template #extra>
-      <OrderStatus :status="order.status_id" />
+      <OrderStatus v-if="order.data.status_id" :status="order.data.status_id" />
     </template>
 
     <ASpin v-if="!store.data.id" />
@@ -43,13 +46,13 @@ onMounted(async () => {
         <ACardGrid style="width: 50%" :hoverable="false">
           <p>
             <CalendarOutlined class="icon" />
-            {{ new Date(order.created_at).toLocaleDateString() }}
+            {{ new Date(store.data.created_at).toLocaleDateString() }}
           </p>
         </ACardGrid>
         <ACardGrid style="width: 50%" :hoverable="false">
           <p>
             <ClockCircleOutlined class="icon" />
-            {{ new Date(order.created_at).toLocaleTimeString() }}
+            {{ new Date(store.data.created_at).toLocaleTimeString() }}
           </p>
         </ACardGrid>
       </ACard>

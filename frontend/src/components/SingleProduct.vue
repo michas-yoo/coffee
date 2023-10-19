@@ -6,7 +6,7 @@ const { data, orderNum } = defineProps({
   orderNum: Number,
 });
 
-const onProductSelect = () => appStore.selectedProductId = data.id;
+const onProductSelect = () => appStore.productId = data.id;
 </script>
 
 <template>

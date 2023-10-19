@@ -2,8 +2,7 @@
 import { appStore } from "../store.js";
 import { useRouter } from "vue-router";
 import { makeRequest } from "../api/apiClient.js";
-import { displayError } from "../utils/displayError.js";
-import { NETWORK_ERROR_TEXT } from "../constants.js";
+import { handleError } from "../utils/handleError.js";
 import { onMounted, reactive } from "vue";
 import { UserOutlined, LockOutlined } from "@ant-design/icons-vue";
 
@@ -26,11 +25,7 @@ const submitForm = async (data) => {
     const response = await makeRequest("login", data);
     onSuccess(response);
   } catch (message) {
-    displayError(message);
-
-    if (message === NETWORK_ERROR_TEXT) {
-      return router.push({ name: "bad-request" });
-    }
+    handleError(message);
   }
 };
 

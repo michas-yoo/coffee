@@ -1,5 +1,4 @@
 <script setup>
-import { ref } from "vue";
 import { useRouter } from "vue-router";
 import {
   HomeOutlined,
@@ -7,37 +6,36 @@ import {
   FileTextOutlined,
   ShoppingCartOutlined,
 } from "@ant-design/icons-vue";
+import { computed } from "vue";
+import { appStore } from "../store.js";
+
+const page = computed(() => appStore.currentPage);
 
 const router = useRouter();
-
-const activeKey = ref("panel_1");
 const panels = [
   {
-    id: "panel_1",
+    id: "main",
     name: "Главная",
     icon: HomeOutlined,
     onClick: () => router.push({ name: "main" }),
   },
   {
-    id: "panel_2",
+    id: "orders",
     name: "Заказы",
     icon: FileTextOutlined,
     onClick: () => router.push({ name: "orders" }),
   },
   {
-    id: "panel_3",
+    id: "checkout",
     name: "Корзина",
     icon: ShoppingCartOutlined,
-    onClick: () => {
-      console.log(123);
-      router.push({ name: "checkout" });
-    },
+    onClick: () => router.push({ name: "checkout" }),
   },
   {
-    id: "panel_4",
+    id: "account",
     name: "Аккаунт",
     icon: UserOutlined,
-    onClick: () => null,
+    onClick: () => router.push({ name: "account" }),
   },
 ];
 
@@ -51,12 +49,12 @@ const onPanelChange = (panelId) => {
     size="large"
     class="tab-bar"
     @change="onPanelChange"
-    v-model:activeKey="activeKey"
+    :activeKey="page"
   >
     <ATabPane v-for="panel in panels" :key="panel.id">
       <template #tab>
         <component :is="panel.icon" />
-        {{ panel.name }}
+        <span class="panel-name">{{ panel.name }}</span>
       </template>
     </ATabPane>
   </ATabs>
@@ -74,5 +72,11 @@ const onPanelChange = (panelId) => {
   padding: 0 20px;
   background-color: #ffffff;
   z-index: 2;
+}
+
+@media screen and (max-width: 500px) {
+  .panel-name {
+    display: none;
+  }
 }
 </style>

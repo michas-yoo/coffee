@@ -6,7 +6,7 @@ import { makeRequest } from "../api/apiClient.js";
 import { getSumByKey } from "../utils/getSumByKey.js";
 import { SERVICE_FEE } from "../constants.js";
 import { ShopOutlined } from "@ant-design/icons-vue";
-import { displayError } from "../utils/displayError.js";
+import { handleError } from "../utils/handleError.js";
 import { ArrowLeftOutlined } from "@ant-design/icons-vue";
 import { computed, onMounted } from "vue";
 import ProductCard from "../components/ProductCard.vue";
@@ -50,15 +50,17 @@ const onOrder = async () => {
       router.push({ name: "orders" });
     }, 2000);
   } catch (e) {
-    displayError(e);
+    handleError(e, router);
   }
 };
 
 onMounted(async () => {
+  appStore.currentPage = "checkout";
+
   try {
     appStore.cart = await makeRequest("getCart");
   } catch (e) {
-    displayError(e);
+    handleError(e, router);
   }
 });
 </script>
