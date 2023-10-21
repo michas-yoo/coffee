@@ -226,28 +226,28 @@ export async function addDefaultData(db) {
   )`);
 
     await db.run(`INSERT INTO shops VALUES (
-    null, "Кафе «Сокол»", "55.8052135 37.5164965", "09:00", "21:00", 
-    "http://localhost:3000/static/shop_1.png"
+    null, "Кафе «Сокол»", "Ленинградский пр-т., 74, корпус 1",
+    "09:00", "21:00", "http://localhost:3000/static/shop_1.png"
   )`);
     await db.run(`INSERT INTO shops VALUES (
-    null, "Кафе «Беговая»", "55.773735 37.5443432", "09:00", "21:00", 
-    "http://localhost:3000/static/shop_2.png"
+    null, "Кафе «Беговая»", "Хорошёвское ш., 39б стр 1, ",
+    "09:00", "21:00", "http://localhost:3000/static/shop_2.png"
   )`);
     await db.run(`INSERT INTO shops VALUES (
-    null, "Кафе «1905» года", "55.7655558 37.5594906", "09:00", "21:00", 
-    "http://localhost:3000/static/shop_3.png"
+    null, "Кафе «1905» года", "1905 Года ул., 15",
+    "09:00", "21:00", "http://localhost:3000/static/shop_3.png"
   )`);
     await db.run(`INSERT INTO shops VALUES (
-    null, "Кафе «Войковская»", "55.8052135 37.5164965", "09:00", "21:00", 
-    "http://localhost:3000/static/shop_4.png"
+    null, "Кафе «Войковская»", "Ленинградский пр-т., 74, корпус 1",
+    "09:00", "21:00", "http://localhost:3000/static/shop_4.png"
   )`);
     await db.run(`INSERT INTO shops VALUES (
-    null, "Кафе «Белорусская»", "55.7781197 37.57902", "09:00", "21:00", 
-    "http://localhost:3000/static/shop_5.png"
+    null, "Кафе «Белорусская»", "Ленинградский пр-т., 3к5",
+    "09:00", "21:00", "http://localhost:3000/static/shop_5.png"
   )`);
     await db.run(`INSERT INTO shops VALUES (
-    null, "Кафе «Китай»-город", "55.7580277 37.6346813", "09:00", "21:00", 
-    "http://localhost:3000/static/shop_6.png"
+    null, "Кафе «Китай»-город", "ул. Маросейка, 9 строение 8",
+    "09:00", "21:00", "http://localhost:3000/static/shop_6.png"
   )`);
 
     await db.run(`INSERT INTO menu_items VALUES (null, 1, 1)`);

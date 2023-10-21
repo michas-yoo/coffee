@@ -2,7 +2,6 @@
 import { useRouter } from "vue-router";
 import {
   HomeOutlined,
-  UserOutlined,
   FileTextOutlined,
   ShoppingCartOutlined,
 } from "@ant-design/icons-vue";
@@ -30,12 +29,6 @@ const panels = [
     name: "Корзина",
     icon: ShoppingCartOutlined,
     onClick: () => router.push({ name: "checkout" }),
-  },
-  {
-    id: "account",
-    name: "Аккаунт",
-    icon: UserOutlined,
-    onClick: () => router.push({ name: "account" }),
   },
 ];
 

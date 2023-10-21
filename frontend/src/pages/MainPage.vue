@@ -3,7 +3,6 @@ import { appStore } from "../store.js";
 import { useRouter } from "vue-router";
 import { makeRequest } from "../api/apiClient.js";
 import { handleError } from "../utils/handleError.js";
-import { BellOutlined } from "@ant-design/icons-vue";
 import { onMounted, ref } from "vue";
 import ShopsGrid from "../components/ShopsGrid.vue";
 
@@ -28,13 +27,7 @@ onMounted(async () => {
       class="header-column"
       :title="appStore.time"
       :sub-title="appStore.username"
-    >
-      <template #extra>
-        <AButton shape="circle" size="large">
-          <BellOutlined />
-        </AButton>
-      </template>
-    </APageHeader>
+    />
     <ShopsGrid :data="shops" />
   </ALayout>
 </template>

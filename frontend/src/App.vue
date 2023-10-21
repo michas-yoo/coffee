@@ -4,16 +4,16 @@ import { useRoute } from "vue-router";
 import TheTabBar from "./components/TheTabBar.vue";
 
 const route = useRoute();
-const isSafePage = computed(() => route.matched
-  .some((record) => record.name.match(/login|register|bad/gi)),
+const hasTabBar = computed(() => route.matched
+  .some((record) => !record.name.match(/login|register|bad/gi)),
 );
 </script>
 
 <template>
-  <ALayout class="main-container" :class="isSafePage ? 'no-paddings' : ''">
+  <ALayout class="main-container" :class="hasTabBar ? '' : 'no-paddings'">
     <router-view />
   </ALayout>
-  <TheTabBar />
+  <TheTabBar v-if="hasTabBar" />
 </template>
 
 <style scoped lang="scss">
