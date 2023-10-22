@@ -1,9 +1,12 @@
-<script setup>
+<script lang="ts" setup>
 import SingleProduct from "./SingleProduct.vue";
+import { IMenuItem } from "../interfaces";
 
-const { data } = defineProps({
-  data: [Object],
-});
+type ProductsGridProps = {
+  data: IMenuItem[],
+};
+
+const { data } = defineProps<ProductsGridProps>();
 </script>
 
 <template>

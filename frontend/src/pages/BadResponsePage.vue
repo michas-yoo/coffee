@@ -1,9 +1,9 @@
-<script setup>
+<script lang="ts" setup>
 import { onMounted } from "vue";
 import { useRouter } from "vue-router";
-import { makeRequest } from "../api/apiClient.js";
-import { handleError } from "../utils/handleError.js";
-import { NETWORK_ERROR_TEXT } from "../constants.js";
+import { makeRequest } from "../api/apiClient.ts";
+import { handleError } from "../utils/handleError.ts";
+import { NETWORK_ERROR_TEXT } from "../constants.ts";
 
 const router = useRouter();
 

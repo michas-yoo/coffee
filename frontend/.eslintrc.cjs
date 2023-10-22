@@ -10,6 +10,13 @@ module.exports = {
     "vue/html-closing-bracket-spacing": "off",
     "vue/singleline-html-element-content-newline": "off",
     "vue/no-unused-vars": "error",
-    "vue/max-attributes-per-line": "off"
+    "vue/max-attributes-per-line": "off",
   },
+  parser: "vue-eslint-parser",
+  "parserOptions": {
+    "parser": "@typescript-eslint/parser",
+    "sourceType": "module",
+  },
+  plugins: ["@typescript-eslint"],
+  root: true,
 };

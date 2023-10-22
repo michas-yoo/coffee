@@ -1,9 +1,12 @@
-<script setup>
+<script lang="ts" setup>
 import SingleShop from "./SingleShop.vue";
+import { IShop } from "../interfaces";
 
-const { data } = defineProps({
-  data: [Object],
-});
+type ShopsGridProps = {
+  data: IShop[],
+};
+
+const { data } = defineProps<ShopsGridProps>();
 </script>
 
 <template>

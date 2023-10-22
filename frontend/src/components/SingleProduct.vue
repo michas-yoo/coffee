@@ -1,10 +1,13 @@
-<script setup>
-import { appStore } from "../store.js";
+<script lang="ts" setup>
+import { appStore } from "../store.ts";
+import { IMenuItem } from "../interfaces";
 
-const { data, orderNum } = defineProps({
-  data: Object,
-  orderNum: Number,
-});
+type SingleProductProps = {
+  data: IMenuItem,
+  orderNum: number,
+};
+
+const { data, orderNum } = defineProps<SingleProductProps>();
 
 const onProductSelect = () => appStore.productId = data.id;
 </script>

@@ -1,9 +1,9 @@
-<script setup>
-import { appStore } from "../store.js";
+<script lang="ts" setup>
+import { appStore } from "../store.ts";
 import { computed } from "vue";
 import { RightOutlined } from "@ant-design/icons-vue";
 import { useRouter } from "vue-router";
-import { getSumByKey } from "../utils/getSumByKey.js";
+import { getSumByKey } from "../utils/getSumByKey.ts";
 
 const router = useRouter();
 

@@ -1,10 +1,10 @@
-<script setup>
+<script lang="ts" setup>
 import { Modal } from "ant-design-vue";
-import { appStore } from "../store.js";
-import { makeRequest } from "../api/apiClient.js";
-import { getSumByKey } from "../utils/getSumByKey.js";
-import { handleError } from "../utils/handleError.js";
-import { mapModifiers } from "../utils/mapModifiers.js";
+import { appStore } from "../store.ts";
+import { makeRequest } from "../api/apiClient.ts";
+import { getSumByKey } from "../utils/getSumByKey.ts";
+import { handleError } from "../utils/handleError.ts";
+import { mapModifiers } from "../utils/mapModifiers.ts";
 import { computed, reactive, watch } from "vue";
 import AmountSelector from "../components/AmountSelector.vue";
 import ProductModifier from "../components/ProductModifier.vue";

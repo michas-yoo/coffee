@@ -1,12 +1,18 @@
-import { appStore } from "../store.js";
-import { isTokenInvalidOrExpired } from "../utils/isTokenInvalidOrExpired.js";
+import { appStore } from "../store.ts";
+import { isTokenInvalidOrExpired } from "../utils/isTokenInvalidOrExpired.ts";
+import { URL } from "../interfaces";
 
-// TODO: описать каждый метод
+type Request = {
+  method: string,
+  body?: string,
+  headers?: Record<string, string>,
+  credentials?: string,
+};
 
 const API_BASE_URL = "http://localhost:3000";
 
 // Private methods
-const fetchCall = async (url, options = {}) => {
+const fetchCall = async (url: URL, options: Request = {}) => {
   if (!options.headers) {
     options.headers = {};
   }
@@ -32,7 +38,7 @@ const fetchCall = async (url, options = {}) => {
   }
 };
 
-const processToken = async (url) => {
+const processToken = async (url: URL) => {
   const shouldUpdateToken = isTokenInvalidOrExpired(url, appStore.accessToken);
 
   if (!shouldUpdateToken) {
@@ -60,9 +66,9 @@ const processToken = async (url) => {
   }
 };
 
-const request = async (type, url, payload = {}) => {
+const request = async (type: string, url: URL, payload = {}) => {
   try {
-    const options = {
+    const options: Request = {
       method: type,
     };
 
@@ -84,24 +90,24 @@ const request = async (type, url, payload = {}) => {
 };
 
 // Request makers
-const get = async (url) => request("get", url);
+const get = async (url: URL) => request("get", url);
 
-const post = async (url, payload) => request("post", url, payload);
+const post = async (url: URL, payload: any) => request("post", url, payload);
 
-const remove = async (url) => request("delete", url);
+const remove = async (url: URL) => request("delete", url);
 
 // Requests
 const getCart = async () => get(`/cart`);
 
-const getShop = async (id) => get(`/shops/${id}`);
+const getShop = async (id: number) => get(`/shops/${id}`);
 
 const getShops = async () => get("/shops");
 
 const getOrders = async () => get("/orders");
 
-const getGallery = async (id) => get(`/gallery/${id}`);
+const getGallery = async (id: number) => get(`/gallery/${id}`);
 
-const getOrderById = async (id) => get(`/orders/${id}`);
+const getOrderById = async (id: number) => get(`/orders/${id}`);
 
 const getProductInfo = async ({ id, shopId }) => get(`/menu/${shopId}/${id}`);
 
@@ -113,11 +119,11 @@ const addToCart = async (payload) => post(`/cart`, payload);
 
 const createOrder = async (payload) => post("/orders", payload);
 
-const refreshToken = async () => post("/refresh_token");
+const refreshToken = async () => post("/refresh_token", {});
 
 const clearCart = async () => remove(`/cart`);
 
-const removeFromCart = async ({ id }) => remove(`/cart/${id}`);
+const removeFromCart = async (id: number) => remove(`/cart/${id}`);
 
 const methods = {
   addToCart,
@@ -135,5 +141,20 @@ const methods = {
   register,
   removeFromCart,
 };
+
+export type MethodName = "addToCart"
+  | "clearCart"
+  | "createOrder"
+  | "getCart"
+  | "getGallery"
+  | "getOrders"
+  | "getOrderById"
+  | "getProductInfo"
+  | "getShop"
+  | "getShops"
+  | "login"
+  | "refreshToken"
+  | "register"
+  | "removeFromCart";
 
 export default methods;

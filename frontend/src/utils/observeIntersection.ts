@@ -1,4 +1,6 @@
-export function observeIntersection(element, callback, once = false) {
+type Callback = () => void;
+
+export function observeIntersection(element: HTMLElement, callback: Callback, once = false) {
   const observer = new IntersectionObserver((entries) => {
     if (!entries[0].isIntersecting) {
       callback?.();

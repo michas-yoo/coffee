@@ -1,18 +1,25 @@
-<script setup>
+<script lang="ts" setup>
 import FilterRadioSelect from "./FilterRadioSelect.vue";
 import FilterCheckBoxSelect from "./FilterCheckBoxSelect.vue";
+import { IProductModifier, Money } from "../interfaces";
 
-const { data, divider } = defineProps({
-  data: [Object],
-  divider: {
-    type: Boolean,
-    default: true,
-  },
+type ProductModifierProps = {
+  data: IProductModifier,
+  divider: boolean,
+};
+
+type ModifierUpdataData = {
+  ids: string,
+  price: Money,
+};
+
+const { data, divider } = withDefaults(defineProps<ProductModifierProps>(), {
+  divider: true,
 });
 
 const emit = defineEmits(["modifier-update"]);
 
-const onModifierUpdate = ({ ids, price }) => {
+const onModifierUpdate = ({ ids, price }: ModifierUpdataData) => {
   emit("modifier-update", {
     ids,
     price,

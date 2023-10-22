@@ -1,14 +1,17 @@
-<script setup>
+<script lang="ts" setup>
 import { RightOutlined, ShopOutlined } from "@ant-design/icons-vue";
 import OrderStatus from "./OrderStatus.vue";
+import { IOrder } from "../interfaces";
 
-const { order } = defineProps({
-  order: Object,
-});
+type OrderCardProps = {
+  order: IOrder,
+};
+
+const { order } = defineProps<OrderCardProps>();
 
 const emit = defineEmits(["select"]);
 
-const onClick = (id) => emit("select", id);
+const onClick = (id: number) => emit("select", id);
 </script>
 
 <template>

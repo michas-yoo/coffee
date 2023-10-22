@@ -1,4 +1,4 @@
-<script setup>
+<script lang="ts" setup>
 import { useRouter } from "vue-router";
 import {
   HomeOutlined,
@@ -6,7 +6,7 @@ import {
   ShoppingCartOutlined,
 } from "@ant-design/icons-vue";
 import { computed } from "vue";
-import { appStore } from "../store.js";
+import { appStore } from "../store.ts";
 
 const page = computed(() => appStore.currentPage);
 
@@ -32,7 +32,7 @@ const panels = [
   },
 ];
 
-const onPanelChange = (panelId) => {
+const onPanelChange = (panelId: string) => {
   panels.find((panel) => panel.id === panelId)?.onClick();
 };
 </script>

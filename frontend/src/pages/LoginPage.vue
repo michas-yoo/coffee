@@ -1,8 +1,8 @@
-<script setup>
-import { appStore } from "../store.js";
+<script lang="ts" setup>
+import { appStore } from "../store.ts";
 import { useRouter } from "vue-router";
-import { makeRequest } from "../api/apiClient.js";
-import { handleError } from "../utils/handleError.js";
+import { makeRequest } from "../api/apiClient.ts";
+import { handleError } from "../utils/handleError.ts";
 import { onMounted, reactive } from "vue";
 import { UserOutlined, LockOutlined } from "@ant-design/icons-vue";
 

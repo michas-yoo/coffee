@@ -1,12 +1,14 @@
-<script setup>
+<script lang="ts" setup>
 import { ref } from "vue";
 
+type AmountSelectorProps = {
+  min: number,
+  max: number,
+  initial: number,
+};
+
 const emit = defineEmits(["update"]);
-const { min, max, initial } = defineProps({
-  min: Number,
-  max: Number,
-  initial: Number,
-});
+const { min, max, initial } = defineProps<AmountSelectorProps>();
 
 const value = ref(initial);
 

@@ -1,4 +1,4 @@
-<script setup>
+<script lang="ts" setup>
 import { reactive } from "vue";
 import { ArrowLeftOutlined } from "@ant-design/icons-vue";
 

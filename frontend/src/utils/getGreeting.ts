@@ -1,6 +1,6 @@
-import { isBetween } from "./isBetween.js";
+import { isBetween } from "./isBetween";
 
-export function getGreeting() {
+export function getGreeting(): string {
   const currentHour = new Date().getHours();
 
   // От 4 до 11 – утро

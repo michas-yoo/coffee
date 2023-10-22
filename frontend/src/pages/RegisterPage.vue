@@ -1,9 +1,9 @@
-<script setup>
+<script lang="ts" setup>
 import { Modal } from "ant-design-vue";
 import { reactive } from "vue";
 import { useRouter } from "vue-router";
-import { makeRequest } from "../api/apiClient.js";
-import { handleError } from "../utils/handleError.js";
+import { makeRequest } from "../api/apiClient.ts";
+import { handleError } from "../utils/handleError.ts";
 import RegisterStepOne from "../views/RegisterStepOne.vue";
 import RegisterStepTwo from "../views/RegisterStepTwo.vue";
 
@@ -62,7 +62,7 @@ const sendRegisterRequest = async (data) => {
 </script>
 
 <template>
-  <transition class="transition-container" name="slide" appear>
+  <transition name="slide" appear>
     <ALayout class="registration-container">
       <RegisterStepOne
         @finish="onStepOneFinished"
@@ -83,9 +83,5 @@ const sendRegisterRequest = async (data) => {
 .registration-container {
   max-width: 800px;
   margin: 0 auto 20px;
-}
-
-.transition-container {
-  position: relative;
 }
 </style>

@@ -1,11 +1,14 @@
-<script setup>
+<script lang="ts" setup>
 import { computed } from "vue";
 import { useRoute } from "vue-router";
 import TheTabBar from "./components/TheTabBar.vue";
 
 const route = useRoute();
 const hasTabBar = computed(() => route.matched
-  .some((record) => !record.name.match(/login|register|bad/gi)),
+  .some((record) => {
+    // @ts-ignore
+    return !record.name.match(/login|register|bad/gi);
+  }),
 );
 </script>
 

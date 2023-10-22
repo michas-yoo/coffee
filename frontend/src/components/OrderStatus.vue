@@ -1,9 +1,18 @@
-<script setup>
-const { status } = defineProps({
-  status: Number,
-});
+<script lang="ts" setup>
+type OrderStatusProps = {
+  status: number,
+};
 
-const STATUSES_DICT = {
+type StatusesDict = {
+  [key: number]: {
+    title: string,
+    color: string,
+  }
+};
+
+const { status } = defineProps<OrderStatusProps>();
+
+const STATUSES_DICT: StatusesDict = {
   1: {
     title: "Принят",
     color: "orange",

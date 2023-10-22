@@ -3,9 +3,12 @@ import {
   NETWORK_ERROR_TEXT,
   NO_TOKEN_ERROR_TEXT,
   BAD_USER_ERROR_TEXT,
-} from "../constants.js";
+} from "../constants";
+import { Router } from "vue-router";
 
-export const handleError = (data, router = null) => {
+type PossibleError = string[] | string | Record<string, string>;
+
+export const handleError = (data: PossibleError, router: Router | null = null): void => {
   let message = "";
 
   if (Array.isArray(data)) {

@@ -1,12 +1,15 @@
-<script setup>
+<script lang="ts" setup>
 import { useRouter } from "vue-router";
+import { IShop } from "../interfaces";
+
+type SingleShopProps = {
+  data: IShop,
+  orderNum: number,
+};
+
+const { data, orderNum } = defineProps<SingleShopProps>();
 
 const router = useRouter();
-
-const { data, orderNum } = defineProps({
-  data: Object,
-  orderNum: Number,
-});
 
 const onClick = () => {
   router.push({ name: "shop", params: { id: data.id } });

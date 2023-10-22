@@ -1,12 +1,12 @@
-<script setup>
+<script lang="ts" setup>
 import { useRouter } from "vue-router";
-import { STATUS_DONE } from "../constants.js";
-import { makeRequest } from "../api/apiClient.js";
+import { STATUS_DONE } from "../constants.ts";
+import { makeRequest } from "../api/apiClient.ts";
 import { ArrowLeftOutlined } from "@ant-design/icons-vue";
 import { computed, onMounted, reactive, ref } from "vue";
 import OrderInfo from "../views/OrderInfo.vue";
 import OrderCard from "../components/OrderCard.vue";
-import { appStore } from "../store.js";
+import { appStore } from "../store.ts";
 
 const router = useRouter();
 

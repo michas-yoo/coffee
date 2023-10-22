@@ -1,11 +1,11 @@
-<script setup>
+<script lang="ts" setup>
 import { Modal } from "ant-design-vue";
-import { appStore } from "../store.js";
+import { appStore } from "../store.ts";
 import { useRouter } from "vue-router";
-import { makeRequest } from "../api/apiClient.js";
-import { getSumByKey } from "../utils/getSumByKey.js";
-import { handleError } from "../utils/handleError.js";
-import { SERVICE_FEE } from "../constants.js";
+import { makeRequest } from "../api/apiClient.ts";
+import { getSumByKey } from "../utils/getSumByKey.ts";
+import { handleError } from "../utils/handleError.ts";
+import { SERVICE_FEE } from "../constants.ts";
 import { ShopOutlined } from "@ant-design/icons-vue";
 import { ArrowLeftOutlined } from "@ant-design/icons-vue";
 import { computed, onMounted } from "vue";
@@ -18,7 +18,7 @@ const cartItems = computed(() => appStore.cart);
 const grandTotal = computed(() => getSumByKey(cartItems.value, "price"));
 
 const onRemove = async (id) => {
-  await makeRequest("removeFromCart", { id });
+  await makeRequest("removeFromCart", id);
   appStore.cart = appStore.cart.filter((item) => item.id !== id);
 };
 
@@ -62,7 +62,6 @@ onMounted(async () => {
   } catch (e) {
     handleError(e, router);
   }
-  console.log(appStore.cart);
 });
 </script>
 

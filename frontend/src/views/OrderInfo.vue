@@ -1,19 +1,36 @@
-<script setup>
-import { makeRequest } from "../api/apiClient.js";
-import { SERVICE_FEE } from "../constants.js";
+<script lang="ts" setup>
+import { makeRequest } from "../api/apiClient.ts";
+import { SERVICE_FEE } from "../constants.ts";
 import { reactive, watch } from "vue";
 import { ClockCircleOutlined, CalendarOutlined, ShopOutlined } from "@ant-design/icons-vue";
 import ProductCard from "../components/ProductCard.vue";
 import OrderStatus from "../components/OrderStatus.vue";
+import { IOrderDetails } from "../interfaces";
 
-const { order } = defineProps({
-  order: Object,
-});
+type OrderData = {
+  data: IOrderDetails
+};
+
+type OrderInfoProps = {
+  order: OrderData
+};
+
+const { order } = defineProps<OrderInfoProps>();
 
 const emit = defineEmits(["close"]);
 
-const store = reactive({
-  data: {},
+const store = reactive<OrderData>({
+  data: {
+    id: 0,
+    shop_id: 0,
+    user_id: 0,
+    price: 0,
+    created_at: "",
+    status_id: 0,
+    name: "",
+    geo: "",
+    items: [],
+  },
 });
 
 const onClose = () => emit("close");

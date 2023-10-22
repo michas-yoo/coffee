@@ -1,6 +1,6 @@
-import methods from "./apiCalls.js";
+import methods, { MethodName } from "./apiCalls.ts";
 
-export const makeRequest = async (requestName, data = null) => {
+export const makeRequest = async (requestName: MethodName, data: any = null): Promise<any> => {
   try {
     const request = await methods[requestName]?.(data);
     return Promise.resolve(request);

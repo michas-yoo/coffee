@@ -1,9 +1,9 @@
-<script setup>
-import { appStore } from "../store.js";
-import { makeRequest } from "../api/apiClient.js";
-import { handleError } from "../utils/handleError.js";
+<script lang="ts" setup>
+import { appStore } from "../store.ts";
+import { makeRequest } from "../api/apiClient.ts";
+import { handleError } from "../utils/handleError.ts";
 import { useRoute, useRouter } from "vue-router";
-import { observeIntersection } from "../utils/observeIntersection.js";
+import { observeIntersection } from "../utils/observeIntersection.ts";
 import { onMounted, reactive, ref, nextTick } from "vue";
 import { ArrowLeftOutlined, ClockCircleOutlined } from "@ant-design/icons-vue";
 import ProductOrder from "../views/ProductOrder.vue";
