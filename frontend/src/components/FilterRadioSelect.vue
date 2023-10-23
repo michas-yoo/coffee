@@ -1,9 +1,12 @@
 <script lang="ts" setup>
 import { onMounted, ref } from "vue";
+import { IModifier } from "../interfaces";
 
-const { filters } = defineProps({
-  filters: [Object],
-});
+type FilterRadioSelectProps = {
+  filters: IModifier[],
+};
+
+const { filters } = defineProps<FilterRadioSelectProps>();
 
 const emit = defineEmits(["radio-select"]);
 

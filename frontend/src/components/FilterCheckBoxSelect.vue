@@ -1,19 +1,22 @@
 <script lang="ts" setup>
 import { onMounted, ref } from "vue";
+import { IModifier } from "../interfaces";
 
-const { filters } = defineProps({
-  filters: [Object],
-});
+type FilterCheckBoxSelectProps = {
+  filters: IModifier[],
+};
+
+const { filters } = defineProps<FilterCheckBoxSelectProps>();
 
 const emit = defineEmits(["checkbox-select"]);
 
 const checked = ref([]);
 
-const onUpdate = (currentValues) => {
+const onUpdate = (currentValues: string[]) => {
   let finalSum = 0;
-  const modifierIds = [];
+  const modifierIds: number[] = [];
 
-  filters.forEach((filter) => {
+  filters.forEach((filter: IModifier) => {
     if (currentValues.includes(filter.name)) {
       finalSum += filter.price;
       modifierIds.push(filter.id);

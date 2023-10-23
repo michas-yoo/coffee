@@ -5,10 +5,11 @@ import { ApiClient } from "../api/apiClient.ts";
 import { handleError } from "../utils/handleError.ts";
 import { onMounted, ref } from "vue";
 import ShopsGrid from "../components/ShopsGrid.vue";
+import { IShop } from "../interfaces";
 
 const router = useRouter();
 
-const shops = ref([]);
+const shops = ref<IShop[]>([]);
 
 onMounted(async () => {
   appStore.currentPage = "main";

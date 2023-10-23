@@ -1,13 +1,4 @@
-import {
-  ICartItem,
-  IGalleryPhoto,
-  IOrder,
-  IOrderDetails,
-  IProductFull,
-  IShop,
-  LoginResponse,
-  Money,
-} from "../interfaces";
+import { Money } from "../interfaces";
 
 export interface IRequest {
   method?: string;
@@ -22,46 +13,13 @@ export interface IResponse {
   message: string | string[] | null;
 }
 
-export interface ICartResponse extends IResponse {
-  data: ICartItem[];
+export interface ICreationResponse {
+  id: number;
 }
 
-export interface IShopResponse extends IResponse {
-  data: IShop;
-}
-
-export interface IShopsResponse extends IResponse {
-  data: IShop[];
-}
-
-export interface IOrderResponse extends IResponse {
-  data: IOrderDetails;
-}
-
-export interface IOrdersResponse extends IResponse {
-  data: IOrder[];
-}
-
-export interface IGalleryResponse extends IResponse {
-  data: IGalleryPhoto[];
-}
-
-export interface IProductResponse extends IResponse {
-  data: IProductFull;
-}
-
-export interface ILoginResponse extends IResponse {
-  data: LoginResponse;
-}
-
-export interface ICreationResponse extends IResponse {
-  data: {
-    id: number;
-  };
-}
-
-export interface IEmptyResponse extends IResponse {
-  data: null;
+export interface IProductParams {
+  id: number;
+  shopId: number;
 }
 
 export interface ILoginPayload {

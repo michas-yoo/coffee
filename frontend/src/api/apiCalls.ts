@@ -78,7 +78,7 @@ const processToken = async (url: URL): Promise<IResponse> => {
  * @param url - Ручка бека, на которую будем случаться
  * @param payload - Данные, которые нужно передать
  */
-const request = async (type: string, url: URL, payload = {}): Promise<IResponse> => {
+const request = async (type: string, url: URL, payload = {}): Promise<any> => {
   try {
     const options: IRequest = {
       method: type,
@@ -106,7 +106,7 @@ const request = async (type: string, url: URL, payload = {}): Promise<IResponse>
  * @description Выполняет GET-запрос
  * @param url - На какую ручку бекенда нужно выполнить запрос
  */
-export const get = async (url: URL) => request("get", url);
+export const get = async (url: URL): Promise<any> => request("get", url);
 
 /**
  * @function
@@ -114,11 +114,11 @@ export const get = async (url: URL) => request("get", url);
  * @param url - На какую ручку бекенда нужно выполнить запрос
  * @param payload - Данные, которые передадим на бекенд
  */
-export const post = async (url: URL, payload: any) => request("post", url, payload);
+export const post = async (url: URL, payload: any): Promise<any> => request("post", url, payload);
 
 /**
  * @function
  * @description Выполняет DELETE-запрос
  * @param url - На какую ручку бекенда нужно выполнить запрос
  */
-export const remove = async (url: URL) => request("delete", url);
+export const remove = async (url: URL): Promise<any> => request("delete", url);

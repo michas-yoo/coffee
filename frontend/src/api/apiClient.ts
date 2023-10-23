@@ -1,60 +1,61 @@
 import { get, post, remove } from "./apiCalls.ts";
 import {
-  ICartItemPayload,
-  ICartResponse,
-  ICreationResponse,
-  IEmptyResponse,
-  IGalleryResponse,
   ILoginPayload,
-  ILoginResponse,
   IOrderPayload,
-  IOrderResponse,
-  IOrdersResponse,
-  IProductResponse,
+  IProductParams,
   IRegisterPayload,
-  IShopResponse,
-  IShopsResponse,
+  ICartItemPayload,
+  ICreationResponse,
 } from "./types";
+import {
+  IShop,
+  IOrder,
+  ICartItem,
+  IProductRaw,
+  IOrderDetails,
+  IGalleryPhoto,
+  ILoginResponse,
+} from "../interfaces";
 
 export class ApiClient {
   /**
    * @function
    * @description Возвращает актуальную корзину пользователя
    */
-  static getCart = async (): Promise<ICartResponse> => get(`/cart`);
+  static getCart = async (): Promise<ICartItem[]> => get(`/cart`);
 
   /**
    * @function
    * @description Возвращает кафе по id
    * @param id - Id кафе
    */
-  static getShop = async (id: number): Promise<IShopResponse> => get(`/shops/${id}`);
+  static getShop = async (id: number): Promise<IShop> => get(`/shops/${id}`);
 
   /**
    * @function
    * @description Возвращает все доступные кафе
    */
-  static getShops = async (): Promise<IShopsResponse> => get("/shops");
+  static getShops = async (): Promise<IShop[]> => get("/shops");
 
   /**
    * @function
    * @description Возвращает все заказы пользователя
    */
-  static getOrders = async (): Promise<IOrdersResponse> => get("/orders");
+  static getOrders = async (): Promise<IOrder[]> => get("/orders");
 
   /**
    * @function
    * @description Возвращает галерею фотографий кафе
    * @param id - Id кафе
    */
-  static getGallery = async (id: number): Promise<IGalleryResponse> => get(`/gallery/${id}`);
+  static getGallery = async (id: number): Promise<IGalleryPhoto[]> => get(`/gallery/${id}`);
 
   /**
    * @function
    * @description Возвращает полную информацию о заказе
    * @param id - Id заказа
    */
-  static getOrderById = async (id: number): Promise<IOrderResponse> => get(`/orders/${id}`);
+  static getOrderById = async (id: number): Promise<IOrderDetails> => get(`/orders/${id}`);
 
   /**
    * @function
@@ -62,7 +63,7 @@ export class ApiClient {
    * @param id
    * @param shopId
    */
-  static getProductInfo = async ({ id, shopId }): Promise<IProductResponse> => get(`/menu/${shopId}/${id}`);
+  static getProductInfo = async ({ id, shopId }: IProductParams): Promise<IProductRaw> => get(`/menu/${shopId}/${id}`);
 
   /**
    * @function
@@ -102,12 +103,12 @@ export class ApiClient {
    * @function
    * @description Очищает корзину пользователя
    */
-  static clearCart = async (): Promise<IEmptyResponse> => remove(`/cart`);
+  static clearCart = async (): Promise<null> => remove(`/cart`);
 
   /**
    * @function
    * @description Удаляет один товар из корзины пользователя
    * @param id - Id товара
    */
-  static removeFromCart = async (id: number): Promise<IEmptyResponse> => remove(`/cart/${id}`);
+  static removeFromCart = async (id: number): Promise<null> => remove(`/cart/${id}`);
 }

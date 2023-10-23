@@ -5,7 +5,7 @@ import { ApiClient } from "../api/apiClient.ts";
 import { handleError } from "../utils/handleError.ts";
 import { onMounted, reactive } from "vue";
 import { UserOutlined, LockOutlined } from "@ant-design/icons-vue";
-import { LoginResponse } from "../interfaces";
+import { ILoginResponse } from "../interfaces";
 import { ILoginPayload } from "../api/types";
 
 const router = useRouter();
@@ -15,7 +15,7 @@ const formState = reactive<ILoginPayload>({
   password: "",
 });
 
-const onSuccess = (data: LoginResponse) => {
+const onSuccess = (data: ILoginResponse) => {
   appStore.username = data.username;
   appStore.accessToken = data.accessToken;
   router.push({ name: "main" });
@@ -23,7 +23,7 @@ const onSuccess = (data: LoginResponse) => {
 
 const submitForm = async (data: ILoginPayload) => {
   try {
-    const response: LoginResponse = await ApiClient.login(data);
+    const response: ILoginResponse = await ApiClient.login(data);
     onSuccess(response);
   } catch (e: any) {
     handleError(e);

@@ -34,7 +34,7 @@ const store = reactive<ShopInfo>({
 });
 
 onMounted(async () => {
-  const shopId = route.params.id;
+  const shopId = +route.params.id;
   appStore.loading = true;
 
   try {

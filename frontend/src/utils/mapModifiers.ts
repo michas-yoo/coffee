@@ -1,15 +1,10 @@
-import { IModifier, IModifierType, IProductModifier } from "../interfaces";
-
-type RawModifiers = {
-  modifiers: IModifier[],
-  modifier_types: IModifierType[],
-};
+import { IModifier, IModifierType, IProductModifier, IProductRaw } from "../interfaces";
 
 type Modifiers = {
   [key: number]: IProductModifier,
 };
 
-export function mapModifiers({ modifier_types, modifiers }: RawModifiers) {
+export function mapModifiers({ modifier_types, modifiers }: IProductRaw): IProductModifier[] {
   const productModifiersList: Modifiers = {};
 
   modifier_types.forEach((type: IModifierType): void => {

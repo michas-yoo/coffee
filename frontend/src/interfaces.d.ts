@@ -17,17 +17,24 @@ export type ProfileInfo = {
   phone: string
 };
 
-export type LoginResponse = {
+export interface ILoginResponse {
   id?: number;
   username: string,
   accessToken: string,
-};
+}
 
 export interface IModifier {
   id: number;
   name: string;
   price: Money;
   type: number;
+}
+
+export interface IProductModifier {
+  id: number;
+  name: string;
+  multipleSelect: boolean;
+  modifiers: IModifier[];
 }
 
 export interface IModifierType {
@@ -83,13 +90,17 @@ interface ICartItem {
   shop: IShop;
 }
 
-export interface IProductFull {
+export interface IProductRaw {
   id: number;
   name: string;
   photo: URL;
   price: Money;
   modifier_types: IModifierType[];
   modifiers: IModifier[];
+}
+
+export interface IProductFull extends IProductRaw {
+  modifiers: IProductModifier[];
 }
 
 interface IOrderItem {
@@ -148,11 +159,4 @@ export interface IAppStore {
   accessToken: string;
   productId: number;
   currentPage: string;
-}
-
-export interface IProductModifier {
-  id: number;
-  name: string;
-  multipleSelect: boolean;
-  modifiers: IModifier[];
 }

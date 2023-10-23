@@ -8,7 +8,7 @@ import { mapModifiers } from "../utils/mapModifiers.ts";
 import { computed, reactive, watch } from "vue";
 import AmountSelector from "../components/AmountSelector.vue";
 import ProductModifier from "../components/ProductModifier.vue";
-import { IProductFull } from "../interfaces";
+import { IProductFull, Money } from "../interfaces";
 
 type ProductOrderProps = {
   shopId: number
@@ -20,8 +20,17 @@ type ProductStore = {
   amount: number,
   comment: string,
   activeModifiers: {
-    [key: string]: number,
+    [key: string]: {
+      ids: string,
+      price: Money,
+    },
   }
+};
+
+type ModifierUpdate = {
+  ids: string,
+  name: string,
+  price: Money,
 };
 
 const { shopId } = defineProps<ProductOrderProps>();
@@ -32,7 +41,7 @@ const store = reactive<ProductStore>({
     name: "",
     price: 0,
     photo: "",
-    modifiers: {},
+    modifiers: [],
     modifier_types: [],
   },
   sum: 0,
@@ -49,9 +58,9 @@ const finalSum = computed(() => {
   return (store.sum + modifiersSum) * store.amount;
 });
 
-const onUpdateAmount = (newValue) => store.amount = newValue;
+const onUpdateAmount = (newValue: number) => store.amount = newValue;
 
-const onUpdateModifier = ({ ids, name, price }) => {
+const onUpdateModifier = ({ ids, name, price }: ModifierUpdate) => {
   store.activeModifiers[name] = { ids, price };
 };
 
@@ -106,14 +115,20 @@ watch(id, async (value) => {
   }
 
   try {
-    store.data = await ApiClient.getProductInfo({
+    const product = await ApiClient.getProductInfo({
       id: value,
       shopId,
     });
 
-    store.sum = store.data.price;
-    store.data.modifiers = mapModifiers(store.data);
-    delete store.data.modifier_types;
+    store.sum = product.price;
+    store.data = {
+      id: product.id,
+      name: product.name,
+      photo: product.photo,
+      price: product.price,
+      modifier_types: product.modifier_types,
+      modifiers: mapModifiers(product),
+    };
   } catch (e: any) {
     console.log(e);
     handleError(e);
