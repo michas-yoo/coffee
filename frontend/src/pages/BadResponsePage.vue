@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { onMounted } from "vue";
 import { useRouter } from "vue-router";
-import { makeRequest } from "../api/apiClient.ts";
+import { ApiClient } from "../api/apiClient.ts";
 import { handleError } from "../utils/handleError.ts";
 import { NETWORK_ERROR_TEXT } from "../constants.ts";
 
@@ -9,7 +9,7 @@ const router = useRouter();
 
 onMounted(async () => {
   try {
-    await makeRequest("refreshToken");
+    await ApiClient.refreshToken();
     await router.push({ name: "main" });
   } catch (e: any) {
     console.log(e);

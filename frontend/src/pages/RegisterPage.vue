@@ -2,7 +2,7 @@
 import { Modal } from "ant-design-vue";
 import { reactive } from "vue";
 import { useRouter } from "vue-router";
-import { makeRequest } from "../api/apiClient.ts";
+import { ApiClient } from "../api/apiClient.ts";
 import { handleError } from "../utils/handleError.ts";
 import RegisterStepOne from "../views/RegisterStepOne.vue";
 import RegisterStepTwo from "../views/RegisterStepTwo.vue";
@@ -59,7 +59,7 @@ const sendRegisterRequest = async (data: ProfileInfo) => {
   registration.profileInfo = data;
 
   try {
-    await makeRequest("register", {
+    await ApiClient.register({
       ...registration.mainInfo,
       ...registration.profileInfo,
     });

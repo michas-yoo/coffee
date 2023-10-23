@@ -1,37 +1,29 @@
 <script lang="ts" setup>
 import { appStore } from "../store.ts";
 import { useRouter } from "vue-router";
-import { makeRequest } from "../api/apiClient.ts";
+import { ApiClient } from "../api/apiClient.ts";
 import { handleError } from "../utils/handleError.ts";
 import { onMounted, reactive } from "vue";
 import { UserOutlined, LockOutlined } from "@ant-design/icons-vue";
-
-type FormState = {
-  email: string,
-  password: string,
-};
-
-type LoginRequestResponse = {
-  username: string,
-  accessToken: string,
-};
+import { LoginResponse } from "../interfaces";
+import { ILoginPayload } from "../api/types";
 
 const router = useRouter();
 
-const formState = reactive<FormState>({
+const formState = reactive<ILoginPayload>({
   email: "",
   password: "",
 });
 
-const onSuccess = (data: LoginRequestResponse) => {
+const onSuccess = (data: LoginResponse) => {
   appStore.username = data.username;
   appStore.accessToken = data.accessToken;
   router.push({ name: "main" });
 };
 
-const submitForm = async (data: FormState) => {
+const submitForm = async (data: ILoginPayload) => {
   try {
-    const response: LoginRequestResponse = await makeRequest("login", data);
+    const response: LoginResponse = await ApiClient.login(data);
     onSuccess(response);
   } catch (e: any) {
     handleError(e);

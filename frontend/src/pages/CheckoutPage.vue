@@ -2,7 +2,7 @@
 import { Modal } from "ant-design-vue";
 import { appStore } from "../store.ts";
 import { useRouter } from "vue-router";
-import { makeRequest } from "../api/apiClient.ts";
+import { ApiClient } from "../api/apiClient.ts";
 import { getSumByKey } from "../utils/getSumByKey.ts";
 import { handleError } from "../utils/handleError.ts";
 import { SERVICE_FEE } from "../constants.ts";
@@ -19,7 +19,7 @@ const cartItems = computed(() => appStore.cart);
 const grandTotal = computed(() => getSumByKey(cartItems.value, "price"));
 
 const onRemove = async (id: number) => {
-  await makeRequest("removeFromCart", id);
+  await ApiClient.removeFromCart(id);
   appStore.cart = appStore.cart.filter((item) => item.id !== id);
 };
 
@@ -34,7 +34,7 @@ const onOrder = async () => {
       modifier_ids: item.modifier_ids,
     }));
 
-    await makeRequest("createOrder", {
+    await ApiClient.createOrder({
       cart: requestCart,
       total: grandTotal.value + SERVICE_FEE,
     });
@@ -55,7 +55,7 @@ onMounted(async () => {
   appStore.currentPage = "checkout";
 
   try {
-    appStore.cart = await makeRequest("getCart");
+    appStore.cart = await ApiClient.getCart();
   } catch (e: any) {
     handleError(e, router);
   }

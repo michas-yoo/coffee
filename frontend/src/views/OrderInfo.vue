@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { makeRequest } from "../api/apiClient.ts";
+import { ApiClient } from "../api/apiClient.ts";
 import { SERVICE_FEE } from "../constants.ts";
 import { reactive } from "vue";
 import { ClockCircleOutlined, CalendarOutlined, ShopOutlined } from "@ant-design/icons-vue";
@@ -21,7 +21,7 @@ const { id, statusId } = defineProps<OrderInfoProps>();
 const emit = defineEmits(["close"]);
 
 const store = reactive<OrderInfo>({
-  data: await makeRequest("getOrderById", id),
+  data: await ApiClient.getOrderById(id),
 });
 
 const onClose = () => emit("close");

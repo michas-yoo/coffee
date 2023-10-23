@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { appStore } from "../store.ts";
-import { makeRequest } from "../api/apiClient.ts";
+import { ApiClient } from "../api/apiClient.ts";
 import { handleError } from "../utils/handleError.ts";
 import { useRoute, useRouter } from "vue-router";
 import { observeIntersection } from "../utils/observeIntersection.ts";
@@ -34,11 +34,11 @@ const store = reactive<ShopInfo>({
 });
 
 onMounted(async () => {
-  const routeId = route.params.id;
+  const shopId = route.params.id;
   appStore.loading = true;
 
   try {
-    store.data = await makeRequest("getShop", routeId);
+    store.data = await ApiClient.getShop(shopId);
     store.menu = store.data.menu;
     store.data.menu = [];
     appStore.loading = false;

@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { appStore } from "../store.ts";
 import { useRouter } from "vue-router";
-import { makeRequest } from "../api/apiClient.ts";
+import { ApiClient } from "../api/apiClient.ts";
 import { handleError } from "../utils/handleError.ts";
 import { onMounted, ref } from "vue";
 import ShopsGrid from "../components/ShopsGrid.vue";
@@ -14,7 +14,7 @@ onMounted(async () => {
   appStore.currentPage = "main";
 
   try {
-    shops.value = await makeRequest("getShops");
+    shops.value = await ApiClient.getShops();
   } catch (e: any) {
     handleError(e, router);
   }

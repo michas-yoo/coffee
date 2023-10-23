@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { useRouter } from "vue-router";
 import { STATUS_DONE } from "../constants.ts";
-import { makeRequest } from "../api/apiClient.ts";
+import { ApiClient } from "../api/apiClient.ts";
 import { ArrowLeftOutlined } from "@ant-design/icons-vue";
 import { computed, onMounted, reactive, ref } from "vue";
 import OrderInfo from "../views/OrderInfo.vue";
@@ -28,7 +28,7 @@ const onCloseOrderInfo = () => selectedOrder.data = { ...DEFAULT_ORDER };
 
 onMounted(async () => {
   appStore.currentPage = "orders";
-  orders.value = await makeRequest("getOrders");
+  orders.value = await ApiClient.getOrders();
 });
 </script>
 

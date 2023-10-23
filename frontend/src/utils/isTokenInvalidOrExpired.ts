@@ -13,6 +13,7 @@ export const isTokenInvalidOrExpired = (url: URL, accessToken: string): boolean 
   }
 
   try {
+    // @ts-ignore
     const { exp } = jwtDecode(accessToken);
     return Date.now() >= exp * 1000;
   } catch (e) {

@@ -1,19 +1,32 @@
 <script lang="ts" setup>
 import { Modal } from "ant-design-vue";
 import { appStore } from "../store.ts";
-import { makeRequest } from "../api/apiClient.ts";
+import { ApiClient } from "../api/apiClient.ts";
 import { getSumByKey } from "../utils/getSumByKey.ts";
 import { handleError } from "../utils/handleError.ts";
 import { mapModifiers } from "../utils/mapModifiers.ts";
 import { computed, reactive, watch } from "vue";
 import AmountSelector from "../components/AmountSelector.vue";
 import ProductModifier from "../components/ProductModifier.vue";
+import { IProductFull } from "../interfaces";
 
-const { shopId } = defineProps({
-  shopId: Number,
-});
+type ProductOrderProps = {
+  shopId: number
+};
 
-const store = reactive({
+type ProductStore = {
+  data: IProductFull,
+  sum: number,
+  amount: number,
+  comment: string,
+  activeModifiers: {
+    [key: string]: number,
+  }
+};
+
+const { shopId } = defineProps<ProductOrderProps>();
+
+const store = reactive<ProductStore>({
   data: {
     id: 0,
     name: "",
@@ -52,7 +65,7 @@ const onBeforeAdd = () => {
       cancelText: "Отменить",
       onOk: async () => {
         appStore.cart = [];
-        await makeRequest("clearCart");
+        await ApiClient.clearCart();
         await onAddToCart();
       },
       onCancel: onClose,
@@ -79,7 +92,7 @@ const onAddToCart = async () => {
   };
 
   try {
-    await makeRequest("addToCart", newCartItem);
+    await ApiClient.addToCart(newCartItem);
     onClose();
   } catch (e: any) {
     console.log(e);
@@ -93,7 +106,7 @@ watch(id, async (value) => {
   }
 
   try {
-    store.data = await makeRequest("getProductInfo", {
+    store.data = await ApiClient.getProductInfo({
       id: value,
       shopId,
     });
