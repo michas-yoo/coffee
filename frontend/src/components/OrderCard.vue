@@ -1,7 +1,7 @@
 <script lang="ts" setup>
+import { IOrder } from "../interfaces";
 import { RightOutlined, ShopOutlined } from "@ant-design/icons-vue";
 import OrderStatus from "./OrderStatus.vue";
-import { IOrder } from "../interfaces";
 
 type OrderCardProps = {
   order: IOrder,

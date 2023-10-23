@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import { onMounted, ref } from "vue";
 import { IModifier } from "../interfaces";
+import { onMounted, ref } from "vue";
 
 type FilterRadioSelectProps = {
   filters: IModifier[],

@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import SingleShop from "./SingleShop.vue";
 import { IShop } from "../interfaces";
+import SingleShop from "./SingleShop.vue";
 
 type ShopsGridProps = {
   data: IShop[],
@@ -10,7 +10,7 @@ const { data } = defineProps<ShopsGridProps>();
 </script>
 
 <template>
-  <div class="shops-container">
+  <div class="grid-container shops-container">
     <transition-group name="slide">
       <SingleShop
         v-for="(shop, i) in data"
@@ -25,8 +25,6 @@ const { data } = defineProps<ShopsGridProps>();
 <style scoped>
 .shops-container {
   position: relative;
-  display: grid;
-  gap: 20px;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   overflow-x: hidden;
 }

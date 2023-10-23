@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { reactive } from "vue";
-import { ArrowLeftOutlined } from "@ant-design/icons-vue";
 import { ProfileInfo } from "../interfaces";
+import { ArrowLeftOutlined } from "@ant-design/icons-vue";
 
 type RegisterStepTwoProps = {
   data: ProfileInfo

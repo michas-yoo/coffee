@@ -1,43 +1,51 @@
 <script lang="ts" setup>
 import { ApiClient } from "../api/apiClient.ts";
 import { SERVICE_FEE } from "../constants.ts";
-import { reactive } from "vue";
+import { reactive, watch } from "vue";
+import { DEFAULT_FULL_ORDER_INFO } from "../defaults.ts";
+import { IOrderDetails, OrderData } from "../interfaces";
 import { ClockCircleOutlined, CalendarOutlined, ShopOutlined } from "@ant-design/icons-vue";
 import ProductCard from "../components/ProductCard.vue";
 import OrderStatus from "../components/OrderStatus.vue";
-import { IOrderDetails } from "../interfaces";
 
 type OrderInfoProps = {
-  id: number,
-  statusId: number,
+  order: OrderData
 };
 
 type OrderInfo = {
   data: IOrderDetails
 };
 
-const { id, statusId } = defineProps<OrderInfoProps>();
+const { order } = defineProps<OrderInfoProps>();
 
 const emit = defineEmits(["close"]);
 
 const store = reactive<OrderInfo>({
-  data: await ApiClient.getOrderById(id),
+  data: { ...DEFAULT_FULL_ORDER_INFO },
 });
 
 const onClose = () => emit("close");
+
+watch(order, async () => {
+  if (!order.data.id) {
+    return;
+  }
+
+  store.data = await ApiClient.getOrderById(order.data.id);
+}, { deep: true });
 </script>
 
 <template>
   <a-drawer
     size="large"
     placement="bottom"
-    :open="!!id"
-    :title="`Детали заказа №${id || ''}`"
+    :open="!!order.data.id"
+    :title="`Детали заказа №${order.data.id || ''}`"
     :closable="true"
     @close="onClose"
   >
     <template #extra>
-      <OrderStatus v-if="statusId" :status="statusId" />
+      <OrderStatus v-if="order.data.status_id" :status="order.data.status_id" />
     </template>
 
     <ASpin v-if="!store.data.id" />

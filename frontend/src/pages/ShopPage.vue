@@ -2,13 +2,13 @@
 import { appStore } from "../store.ts";
 import { ApiClient } from "../api/apiClient.ts";
 import { handleError } from "../utils/handleError.ts";
+import { IMenuItem, IShop } from "../interfaces";
 import { useRoute, useRouter } from "vue-router";
 import { observeIntersection } from "../utils/observeIntersection.ts";
 import { onMounted, reactive, ref, nextTick } from "vue";
 import { ArrowLeftOutlined, ClockCircleOutlined } from "@ant-design/icons-vue";
 import ProductOrder from "../views/ProductOrder.vue";
 import ProductsGrid from "../components/ProductsGrid.vue";
-import { IMenuItem, IShop } from "../interfaces";
 
 type ShopInfo = {
   data: IShop,
@@ -62,8 +62,7 @@ onMounted(async () => {
 
 <template>
   <div>
-    <ASpin size="large" v-if="!store.data.id" />
-    <ALayout v-else class="shop-page-container">
+    <ALayout v-if="store.data.id" class="shop-page-container">
       <APageHeader title=" " @back="() => router.push({ name: 'main' })">
         <template #backIcon>
           <span class="back-container" ref="backContainer" />

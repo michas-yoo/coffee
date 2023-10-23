@@ -1,5 +1,5 @@
-import jwtDecode from "jwt-decode";
 import { URL } from "../interfaces";
+import jwtDecode from "jwt-decode";
 
 export const isTokenInvalidOrExpired = (url: URL, accessToken: string): boolean => {
   const ignoredUrls: RegExp = new RegExp(/login|register|refresh_token/gi);

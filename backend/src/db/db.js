@@ -193,37 +193,37 @@ export async function addDefaultData(db) {
     await db.run(`INSERT INTO modifiers VALUES (null, "Карамельный соус", 20, 5)`);
 
     await db.run(`INSERT INTO products VALUES (
-    null, "Классика", "http://localhost:3000/static/cup_1.png",
-    69, "${allModifiers}"
-  )`);
+      null, "Классика", "http://localhost:3000/static/cup_1.png",
+      69, "${allModifiers}"
+    )`);
     await db.run(`INSERT INTO products VALUES (
-    null, "Мятная свежесть", "http://localhost:3000/static/cup_2.png",
-    79, "${allModifiers}"
-  )`);
+      null, "Мятная свежесть", "http://localhost:3000/static/cup_2.png",
+      79, "${allModifiers}"
+    )`);
     await db.run(`INSERT INTO products VALUES (
-    null, "Малиновый латте", "http://localhost:3000/static/cup_3.png",
-    89, "${allModifiers}"
-  )`);
+      null, "Малиновый латте", "http://localhost:3000/static/cup_3.png",
+      89, "${allModifiers}"
+    )`);
     await db.run(`INSERT INTO products VALUES (
-    null, "Дымный эспрессо", "http://localhost:3000/static/cup_4.png",
-    69, "${allModifiers}"
-  )`);
+      null, "Дымный эспрессо", "http://localhost:3000/static/cup_4.png",
+      69, "${allModifiers}"
+    )`);
     await db.run(`INSERT INTO products VALUES (
-    null, "Черничное наслаждение", "http://localhost:3000/static/cup_5.png",
-    79, "${allModifiers}"
-  )`);
+      null, "Черничное наслаждение", "http://localhost:3000/static/cup_5.png",
+      79, "${allModifiers}"
+    )`);
     await db.run(`INSERT INTO products VALUES (
-    null, "Солнечный латте", "http://localhost:3000/static/cup_6.png",
-    89, "${allModifiers}"
-  )`);
+      null, "Солнечный латте", "http://localhost:3000/static/cup_6.png",
+      89, "${allModifiers}"
+    )`);
     await db.run(`INSERT INTO products VALUES (
-    null, "Ягодный бум", "http://localhost:3000/static/cup_7.png",
-    89, "${allModifiers}"
-  )`);
+      null, "Ягодный бум", "http://localhost:3000/static/cup_7.png",
+      89, "${allModifiers}"
+    )`);
     await db.run(`INSERT INTO products VALUES (
-    null, "Океанский бриз", "http://localhost:3000/static/cup_8.png",
-    79, "${allModifiers}"
-  )`);
+      null, "Океанский бриз", "http://localhost:3000/static/cup_8.png",
+      79, "${allModifiers}"
+    )`);
 
     await db.run(`INSERT INTO shops VALUES (
     null, "Кафе «Сокол»", "Ленинградский пр-т., 74, корпус 1",
@@ -281,7 +281,7 @@ export async function addDefaultData(db) {
     await db.run(`INSERT INTO menu_items VALUES (null, 6, 6)`);
     await db.run(`INSERT INTO menu_items VALUES (null, 6, 8)`);
   } catch (e) {
-    console.log('Error while creating DB:', e);
+    console.log("Error while creating DB:", e);
   }
 }
 

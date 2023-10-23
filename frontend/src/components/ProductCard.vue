@@ -1,13 +1,13 @@
 <script lang="ts" setup>
-import { DeleteOutlined } from "@ant-design/icons-vue";
-import { getSumByKey } from "../utils/getSumByKey.ts";
 import { computed } from "vue";
+import { getSumByKey } from "../utils/getSumByKey.ts";
 import { IMappedProduct } from "../interfaces";
+import { DeleteOutlined } from "@ant-design/icons-vue";
 
 type ProductCardProps = {
   data: IMappedProduct,
-  removable: boolean,
-  index: number,
+  index?: number,
+  removable?: boolean,
 };
 
 const { data, index } = withDefaults(defineProps<ProductCardProps>(), {

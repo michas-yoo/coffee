@@ -1,11 +1,11 @@
 <script lang="ts" setup>
+import { IProductModifier, Money } from "../interfaces";
 import FilterRadioSelect from "./FilterRadioSelect.vue";
 import FilterCheckBoxSelect from "./FilterCheckBoxSelect.vue";
-import { IProductModifier, Money } from "../interfaces";
 
 type ProductModifierProps = {
   data: IProductModifier,
-  divider: boolean,
+  divider?: boolean,
 };
 
 type ModifierUpdateData = {

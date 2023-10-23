@@ -1,12 +1,12 @@
 <script lang="ts" setup>
+import { computed } from "vue";
+import { appStore } from "../store.ts";
 import { useRouter } from "vue-router";
 import {
   HomeOutlined,
   FileTextOutlined,
   ShoppingCartOutlined,
 } from "@ant-design/icons-vue";
-import { computed } from "vue";
-import { appStore } from "../store.ts";
 
 const page = computed(() => appStore.currentPage);
 
@@ -16,24 +16,25 @@ const panels = [
     id: "main",
     name: "Главная",
     icon: HomeOutlined,
-    onClick: () => router.push({ name: "main" }),
+    onClick: async () => await router.push({ name: "main" }),
   },
   {
     id: "orders",
     name: "Заказы",
     icon: FileTextOutlined,
-    onClick: () => router.push({ name: "orders" }),
+    onClick: async () => await router.push({ name: "orders" }),
   },
   {
     id: "checkout",
     name: "Корзина",
     icon: ShoppingCartOutlined,
-    onClick: () => router.push({ name: "checkout" }),
+    onClick: async () => await router.push({ name: "checkout" }),
   },
 ];
 
-const onPanelChange = (panelId: string) => {
-  panels.find((panel) => panel.id === panelId)?.onClick();
+const onPanelChange = async (panelId: string) => {
+  const panel = panels.find((panel) => panel.id === panelId);
+  await panel?.onClick();
 };
 </script>
 

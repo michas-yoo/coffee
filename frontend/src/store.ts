@@ -1,7 +1,7 @@
 import { reactive } from "vue";
+import { IAppStore } from "./interfaces";
 import { getGreeting } from "./utils/getGreeting.ts";
 import { AVAILABLE_PAGES } from "./constants.ts";
-import { IAppStore } from "./interfaces";
 
 const initialPageName = (): string => {
   const url: string = window.location.href.split("/")[3];

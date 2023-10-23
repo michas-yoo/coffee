@@ -5,10 +5,10 @@ import { ApiClient } from "../api/apiClient.ts";
 import { getSumByKey } from "../utils/getSumByKey.ts";
 import { handleError } from "../utils/handleError.ts";
 import { mapModifiers } from "../utils/mapModifiers.ts";
+import { IProductFull, Money } from "../interfaces";
 import { computed, reactive, watch } from "vue";
 import AmountSelector from "../components/AmountSelector.vue";
 import ProductModifier from "../components/ProductModifier.vue";
-import { IProductFull, Money } from "../interfaces";
 
 type ProductOrderProps = {
   shopId: number
@@ -41,6 +41,7 @@ const store = reactive<ProductStore>({
     name: "",
     price: 0,
     photo: "",
+    product_id: 0,
     modifiers: [],
     modifier_types: [],
   },
@@ -96,7 +97,7 @@ const onAddToCart = async () => {
     price: finalSum.value,
     shop_id: shopId,
     amount: store.amount,
-    productId: id.value,
+    productId: store.data.product_id,
     modifierIds: selectedModifierIds,
   };
 
@@ -126,6 +127,7 @@ watch(id, async (value) => {
       name: product.name,
       photo: product.photo,
       price: product.price,
+      product_id: product.product_id,
       modifier_types: product.modifier_types,
       modifiers: mapModifiers(product),
     };

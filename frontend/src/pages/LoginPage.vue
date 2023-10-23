@@ -3,10 +3,10 @@ import { appStore } from "../store.ts";
 import { useRouter } from "vue-router";
 import { ApiClient } from "../api/apiClient.ts";
 import { handleError } from "../utils/handleError.ts";
+import { ILoginPayload } from "../api/types";
+import { ILoginResponse } from "../interfaces";
 import { onMounted, reactive } from "vue";
 import { UserOutlined, LockOutlined } from "@ant-design/icons-vue";
-import { ILoginResponse } from "../interfaces";
-import { ILoginPayload } from "../api/types";
 
 const router = useRouter();
 

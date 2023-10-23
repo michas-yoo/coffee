@@ -40,6 +40,11 @@ label {
   grid-template-columns: 1fr 1fr;
 }
 
+.grid-container {
+  display: grid;
+  gap: 20px;
+}
+
 .ant-page-header {
   padding-top: 0 !important;
   padding-left: 0 !important;

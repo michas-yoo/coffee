@@ -25,7 +25,7 @@ export class MenuItem extends BaseEntity {
 
     const filters = this.mapKeys(options).join(" AND ");
     const data = await this.db.get(`
-      SELECT products.*, ${this.tableName}.id as id
+      SELECT products.*, ${this.tableName}.id as id, products.id as product_id
       FROM ${this.tableName}
       JOIN products ON products.id = ${this.tableName}.product_id
       WHERE ${filters}

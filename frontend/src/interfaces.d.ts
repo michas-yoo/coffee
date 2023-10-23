@@ -95,6 +95,7 @@ export interface IProductRaw {
   name: string;
   photo: URL;
   price: Money;
+  product_id: number,
   modifier_types: IModifierType[];
   modifiers: IModifier[];
 }

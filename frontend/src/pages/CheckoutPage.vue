@@ -2,6 +2,7 @@
 import { Modal } from "ant-design-vue";
 import { appStore } from "../store.ts";
 import { useRouter } from "vue-router";
+import { ICartItem } from "../interfaces";
 import { ApiClient } from "../api/apiClient.ts";
 import { getSumByKey } from "../utils/getSumByKey.ts";
 import { handleError } from "../utils/handleError.ts";
@@ -10,7 +11,6 @@ import { ShopOutlined } from "@ant-design/icons-vue";
 import { ArrowLeftOutlined } from "@ant-design/icons-vue";
 import { computed, onMounted } from "vue";
 import ProductCard from "../components/ProductCard.vue";
-import { ICartItem } from "../interfaces";
 
 const router = useRouter();
 
@@ -52,11 +52,14 @@ const onOrder = async () => {
 };
 
 onMounted(async () => {
+  appStore.loading = true;
   appStore.currentPage = "checkout";
 
   try {
     appStore.cart = await ApiClient.getCart();
+    appStore.loading = false;
   } catch (e: any) {
+    appStore.loading = false;
     handleError(e, router);
   }
 });
@@ -72,7 +75,7 @@ onMounted(async () => {
       </template>
     </APageHeader>
 
-    <div class="checkout-list" v-if="cartItems.length">
+    <div class="grid-container" v-if="cartItems.length">
       <ACard>
         <ATypographyText type="secondary">Заказ можно забрать по адресу:</ATypographyText>
         <div class="container flexed aic">
@@ -92,6 +95,7 @@ onMounted(async () => {
           :key="item.id"
           :data="item"
           :index="index"
+          :removable="true"
           @remove="onRemove"
         />
       </transition-group>
@@ -133,11 +137,6 @@ onMounted(async () => {
 </template>
 
 <style scoped>
-.checkout-list {
-  display: grid;
-  gap: 20px;
-}
-
 .container {
   margin-top: 15px;
 }

@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { reactive } from "vue";
-import { LockOutlined, UserOutlined } from "@ant-design/icons-vue";
 import { MainInfo } from "../interfaces";
+import { LockOutlined, UserOutlined } from "@ant-design/icons-vue";
 
 type RegisterStepOneProps = {
   data: MainInfo

@@ -4,9 +4,9 @@ import { reactive } from "vue";
 import { useRouter } from "vue-router";
 import { ApiClient } from "../api/apiClient.ts";
 import { handleError } from "../utils/handleError.ts";
+import { MainInfo, ProfileInfo } from "../interfaces";
 import RegisterStepOne from "../views/RegisterStepOne.vue";
 import RegisterStepTwo from "../views/RegisterStepTwo.vue";
-import { MainInfo, ProfileInfo } from "../interfaces";
 
 type Step = "main" | "profile";
 

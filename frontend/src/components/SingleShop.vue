@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import { useRouter } from "vue-router";
 import { IShop } from "../interfaces";
+import { useRouter } from "vue-router";
 
 type SingleShopProps = {
   data: IShop,
