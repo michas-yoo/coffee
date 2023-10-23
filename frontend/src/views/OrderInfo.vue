@@ -1,60 +1,43 @@
 <script lang="ts" setup>
 import { makeRequest } from "../api/apiClient.ts";
 import { SERVICE_FEE } from "../constants.ts";
-import { reactive, watch } from "vue";
+import { reactive } from "vue";
 import { ClockCircleOutlined, CalendarOutlined, ShopOutlined } from "@ant-design/icons-vue";
 import ProductCard from "../components/ProductCard.vue";
 import OrderStatus from "../components/OrderStatus.vue";
 import { IOrderDetails } from "../interfaces";
 
-type OrderData = {
+type OrderInfoProps = {
+  id: number,
+  statusId: number,
+};
+
+type OrderInfo = {
   data: IOrderDetails
 };
 
-type OrderInfoProps = {
-  order: OrderData
-};
-
-const { order } = defineProps<OrderInfoProps>();
+const { id, statusId } = defineProps<OrderInfoProps>();
 
 const emit = defineEmits(["close"]);
 
-const store = reactive<OrderData>({
-  data: {
-    id: 0,
-    shop_id: 0,
-    user_id: 0,
-    price: 0,
-    created_at: "",
-    status_id: 0,
-    name: "",
-    geo: "",
-    items: [],
-  },
+const store = reactive<OrderInfo>({
+  data: await makeRequest("getOrderById", id),
 });
 
 const onClose = () => emit("close");
-
-watch(order, async () => {
-  if (!order.data.id) {
-    return;
-  }
-
-  store.data = await makeRequest("getOrderById", order.data.id);
-}, { deep: true });
 </script>
 
 <template>
   <a-drawer
     size="large"
     placement="bottom"
-    :open="!!order.data?.id"
-    :title="`Детали заказа №${order.data.id || ''}`"
+    :open="!!id"
+    :title="`Детали заказа №${id || ''}`"
     :closable="true"
     @close="onClose"
   >
     <template #extra>
-      <OrderStatus v-if="order.data.status_id" :status="order.data.status_id" />
+      <OrderStatus v-if="statusId" :status="statusId" />
     </template>
 
     <ASpin v-if="!store.data.id" />

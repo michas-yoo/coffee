@@ -11,7 +11,7 @@ onMounted(async () => {
   try {
     await makeRequest("refreshToken");
     await router.push({ name: "main" });
-  } catch (e) {
+  } catch (e: any) {
     console.log(e);
 
     if (e !== NETWORK_ERROR_TEXT) {

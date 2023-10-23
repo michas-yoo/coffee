@@ -1,16 +1,19 @@
 <script lang="ts" setup>
 import { reactive } from "vue";
 import { LockOutlined, UserOutlined } from "@ant-design/icons-vue";
+import { MainInfo } from "../interfaces";
 
-const { data } = defineProps({
-  data: Object,
-});
+type RegisterStepOneProps = {
+  data: MainInfo
+};
+
+const { data } = defineProps<RegisterStepOneProps>();
 
 const formState = reactive(data);
 
 const emit = defineEmits(["finish"]);
 
-const submitForm = (data) => {
+const submitForm = (data: MainInfo) => {
   emit("finish", data);
 };
 </script>

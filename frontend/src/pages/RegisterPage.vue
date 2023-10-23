@@ -6,13 +6,22 @@ import { makeRequest } from "../api/apiClient.ts";
 import { handleError } from "../utils/handleError.ts";
 import RegisterStepOne from "../views/RegisterStepOne.vue";
 import RegisterStepTwo from "../views/RegisterStepTwo.vue";
+import { MainInfo, ProfileInfo } from "../interfaces";
+
+type Step = "main" | "profile";
+
+type RegistrationForm = {
+  step: Step,
+  mainInfo: MainInfo,
+  profileInfo: ProfileInfo,
+};
 
 const MAIN_STEP = "main";
 const PROFILE_STEP = "profile";
 
 const router = useRouter();
 
-const registration = reactive({
+const registration = reactive<RegistrationForm>({
   step: MAIN_STEP,
   mainInfo: {
     email: "",
@@ -24,7 +33,7 @@ const registration = reactive({
   },
 });
 
-const onStepOneFinished = (data) => {
+const onStepOneFinished = (data: MainInfo) => {
   registration.step = PROFILE_STEP;
   registration.mainInfo = data;
 };
@@ -46,17 +55,17 @@ const onSuccess = () => {
   }, 2000);
 };
 
-const sendRegisterRequest = async (data) => {
+const sendRegisterRequest = async (data: ProfileInfo) => {
   registration.profileInfo = data;
 
   try {
-    const response = await makeRequest("register", {
+    await makeRequest("register", {
       ...registration.mainInfo,
       ...registration.profileInfo,
     });
-    onSuccess(response);
-  } catch (message) {
-    handleError(message);
+    onSuccess();
+  } catch (e: any) {
+    handleError(e);
   }
 };
 </script>

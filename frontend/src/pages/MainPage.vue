@@ -15,8 +15,8 @@ onMounted(async () => {
 
   try {
     shops.value = await makeRequest("getShops");
-  } catch ({ message }) {
-    handleError(message, router);
+  } catch (e: any) {
+    handleError(e, router);
   }
 });
 </script>

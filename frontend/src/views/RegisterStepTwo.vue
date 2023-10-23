@@ -1,16 +1,19 @@
 <script lang="ts" setup>
 import { reactive } from "vue";
 import { ArrowLeftOutlined } from "@ant-design/icons-vue";
+import { ProfileInfo } from "../interfaces";
 
-const { data } = defineProps({
-  data: Object,
-});
+type RegisterStepTwoProps = {
+  data: ProfileInfo
+};
+
+const { data } = defineProps<RegisterStepTwoProps>();
 
 const formState = reactive(data);
 
 const emit = defineEmits(["finish", "back"]);
 
-const submitForm = (data) => {
+const submitForm = (data: ProfileInfo) => {
   emit("finish", data);
 };
 </script>

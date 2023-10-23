@@ -81,7 +81,7 @@ const onAddToCart = async () => {
   try {
     await makeRequest("addToCart", newCartItem);
     onClose();
-  } catch (e) {
+  } catch (e: any) {
     console.log(e);
     handleError(e);
   }
@@ -101,7 +101,7 @@ watch(id, async (value) => {
     store.sum = store.data.price;
     store.data.modifiers = mapModifiers(store.data);
     delete store.data.modifier_types;
-  } catch (e) {
+  } catch (e: any) {
     console.log(e);
     handleError(e);
   }

@@ -7,26 +7,24 @@ import { computed, onMounted, reactive, ref } from "vue";
 import OrderInfo from "../views/OrderInfo.vue";
 import OrderCard from "../components/OrderCard.vue";
 import { appStore } from "../store.ts";
+import { IOrder, OrderData } from "../interfaces";
+import { DEFAULT_ORDER } from "../defaults.ts";
 
 const router = useRouter();
 
-const orders = ref([]);
+const orders = ref<IOrder[]>([]);
 const activeKey = ref("1");
-const selectedOrder = reactive({
-  data: {},
+const selectedOrder = reactive<OrderData>({
+  data: { ...DEFAULT_ORDER },
 });
 
 const doneOrders = computed(() => orders.value.filter((o) => o.status_id === STATUS_DONE));
 
-const onPanelChange = (tab) => {
-  console.log(tab);
+const onShowOrderInfo = (id: number) => {
+  selectedOrder.data = orders.value.find((order: IOrder) => order.id === id)!;
 };
 
-const onShowOrderInfo = (id) => {
-  selectedOrder.data = orders.value.find((order) => order.id === id);
-};
-
-const onCloseOrderInfo = () => selectedOrder.data = {};
+const onCloseOrderInfo = () => selectedOrder.data = { ...DEFAULT_ORDER };
 
 onMounted(async () => {
   appStore.currentPage = "orders";
@@ -46,7 +44,6 @@ onMounted(async () => {
     <ATabs
       size="large"
       class="tab-bar"
-      @change="onPanelChange"
       v-model:activeKey="activeKey"
     >
       <ATabPane key="1" tab="Активные">
@@ -71,7 +68,8 @@ onMounted(async () => {
       </ATabPane>
     </ATabs>
     <OrderInfo
-      :order="selectedOrder"
+      :id="selectedOrder.data.id"
+      :status-id="selectedOrder.data.status_id"
       @close="onCloseOrderInfo"
     />
   </ALayout>

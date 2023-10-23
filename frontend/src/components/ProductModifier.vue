@@ -8,7 +8,7 @@ type ProductModifierProps = {
   divider: boolean,
 };
 
-type ModifierUpdataData = {
+type ModifierUpdateData = {
   ids: string,
   price: Money,
 };
@@ -19,7 +19,7 @@ const { data, divider } = withDefaults(defineProps<ProductModifierProps>(), {
 
 const emit = defineEmits(["modifier-update"]);
 
-const onModifierUpdate = ({ ids, price }: ModifierUpdataData) => {
+const onModifierUpdate = ({ ids, price }: ModifierUpdateData) => {
   emit("modifier-update", {
     ids,
     price,

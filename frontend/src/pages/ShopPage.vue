@@ -8,12 +8,18 @@ import { onMounted, reactive, ref, nextTick } from "vue";
 import { ArrowLeftOutlined, ClockCircleOutlined } from "@ant-design/icons-vue";
 import ProductOrder from "../views/ProductOrder.vue";
 import ProductsGrid from "../components/ProductsGrid.vue";
+import { IMenuItem, IShop } from "../interfaces";
+
+type ShopInfo = {
+  data: IShop,
+  menu: IMenuItem[],
+};
 
 const route = useRoute();
 const router = useRouter();
 
-const backContainer = ref(null);
-const store = reactive({
+const backContainer = ref<HTMLElement | null>(null);
+const store = reactive<ShopInfo>({
   data: {
     id: 0,
     geo: "",
@@ -36,9 +42,9 @@ onMounted(async () => {
     store.menu = store.data.menu;
     store.data.menu = [];
     appStore.loading = false;
-  } catch ({ message }) {
+  } catch (e: any) {
     appStore.loading = false;
-    handleError(message, router);
+    handleError(e, router);
     return;
   }
 
@@ -46,7 +52,7 @@ onMounted(async () => {
 
   await nextTick(() => {
     if (window.innerHeight < 800) {
-      observeIntersection(backContainer.value, showMenuCallback, true);
+      observeIntersection(backContainer.value!, showMenuCallback, true);
     } else {
       showMenuCallback();
     }

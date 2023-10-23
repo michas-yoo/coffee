@@ -10,6 +10,7 @@ import { ShopOutlined } from "@ant-design/icons-vue";
 import { ArrowLeftOutlined } from "@ant-design/icons-vue";
 import { computed, onMounted } from "vue";
 import ProductCard from "../components/ProductCard.vue";
+import { ICartItem } from "../interfaces";
 
 const router = useRouter();
 
@@ -17,25 +18,21 @@ const cartItems = computed(() => appStore.cart);
 
 const grandTotal = computed(() => getSumByKey(cartItems.value, "price"));
 
-const onRemove = async (id) => {
+const onRemove = async (id: number) => {
   await makeRequest("removeFromCart", id);
   appStore.cart = appStore.cart.filter((item) => item.id !== id);
 };
 
 const onOrder = async () => {
   try {
-    const requestCart = cartItems.value.map((item) => {
-      const { shop_id, user_id, product_id, modifier_ids, amount, comment } = item;
-
-      return {
-        amount,
-        comment,
-        shop_id,
-        user_id,
-        product_id,
-        modifier_ids,
-      };
-    });
+    const requestCart = cartItems.value.map((item: ICartItem) => ({
+      amount: item.amount,
+      comment: item.comment,
+      shop_id: item.shop_id,
+      user_id: item.user_id,
+      product_id: item.product_id,
+      modifier_ids: item.modifier_ids,
+    }));
 
     await makeRequest("createOrder", {
       cart: requestCart,
@@ -49,7 +46,7 @@ const onOrder = async () => {
     setTimeout(() => {
       router.push({ name: "orders" });
     }, 2000);
-  } catch (e) {
+  } catch (e: any) {
     handleError(e, router);
   }
 };
@@ -59,7 +56,7 @@ onMounted(async () => {
 
   try {
     appStore.cart = await makeRequest("getCart");
-  } catch (e) {
+  } catch (e: any) {
     handleError(e, router);
   }
 });

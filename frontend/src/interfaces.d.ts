@@ -3,6 +3,21 @@ type Money = number;
 type DateTime = string;
 type StringList = string;
 
+export type OrderData = {
+  data: IOrder,
+};
+
+export type MainInfo = {
+  email: string,
+  password: string,
+};
+
+export type ProfileInfo = {
+  name: string,
+  phone: string,
+};
+
+
 export interface IModifier {
   id: number,
   name: string,
@@ -63,7 +78,7 @@ interface ICartItem {
   shop: IShop,
 }
 
-interface IProductFull {
+export interface IProductFull {
   id: number,
   name: string,
   photo: URL,
@@ -83,15 +98,20 @@ interface IOrderItem {
   name: string,
 }
 
-interface IOrder {
+interface IShopShort {
+  name: string,
+  geo: string,
+}
+
+export interface IOrder {
   id: number,
   shop_id: number,
   user_id: number,
+  status_id: number,
+  shop: IShopShort,
+  items: IOrderItem[],
   price: Money,
   created_at: DateTime,
-  status_id: number,
-  items: IOrderItem[],
-  shop: IShop,
 }
 
 interface IMappedProduct {
@@ -103,7 +123,7 @@ interface IMappedProduct {
   product: IProductShort,
 }
 
-interface IOrderDetails {
+export interface IOrderDetails {
   id: number,
   shop_id: number,
   user_id: number,

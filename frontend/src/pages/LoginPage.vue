@@ -6,26 +6,35 @@ import { handleError } from "../utils/handleError.ts";
 import { onMounted, reactive } from "vue";
 import { UserOutlined, LockOutlined } from "@ant-design/icons-vue";
 
+type FormState = {
+  email: string,
+  password: string,
+};
+
+type LoginRequestResponse = {
+  username: string,
+  accessToken: string,
+};
+
 const router = useRouter();
 
-const formState = reactive({
+const formState = reactive<FormState>({
   email: "",
   password: "",
-  remember: true,
 });
 
-const onSuccess = (data) => {
+const onSuccess = (data: LoginRequestResponse) => {
   appStore.username = data.username;
   appStore.accessToken = data.accessToken;
   router.push({ name: "main" });
 };
 
-const submitForm = async (data) => {
+const submitForm = async (data: FormState) => {
   try {
-    const response = await makeRequest("login", data);
+    const response: LoginRequestResponse = await makeRequest("login", data);
     onSuccess(response);
-  } catch (message) {
-    handleError(message);
+  } catch (e: any) {
+    handleError(e);
   }
 };
 
@@ -37,8 +46,8 @@ onMounted(() => {
 </script>
 
 <template>
-  <transition class="login-container" name="slide" appear tag="div">
-    <div>
+  <transition name="slide" appear>
+    <div class="login-container">
       <ALayout>
         <ALayoutHeader class="tal mb30">
           <ATypographyTitle>Добро пожаловать 👋</ATypographyTitle>
@@ -80,11 +89,6 @@ onMounted(() => {
                 <LockOutlined />
               </template>
             </AInputPassword>
-          </AFormItem>
-          <AFormItem name="remember" class="tal">
-            <ACheckbox v-model:checked="formState.remember">
-              Запомнить меня
-            </ACheckbox>
           </AFormItem>
 
           <ADivider />

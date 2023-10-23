@@ -1,7 +1,7 @@
 import { isBetween } from "./isBetween";
 
 export function getGreeting(): string {
-  const currentHour = new Date().getHours();
+  const currentHour: number = new Date().getHours();
 
   // От 4 до 11 – утро
   if (isBetween(currentHour, 4, 11)) {
@@ -13,7 +13,7 @@ export function getGreeting(): string {
     return "Доброй ночи 🌝";
   }
 
-  // C 17 до 21 – вечер
+  // С 17 до 21 – вечер
   if (isBetween(currentHour, 17, 21)) {
     return "Добрый вечер 🌚";
   }

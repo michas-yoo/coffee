@@ -20,7 +20,7 @@ export class CartController extends BaseController {
     return cartData;
   }
 
-  async index(options = {}, params) {
+  async index(options = {}, params = { whereIn: false, fields: [] }) {
     let cartData = await super.index(options);
 
     for (let item of cartData.data) {
