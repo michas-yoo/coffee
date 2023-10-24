@@ -3,6 +3,7 @@ import "./assets/style.css";
 import App from "./App.vue";
 import Antd from "ant-design-vue";
 import { createRouter, createWebHistory } from "vue-router";
+import { createPinia } from "pinia";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -48,4 +49,5 @@ const router = createRouter({
 createApp(App)
   .use(Antd)
   .use(router)
+  .use(createPinia())
   .mount("#app");

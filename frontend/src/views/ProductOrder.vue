@@ -1,9 +1,10 @@
 <script lang="ts" setup>
 import { Modal } from "ant-design-vue";
-import { appStore } from "../store.ts";
 import { ApiClient } from "../api/apiClient.ts";
 import { getSumByKey } from "../utils/getSumByKey.ts";
 import { handleError } from "../utils/handleError.ts";
+import { useAppStore } from "../stores/AppStore.ts";
+import { useCartStore } from "../stores/CartStore.ts";
 import { mapModifiers } from "../utils/mapModifiers.ts";
 import { IProductFull, Money } from "../interfaces";
 import { computed, reactive, watch } from "vue";
@@ -34,6 +35,9 @@ type ModifierUpdate = {
 };
 
 const { shopId } = defineProps<ProductOrderProps>();
+
+const appStore = useAppStore();
+const cartStore = useCartStore();
 
 const store = reactive<ProductStore>({
   data: {
@@ -68,13 +72,13 @@ const onUpdateModifier = ({ ids, name, price }: ModifierUpdate) => {
 const onClose = () => appStore.productId = 0;
 
 const onBeforeAdd = () => {
-  if (appStore.cart.length && appStore.cart[0].shop_id !== shopId) {
+  if (cartStore.cart.length && cartStore.cart[0].shop_id !== shopId) {
     Modal.confirm({
       title: "Вы выбрали товар в новом кафе",
       content: "Текущий из другого кафе будет удален из корзины",
       cancelText: "Отменить",
       onOk: async () => {
-        appStore.cart = [];
+        cartStore.setCart([]);
         await ApiClient.clearCart();
         await onAddToCart();
       },
@@ -143,7 +147,7 @@ watch(id, async (value) => {
     size="large"
     class="product-order"
     placement="bottom"
-    :open="!!id"
+    :open="!!appStore.productId"
     :closable="true"
     @close="onClose"
   >

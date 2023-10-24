@@ -2,6 +2,7 @@ import { open } from "sqlite";
 import sqlite3 from "sqlite3";
 
 const tableNames = [
+  "cart",
   "users",
   "shops",
   "orders",
@@ -10,6 +11,7 @@ const tableNames = [
   "statuses",
   "modifiers",
   "menu_items",
+  "ordered_items",
   "modifier_types",
 ];
 

@@ -1,14 +1,15 @@
 <script lang="ts" setup>
-import { appStore } from "../store.ts";
 import { useRouter } from "vue-router";
 import { ApiClient } from "../api/apiClient.ts";
 import { handleError } from "../utils/handleError.ts";
+import { useUserStore } from "../stores/UserStore.ts";
 import { ILoginPayload } from "../api/types";
 import { ILoginResponse } from "../interfaces";
 import { onMounted, reactive } from "vue";
 import { UserOutlined, LockOutlined } from "@ant-design/icons-vue";
 
 const router = useRouter();
+const userStore = useUserStore();
 
 const formState = reactive<ILoginPayload>({
   email: "",
@@ -16,8 +17,7 @@ const formState = reactive<ILoginPayload>({
 });
 
 const onSuccess = (data: ILoginResponse) => {
-  appStore.username = data.username;
-  appStore.accessToken = data.accessToken;
+  userStore.setUser(data);
   router.push({ name: "main" });
 };
 
@@ -31,7 +31,7 @@ const submitForm = async (data: ILoginPayload) => {
 };
 
 onMounted(() => {
-  if (appStore.accessToken) {
+  if (userStore.accessToken) {
     return router.push({ name: "main" });
   }
 });

@@ -1,8 +1,8 @@
 <script lang="ts" setup>
-import { appStore } from "../store.ts";
 import { useRouter } from "vue-router";
 import { ApiClient } from "../api/apiClient.ts";
 import { STATUS_DONE } from "../constants.ts";
+import { useAppStore } from "../stores/AppStore.ts";
 import { DEFAULT_ORDER } from "../defaults.ts";
 import { IOrder, OrderData } from "../interfaces";
 import { ArrowLeftOutlined } from "@ant-design/icons-vue";
@@ -11,6 +11,7 @@ import OrderInfo from "../views/OrderInfo.vue";
 import OrderCard from "../components/OrderCard.vue";
 
 const router = useRouter();
+const appStore = useAppStore();
 
 const orders = ref<IOrder[]>([]);
 const activeKey = ref("1");
@@ -19,6 +20,7 @@ const selectedOrder = reactive<OrderData>({
 });
 
 const doneOrders = computed(() => orders.value.filter((o) => o.status_id === STATUS_DONE));
+const activeOrders = computed(() => orders.value.filter((o) => o.status_id < STATUS_DONE && o.items.length));
 
 const onShowOrderInfo = (id: number) => {
   selectedOrder.data = orders.value.find((order: IOrder) => order.id === id)!;
@@ -49,8 +51,13 @@ onMounted(async () => {
       <ATabPane key="1" tab="Активные">
         <div class="grid-container">
           <transition-group name="slide" appear>
+            <AEmpty v-if="!activeOrders.length">
+              <template #description>
+                Вы пока не совершали заказов
+              </template>
+            </AEmpty>
             <OrderCard
-              v-for="order in orders.filter((o) => o.status_id < STATUS_DONE && o.items.length)"
+              v-for="order in activeOrders"
               :key="order.id"
               :order="order"
               @select="onShowOrderInfo"

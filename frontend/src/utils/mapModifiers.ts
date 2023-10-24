@@ -1,9 +1,19 @@
-import { IModifier, IModifierType, IProductModifier, IProductRaw } from "../interfaces";
+import {
+  IModifier,
+  IProductRaw,
+  IModifierType,
+  IProductModifier,
+} from "../interfaces";
 
 type Modifiers = {
   [key: number]: IProductModifier,
 };
 
+/**
+ * @function
+ * @description Принимает объект продукта, и мапит модификаторы в нужный формат
+ * @param product - Продукт
+ */
 export function mapModifiers({ modifier_types, modifiers }: IProductRaw): IProductModifier[] {
   const productModifiersList: Modifiers = {};
 

@@ -1,5 +1,10 @@
 import { isBetween } from "./isBetween";
 
+/**
+ * @function
+ * @description Возвращает приветствие в зависимости от времени суток
+ * @returns {string} Строка с приветствием
+ */
 export function getGreeting(): string {
   const currentHour: number = new Date().getHours();
 

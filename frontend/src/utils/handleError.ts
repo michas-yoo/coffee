@@ -8,15 +8,23 @@ import {
 
 type PossibleError = string[] | string | Record<string, string>;
 
+/**
+ * @function
+ * @description Обрабатывает ошибку и показывает сообщение
+ * @param data - Массив строк, строка или объект с ключом message
+ * @param router - Роутер, нужен для перехода на страницу, если ошибка это предполагает
+ */
 export const handleError = (data: PossibleError, router: Router | null = null): void => {
-  let message = "";
+  let message: string;
 
   if (Array.isArray(data)) {
     message = data[0];
     data.forEach((error) => notification.error({ message: error }));
   } else if (typeof data === "string") {
+    message = data;
     notification.error({ message: data });
   } else {
+    message = data.message?.[0] || data.message;
     notification.error({ message: data.message });
   }
 

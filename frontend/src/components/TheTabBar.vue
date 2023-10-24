@@ -1,16 +1,15 @@
 <script lang="ts" setup>
-import { computed } from "vue";
-import { appStore } from "../store.ts";
 import { useRouter } from "vue-router";
+import { useAppStore } from "../stores/AppStore.ts";
 import {
   HomeOutlined,
   FileTextOutlined,
   ShoppingCartOutlined,
 } from "@ant-design/icons-vue";
 
-const page = computed(() => appStore.currentPage);
-
 const router = useRouter();
+const appStore = useAppStore();
+
 const panels = [
   {
     id: "main",
@@ -43,7 +42,7 @@ const onPanelChange = async (panelId: string) => {
     size="large"
     class="tab-bar"
     @change="onPanelChange"
-    :activeKey="page"
+    :activeKey="appStore.currentPage"
   >
     <ATabPane v-for="panel in panels" :key="panel.id">
       <template #tab>
@@ -54,7 +53,7 @@ const onPanelChange = async (panelId: string) => {
   </ATabs>
 </template>
 
-<style scoped>
+<style lang="scss" scoped>
 .tab-bar {
   position: fixed;
   left: 0;
@@ -66,6 +65,19 @@ const onPanelChange = async (panelId: string) => {
   padding: 0 20px;
   background-color: #ffffff;
   z-index: 2;
+
+  :deep(.ant-tabs-nav) {
+    margin-bottom: 20px;
+
+    &::before {
+      display: none;
+    }
+
+    .ant-tabs-nav-list {
+      justify-content: space-between;
+      margin: 0 auto;
+    }
+  }
 }
 
 @media screen and (max-width: 500px) {

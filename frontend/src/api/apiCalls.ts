@@ -1,8 +1,9 @@
-import { appStore } from "../store.ts";
-import { isTokenInvalidOrExpired } from "../utils/isTokenInvalidOrExpired.ts";
 import { URL } from "../interfaces";
+import { useUserStore } from "../stores/UserStore.ts";
 import { IRequest, IResponse } from "./types";
+import { isTokenInvalidOrExpired } from "../utils/isTokenInvalidOrExpired.ts";
 
+const userStore = useUserStore();
 const API_BASE_URL: string = "http://localhost:3000";
 
 /**
@@ -26,8 +27,8 @@ const fetchCall = async (url: URL, options: IRequest = {}): Promise<IResponse> =
       return Promise.reject(refreshResult);
     }
 
-    if (appStore.accessToken) {
-      options.headers["Authorization"] = `Bearer ${appStore.accessToken}`;
+    if (userStore.accessToken) {
+      options.headers["Authorization"] = `Bearer ${userStore.accessToken}`;
     }
 
     // @ts-ignore
@@ -44,14 +45,14 @@ const fetchCall = async (url: URL, options: IRequest = {}): Promise<IResponse> =
  * @param url - Адрес страницы, на которую делаем запрос. Если это login | register | refresh_token, пытаться обновить не будем
  */
 const processToken = async (url: URL): Promise<IResponse> => {
-  const shouldUpdateToken: boolean = isTokenInvalidOrExpired(url, appStore.accessToken);
+  const shouldUpdateToken: boolean = isTokenInvalidOrExpired(url, userStore.accessToken);
 
   if (!shouldUpdateToken) {
     return { ok: true, data: null, message: null };
   }
 
   try {
-    // We use basic fetch not to cause recursion
+    // Используем нативный fetch, чтобы не словить рекурсию
     const response = await fetch(`${API_BASE_URL}/refresh_token`, {
       method: "POST",
       credentials: "include",
@@ -62,8 +63,7 @@ const processToken = async (url: URL): Promise<IResponse> => {
       return Promise.reject(response);
     }
 
-    appStore.username = response.data.username;
-    appStore.accessToken = response.data.accessToken;
+    userStore.setUser(response.data);
     return Promise.resolve(response);
   } catch (e: any) {
     console.log(e.message);

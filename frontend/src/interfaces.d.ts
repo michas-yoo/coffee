@@ -76,7 +76,7 @@ interface IShop {
   gallery: IGalleryPhoto[];
 }
 
-interface ICartItem {
+export interface ICartItem {
   id: number;
   shop_id: number;
   user_id: number;
@@ -150,14 +150,4 @@ export interface IOrderDetails {
   name: string;
   geo: string;
   items: IMappedProduct[];
-}
-
-export interface IAppStore {
-  cart: ICartItem[];
-  greeting: string;
-  loading: boolean;
-  username: string;
-  accessToken: string;
-  productId: number;
-  currentPage: string;
 }

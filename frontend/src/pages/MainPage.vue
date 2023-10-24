@@ -1,13 +1,17 @@
 <script lang="ts" setup>
 import { IShop } from "../interfaces";
-import { appStore } from "../store.ts";
 import { useRouter } from "vue-router";
 import { ApiClient } from "../api/apiClient.ts";
 import { handleError } from "../utils/handleError.ts";
+import { getGreeting } from "../utils/getGreeting.ts";
+import { useAppStore } from "../stores/AppStore.ts";
+import { useUserStore } from "../stores/UserStore.ts";
 import { onMounted, ref } from "vue";
 import ShopsGrid from "../components/ShopsGrid.vue";
 
 const router = useRouter();
+const appStore = useAppStore();
+const userStore = useUserStore();
 
 const shops = ref<IShop[]>([]);
 
@@ -26,8 +30,8 @@ onMounted(async () => {
   <ALayout>
     <APageHeader
       class="header-column"
-      :title="appStore.greeting"
-      :sub-title="appStore.username"
+      :title="getGreeting()"
+      :sub-title="userStore.username"
     />
     <ShopsGrid :data="shops" />
   </ALayout>

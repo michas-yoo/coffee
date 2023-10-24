@@ -1,6 +1,12 @@
 import { URL } from "../interfaces";
 import jwtDecode from "jwt-decode";
 
+/**
+ * @function
+ * @description Проверяет протух ли токен и возвращает ответ
+ * @param url - На какую ручку идет запрос
+ * @param accessToken - Текущий токен пользователя
+ */
 export const isTokenInvalidOrExpired = (url: URL, accessToken: string): boolean => {
   const ignoredUrls: RegExp = new RegExp(/login|register|refresh_token/gi);
 

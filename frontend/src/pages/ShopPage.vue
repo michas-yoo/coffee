@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import { appStore } from "../store.ts";
 import { ApiClient } from "../api/apiClient.ts";
+import { useAppStore } from "../stores/AppStore.ts";
 import { handleError } from "../utils/handleError.ts";
 import { IMenuItem, IShop } from "../interfaces";
 import { useRoute, useRouter } from "vue-router";
@@ -17,6 +17,7 @@ type ShopInfo = {
 
 const route = useRoute();
 const router = useRouter();
+const appStore = useAppStore();
 
 const backContainer = ref<HTMLElement | null>(null);
 const store = reactive<ShopInfo>({
@@ -35,15 +36,15 @@ const store = reactive<ShopInfo>({
 
 onMounted(async () => {
   const shopId = +route.params.id;
-  appStore.loading = true;
+  appStore.setLoading(true);
 
   try {
     store.data = await ApiClient.getShop(shopId);
     store.menu = store.data.menu;
     store.data.menu = [];
-    appStore.loading = false;
+    appStore.setLoading(false);
   } catch (e: any) {
-    appStore.loading = false;
+    appStore.setLoading(false);
     handleError(e, router);
     return;
   }

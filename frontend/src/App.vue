@@ -1,13 +1,13 @@
 <script lang="ts" setup>
 import { computed } from "vue";
 import { useRoute } from "vue-router";
-import { appStore } from "./store.ts";
+import { useAppStore } from "./stores/AppStore.ts";
 import ALoader from "./components/ALoader.vue";
 import TheTabBar from "./components/TheTabBar.vue";
 
 const route = useRoute();
+const appStore = useAppStore();
 
-const loading = computed(() => appStore.loading);
 const hasTabBar = computed(() => route.matched
   .some((record) => {
     // @ts-ignore
@@ -17,7 +17,7 @@ const hasTabBar = computed(() => route.matched
 </script>
 
 <template>
-  <ALoader v-if="loading" />
+  <ALoader v-if="appStore.loading" />
   <ALayout class="main-container" :class="hasTabBar ? '' : 'no-paddings'">
     <router-view />
   </ALayout>
