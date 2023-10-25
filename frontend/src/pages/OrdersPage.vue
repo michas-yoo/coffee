@@ -29,7 +29,7 @@ const onShowOrderInfo = (id: number) => {
 const onCloseOrderInfo = () => selectedOrder.data = { ...DEFAULT_ORDER };
 
 onMounted(async () => {
-  appStore.currentPage = "orders";
+  appStore.setCurrentPage("orders");
   orders.value = await ApiClient.getOrders();
 });
 </script>

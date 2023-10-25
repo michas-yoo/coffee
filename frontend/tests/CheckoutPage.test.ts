@@ -5,6 +5,7 @@ import { createTestingPinia } from "@pinia/testing";
 import { createPinia, setActivePinia } from "pinia";
 import { DEFAULT_PRODUCT, DEFAULT_SHOP } from "../src/defaults";
 import { test, describe, expect, beforeEach, vi, afterEach } from "vitest";
+// @ts-ignore
 import CheckoutPage from "../src/pages/CheckoutPage.vue";
 
 vi.mock("../src/api/apiClient", () => {

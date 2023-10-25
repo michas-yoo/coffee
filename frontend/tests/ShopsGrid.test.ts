@@ -1,6 +1,7 @@
 import { mount } from "@vue/test-utils";
 import { DEFAULT_SHOP } from "../src/defaults";
 import { describe, expect, test } from "vitest";
+// @ts-ignore
 import SingleShop from "../src/components/ShopsGrid.vue";
 
 describe("ShopsGrid", () => {

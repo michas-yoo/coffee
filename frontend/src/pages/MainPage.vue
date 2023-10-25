@@ -16,7 +16,7 @@ const userStore = useUserStore();
 const shops = ref<IShop[]>([]);
 
 onMounted(async () => {
-  appStore.currentPage = "main";
+  appStore.setCurrentPage("main");
 
   try {
     shops.value = await ApiClient.getShops();

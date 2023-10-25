@@ -239,4 +239,3 @@ function processResultWithCookie(result, res, req = {}) {
     console.log(`Coffee app backend started on port ${port}`);
   });
 })();
-
