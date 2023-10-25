@@ -43,14 +43,14 @@ const submitForm = (data: ProfileInfo) => {
         { required: true, message: 'Пожалуйста, введите ваше имя' },
       ]"
       >
-        <AInput placeholder="Имя" v-model:value="formState.name" />
+        <AInput placeholder="Имя" v-model.lazy:value="formState.name" />
       </AFormItem>
 
       <AFormItem
         label="Номер телефона" name="phone"
         :rules="[{ required: true, message: 'Пожалуйста, введите ваш номер телефона' }]"
       >
-        <AInput placeholder="+7 (999) 999-99-99" v-model:value="formState.phone" />
+        <AInput placeholder="+7 (999) 999-99-99" v-model.lazy:value="formState.phone" />
       </AFormItem>
 
       <ADivider />

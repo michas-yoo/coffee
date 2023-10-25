@@ -1,23 +1,20 @@
 <script lang="ts" setup>
 import { Modal } from "ant-design-vue";
+import { onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { ICartItem } from "../interfaces";
 import { ApiClient } from "../api/apiClient.ts";
-import { getSumByKey } from "../utils/getSumByKey.ts";
 import { handleError } from "../utils/handleError.ts";
 import { SERVICE_FEE } from "../constants.ts";
 import { useAppStore } from "../stores/AppStore.ts";
 import { useCartStore } from "../stores/CartStore.ts";
 import { ShopOutlined } from "@ant-design/icons-vue";
 import { ArrowLeftOutlined } from "@ant-design/icons-vue";
-import { computed, onMounted } from "vue";
 import ProductCard from "../components/ProductCard.vue";
 
 const router = useRouter();
 const appStore = useAppStore();
 const cartStore = useCartStore();
-
-const grandTotal = computed(() => getSumByKey(cartStore.cart, "price"));
 
 const onRemove = async (id: number) => {
   await ApiClient.removeFromCart(id);
@@ -37,14 +34,15 @@ const onOrder = async () => {
 
     await ApiClient.createOrder({
       cart: requestCart,
-      total: grandTotal.value + SERVICE_FEE,
+      total: cartStore.getCartPrice() + SERVICE_FEE,
     });
-    Modal.success({
+    const modal = Modal.success({
       title: "Заказ успешно создан",
       content: "Переходим на его страницу...",
       onOk: () => router.push({ name: "orders" }),
     });
     setTimeout(() => {
+      modal.destroy();
       router.push({ name: "orders" });
     }, 2000);
   } catch (e: any) {
@@ -104,7 +102,7 @@ onMounted(async () => {
       <ACard title="Детали заказа">
         <div class="flexed aic sb">
           <ATypographyText type="secondary">Сумма заказа</ATypographyText>
-          <ATypographyText>{{ grandTotal }}₽</ATypographyText>
+          <ATypographyText>{{ cartStore.getCartPrice() }}₽</ATypographyText>
         </div>
         <div class="flexed aic sb">
           <ATypographyText type="secondary">Работа сервиса</ATypographyText>
@@ -113,7 +111,7 @@ onMounted(async () => {
         <ADivider />
         <div class="flexed aic sb">
           <ATypographyText strong>Итого</ATypographyText>
-          <ATypographyText strong>{{ grandTotal + SERVICE_FEE }}₽</ATypographyText>
+          <ATypographyText strong>{{ cartStore.getCartPrice() + SERVICE_FEE }}₽</ATypographyText>
         </div>
       </ACard>
     </div>

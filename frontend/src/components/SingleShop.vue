@@ -18,6 +18,7 @@ const onClick = () => {
 
 <template>
   <ACard
+    class="shop-card"
     hoverable
     :style="{
       width: '100%',

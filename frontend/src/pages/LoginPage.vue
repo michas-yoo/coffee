@@ -62,7 +62,7 @@ onMounted(() => {
           >
             <AInput
               placeholder="Email"
-              v-model:value="formState.email"
+              v-model.lazy:value="formState.email"
             >
               <template #prefix>
                 <UserOutlined />
@@ -75,7 +75,7 @@ onMounted(() => {
           >
             <AInputPassword
               placeholder="Пароль"
-              v-model:value="formState.password"
+              v-model.lazy:value="formState.password"
             >
               <template #prefix>
                 <LockOutlined />

@@ -182,7 +182,7 @@ watch(id, async (value) => {
           size="large"
           allow-clear
           placeholder="Например: поменьше сахара"
-          v-model:value="store.comment"
+          v-model.lazy:value="store.comment"
         />
       </div>
 

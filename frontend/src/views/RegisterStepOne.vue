@@ -40,7 +40,7 @@ const submitForm = (data: MainInfo) => {
       >
         <AInput
           placeholder="Email"
-          v-model:value="formState.email"
+          v-model.lazy:value="formState.email"
         >
           <template #prefix>
             <UserOutlined />
@@ -53,7 +53,7 @@ const submitForm = (data: MainInfo) => {
       >
         <AInputPassword
           placeholder="Пароль"
-          v-model:value="formState.password"
+          v-model.lazy:value="formState.password"
         >
           <template #prefix>
             <LockOutlined />

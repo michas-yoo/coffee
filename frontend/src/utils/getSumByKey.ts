@@ -5,5 +5,7 @@
  * @param key - Ключ, по которому будет складываться сумма
  */
 export const getSumByKey = (array: any, key: string) => {
-  return array.reduce((sum: number, current: Record<string, number>) => sum + current[key], 0);
+  return array.reduce((sum: number, current: Record<string, number>) => {
+    return sum + (current[key] || 0);
+  }, 0);
 };
